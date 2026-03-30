@@ -3,571 +3,919 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Olena Zolotova | Lab Series - Демо</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <title>Olena Zolotova | Lab Series</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --gold: #d4af37;
-            --black: #0a0a0a;
-            --dark-grey: #1a1a1a;
-            --white: #ffffff;
-            --transition: 0.3s ease-in-out;
+            --gold: #c9a84c;
+            --gold-light: #e8d090;
+            --gold-dim: #a07c30;
+            --dark: #080808;
+            --dark-2: #0e0c07;
+            --card-bg: #111008;
+            --card-border: rgba(201, 168, 76, 0.18);
+            --text: #f0e6cc;
+            --text-muted: #9a8060;
+            --radius: 6px;
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            margin: 0;
-            font-family: 'Playfair Display', serif;
-            background-color: var(--black);
-            color: var(--white);
-            line-height: 1.6;
+            font-family: 'Montserrat', sans-serif;
+            background: var(--dark);
+            color: var(--text);
+            scroll-behavior: smooth;
+            overflow-x: hidden;
         }
 
-        /* Заголовок (Header) */
-        header {
-            padding: 20px;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            left: 0;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-sizing: border-box;
-            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
-        }
+        /* ─── УТИЛІТИ ─────────────────────────────── */
+        h1, h2, h3, .cinzel { font-family: 'Cinzel', serif; }
+        .italic { font-family: 'Cormorant Garamond', serif; font-style: italic; }
 
-        .logo-link {
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-        }
-
-        /* SVG Лого з image_0.png, імітація */
-        #logo_cz {
-            height: 40px;
-            fill: var(--gold);
-        }
-
-        .logo-text {
-            color: var(--gold);
-            font-size: 1.2rem;
-            margin-left: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 700;
-        }
-
+        /* ─── НАВІГАЦІЯ ───────────────────────────── */
         .nav {
-            display: flex;
-            gap: 20px;
+            position: fixed; top: 0; width: 100%;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 16px 5%;
+            background: rgba(8,8,8,0.96);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--card-border);
+            z-index: 1000;
+            transition: padding 0.3s;
         }
 
-        .nav-link {
-            color: var(--white);
+        /* ═══════════════════════════════════════════
+           ЛОГОТИП — ЗАМІНИТИ ФАЙЛИ:
+           Помістіть у ту саму папку що й index.html:
+           • logo_full.png   — логотип з текстом (Image 1)
+           • monogram.png    — тільки монограма CZ (Image 2)
+           ═══════════════════════════════════════════ */
+        .nav-logo img {
+            height: 44px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 8px rgba(201,168,76,0.25));
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
             text-decoration: none;
+            margin-left: 28px;
+            font-size: 0.72rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 0.9rem;
-            transition: var(--transition);
+            letter-spacing: 2.5px;
+            transition: color 0.3s;
         }
+        .nav-links a:hover { color: var(--gold); }
 
-        .nav-link:hover {
-            color: var(--gold);
-        }
-
-        .cart-status {
-            color: var(--gold);
-            font-size: 1rem;
-            text-decoration: none;
-            position: relative;
-        }
-
-        #cart-count {
-            background: var(--white);
-            color: var(--black);
-            font-size: 0.7rem;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            margin-left: 5px;
-            font-weight: bold;
-        }
-
-        /* Мобільне меню */
-        .menu-toggle {
-            display: none;
-            background: none;
-            border: none;
+        .cart-btn {
             cursor: pointer;
-            color: var(--white);
-            font-size: 1.5rem;
-        }
-
-        /* Основний контент */
-        main {
-            padding-top: 100px;
-        }
-
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .section {
-            margin-bottom: 80px;
-        }
-
-        .section-title {
             color: var(--gold);
-            font-size: 2.5rem;
+            border: 1px solid var(--card-border);
+            padding: 9px 18px;
+            border-radius: var(--radius);
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            transition: 0.3s;
+        }
+        .cart-btn:hover { border-color: var(--gold); background: rgba(201,168,76,0.07); }
+        #cart-count { margin-left: 6px; font-weight: 700; color: var(--gold-light); }
+
+        /* ─── HERO ────────────────────────────────── */
+        .hero {
+            min-height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            text-align: center;
+            background:
+                radial-gradient(ellipse 60% 50% at 50% 60%, rgba(201,168,76,0.07) 0%, transparent 70%),
+                radial-gradient(ellipse 100% 100% at 50% 100%, #1a1200 0%, var(--dark) 60%);
+            padding: 100px 20px 60px;
+        }
+
+        .hero-logo {
+            /* ═══════════════════════════════════════
+               ЛОГОТИП HERO — тут використовується
+               logo_full.png (великий, з підписом)
+               ═══════════════════════════════════════ */
+            width: min(320px, 70vw);
+            margin: 0 auto 40px;
+            animation: fadeInDown 1.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+        .hero-logo img { width: 100%; filter: drop-shadow(0 0 40px rgba(201,168,76,0.35)); }
+
+        .hero-tagline {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: clamp(1.1rem, 3vw, 1.6rem);
+            color: var(--gold);
+            letter-spacing: 4px;
+            margin-bottom: 14px;
+            animation: fadeInUp 1.8s 0.3s both;
+        }
+        .hero-sub {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            letter-spacing: 4px;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 50px;
+            animation: fadeInUp 1.8s 0.5s both;
         }
 
-        /* Баннер */
-        .banner {
-            text-align: center;
-            padding: 100px 20px;
-            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
-        }
-
-        .banner #logo_cz_large {
-            height: 150px;
-            fill: var(--gold);
-            margin-bottom: 20px;
-        }
-
-        .banner h1 {
+        .btn-gold {
+            display: inline-block;
+            padding: 14px 44px;
+            border: 1px solid var(--gold);
             color: var(--gold);
-            font-size: 3rem;
+            text-decoration: none;
             text-transform: uppercase;
             letter-spacing: 3px;
-        }
-
-        .banner p {
-            font-size: 1.3rem;
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        /* Блок О бренді */
-        .about p {
-            font-size: 1.2rem;
-            text-align: center;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        /* Товари (Grid) */
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-        }
-
-        /* Фліп-карта */
-        .flip-card {
-            background-color: transparent;
-            width: 100%;
-            height: 450px;
-            perspective: 1000px;
-            border: 1px solid var(--gold);
-        }
-
-        .flip-card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            text-align: center;
-            transition: transform 0.8s;
-            transform-style: preserve-3d;
+            font-size: 0.78rem;
+            transition: 0.4s;
+            background: transparent;
             cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            animation: fadeInUp 1.8s 0.7s both;
         }
-
-        .flip-card:hover .flip-card-inner {
-            transform: rotateY(180deg);
-        }
-
-        .flip-card-front, .flip-card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-around;
-            align-items: center;
-            padding: 30px;
-            box-sizing: border-box;
-            background: var(--dark-grey);
-        }
-
-        .flip-card-front {
-            background-size: cover;
-            background-position: center;
-            position: relative;
-        }
-
-        /* Імітація фото товарів */
-        .product-1-img { background-color: #222; background-image: url('data:image/jpeg;base64,...'); }
-        .product-2-img { background-color: #333; background-image: url('data:image/jpeg;base64,...'); }
-        .product-3-img { background-color: #444; background-image: url('data:image/jpeg;base64,...'); }
-
-        .price {
-            font-size: 2rem;
-            font-weight: bold;
-            color: var(--gold);
-        }
-
-        .flip-card-back {
-            transform: rotateY(180deg);
+        .btn-gold:hover {
             background: var(--gold);
-            color: var(--black);
+            color: var(--dark);
+            box-shadow: 0 0 30px rgba(201,168,76,0.3);
         }
 
-        .flip-card-back h3 { color: var(--black); }
-
-        .flip-card-back .effect {
-            font-size: 1.1rem;
-            margin-bottom: 20px;
-        }
-
-        /* Кнопки */
-        .btn {
-            background: var(--black);
+        /* ─── СЕКЦІЇ ─────────────────────────────── */
+        .section { padding: 100px 5%; max-width: 1200px; margin: 0 auto; }
+        .section-title {
+            font-size: clamp(1.4rem, 4vw, 2.2rem);
+            text-align: center;
+            margin-bottom: 70px;
+            letter-spacing: 6px;
             color: var(--gold);
-            border: 1px solid var(--gold);
-            padding: 12px 30px;
             text-transform: uppercase;
-            cursor: pointer;
-            transition: var(--transition);
-            text-decoration: none;
-            letter-spacing: 1px;
-            font-size: 1rem;
+            position: relative;
         }
-
-        .flip-card-back .btn {
-            background: var(--black);
-            color: var(--white);
-            border: none;
-        }
-
-        .btn:hover {
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px; height: 1px;
             background: var(--gold);
-            color: var(--black);
+            margin: 18px auto 0;
+            opacity: 0.5;
         }
 
-        .flip-card-back .btn:hover {
-            background: var(--white);
-            color: var(--black);
+        /* ─── ПРО БРЕНД ──────────────────────────── */
+        .about-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; }
+        .about-card {
+            text-align: center;
+            padding: 44px 30px;
+            border: 1px solid var(--card-border);
+            background: var(--card-bg);
+            transition: 0.35s;
+            border-radius: var(--radius);
+        }
+        .about-card:hover { border-color: rgba(201,168,76,0.5); background: rgba(201,168,76,0.04); }
+        .about-icon { font-size: 2.2rem; margin-bottom: 20px; }
+        .about-card h3 { font-size: 0.95rem; letter-spacing: 2px; margin-bottom: 14px; color: var(--gold-light); }
+        .about-card p { font-size: 0.85rem; line-height: 1.8; color: var(--text-muted); }
+
+        /* ─── КАРТКИ ТОВАРІВ (FLIP) ───────────────── */
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 32px; }
+
+        .card { height: 480px; perspective: 1400px; cursor: pointer; }
+        .card-inner {
+            position: relative; width: 100%; height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.85s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card.flipped .card-inner { transform: rotateY(180deg); }
+
+        .card-front, .card-back {
+            position: absolute; inset: 0;
+            backface-visibility: hidden;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--card-border);
         }
 
-        /* Форма замовлення */
-        .order-form {
-            background: var(--dark-grey);
-            padding: 40px;
-            border-top: 2px solid var(--gold);
+        /* ── ПЕРЕДНЯ СТОРОНА КАРТКИ ── */
+        .card-front {
+            background: var(--card-bg);
+            display: flex; flex-direction: column;
         }
 
-        .form-fields {
-            max-width: 600px;
-            margin: 0 auto;
+        /* ═══════════════════════════════════════════
+           ЗОБРАЖЕННЯ ТОВАРУ — замінити src у кожній картці.
+           Рекомендований розмір: 600×400px або пропорційний.
+           Помістіть файли в папку images/ поруч з index.html:
+           • images/serum.jpg      — сироватка
+           • images/cream.jpg      — крем
+           • images/perfume.jpg    — парфум
+           ═══════════════════════════════════════════ */
+        .card-img {
+            width: 100%; height: 55%;
+            object-fit: cover;
+            object-position: center;
+            display: block;
         }
 
-        .order-summary {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 20px;
+        /* Якщо картинки ще немає — показуємо заглушку */
+        .card-img-placeholder {
+            width: 100%; height: 55%;
+            background: linear-gradient(135deg, #1a1508 0%, #0e0c07 100%);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 3.5rem;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .card-front-body {
+            flex: 1;
+            padding: 24px 28px;
+            display: flex; flex-direction: column; justify-content: space-between;
+        }
+        .card-front-body h3 {
+            font-family: 'Cinzel', serif;
+            font-size: 0.95rem;
+            letter-spacing: 2px;
+            color: var(--text);
+            margin-bottom: 6px;
+        }
+        .card-volume {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        .card-price {
+            font-size: 1.5rem;
+            color: var(--gold);
+            font-weight: 600;
+            font-family: 'Cinzel', serif;
+        }
+        .card-hint {
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            letter-spacing: 1.5px;
+            text-align: right;
+            text-transform: uppercase;
+        }
+
+        /* ── ЗАДНЯ СТОРОНА КАРТКИ ── */
+        .card-back {
+            transform: rotateY(180deg);
+            background: #0d0b06;
+            display: flex; flex-direction: column;
+            padding: 36px 32px;
+            justify-content: space-between;
+        }
+        .card-back-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.8rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gold-dim);
+            margin-bottom: 8px;
+        }
+        .card-back h3 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.15rem;
+            color: var(--gold-light);
             margin-bottom: 20px;
-            border: 1px solid rgba(212, 175, 55, 0.3);
+            letter-spacing: 1px;
         }
 
-        .order-summary h3 { color: var(--gold); margin-top: 0; }
-        .order-summary p { margin: 5px 0; }
-        #clear-cart { color: #aaa; text-decoration: underline; cursor: pointer; font-size: 0.9rem; margin-top: 10px; display: inline-block; }
+        /* ═══════════════════════════════════════════
+           ОПИС ТОВАРУ — відредагуйте <p class="card-desc">
+           в кожній картці нижче в HTML.
+           ═══════════════════════════════════════════ */
+        .card-desc { font-size: 0.85rem; line-height: 1.8; color: var(--text-muted); flex: 1; }
 
-        input, textarea {
+        .card-mood {
+            margin: 20px 0;
+            padding: 14px 18px;
+            border: 1px solid var(--card-border);
+            border-radius: 4px;
+            background: rgba(201,168,76,0.04);
+        }
+        .card-mood span {
+            display: block;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            color: var(--gold-dim);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+        .card-mood strong { font-size: 0.9rem; color: var(--text); font-weight: 400; }
+
+        .btn-cart {
             width: 100%;
-            padding: 15px;
-            margin: 10px 0;
+            padding: 14px;
             background: transparent;
             border: 1px solid var(--gold);
-            color: var(--white);
-            font-family: 'Playfair Display', serif;
-            font-size: 1rem;
-            box-sizing: border-box;
+            color: var(--gold);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            cursor: pointer;
+            transition: 0.35s;
+            border-radius: var(--radius);
+        }
+        .btn-cart:hover {
+            background: var(--gold);
+            color: var(--dark);
         }
 
-        textarea { height: 100px; resize: vertical; }
-
-        /* До/Після */
-        .results-slider {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            overflow-x: auto;
-            scroll-behavior: smooth;
-            padding: 10px;
+        /* ─── ДО/ПІСЛЯ ───────────────────────────── */
+        .ba-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+        .ba-item {
+            position: relative;
+            height: 380px;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid var(--card-border);
+            background: #0f0f0f;
         }
 
-        .results-slider img {
-            width: 300px;
-            border: 1px solid var(--gold);
-            flex-shrink: 0;
-            object-fit: cover;
+        /* ═══════════════════════════════════════════
+           ФОТО ДО/ПІСЛЯ — замінити src тут:
+           Приклад: <img src="images/before1.jpg" ...>
+           Для кожного результату — пара фото "до" і "після".
+           ═══════════════════════════════════════════ */
+        .ba-item img {
+            width: 100%; height: 100%;
+            object-fit: cover; object-position: center;
+            display: block;
+        }
+        .ba-placeholder {
+            width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            flex-direction: column; gap: 10px;
+            color: #333;
+            font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase;
+        }
+        .ba-placeholder-icon { font-size: 2rem; opacity: 0.3; }
+        .ba-label {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            padding: 10px 20px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.85));
+            font-size: 0.72rem; letter-spacing: 3px;
+            text-transform: uppercase; color: var(--gold);
+            font-family: 'Cinzel', serif;
         }
 
-        /* Футер */
+        /* ─── ФОРМА ЗАМОВЛЕННЯ ───────────────────── */
+        .order-wrap { background: #050503; }
+        .order-form { max-width: 580px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
+        .form-field {
+            display: flex; flex-direction: column; gap: 6px;
+        }
+        .form-field label {
+            font-size: 0.68rem; letter-spacing: 2px;
+            text-transform: uppercase; color: var(--gold-dim);
+        }
+        input, select, textarea {
+            background: #0d0d0a;
+            border: 1px solid rgba(201,168,76,0.2);
+            padding: 14px 16px;
+            color: var(--text);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.88rem;
+            outline: none;
+            border-radius: var(--radius);
+            transition: border-color 0.3s;
+        }
+        input:focus, textarea:focus { border-color: var(--gold); }
+        textarea { resize: vertical; min-height: 80px; }
+
+        .cart-summary {
+            padding: 20px;
+            border: 1px dashed rgba(201,168,76,0.3);
+            border-radius: var(--radius);
+            background: rgba(201,168,76,0.03);
+            font-size: 0.85rem;
+            line-height: 1.8;
+            color: var(--text-muted);
+        }
+        .cart-summary strong { color: var(--gold); }
+
+        /* ─── КОШИК OVERLAY ──────────────────────── */
+        .cart-overlay {
+            position: fixed; top: 0; right: -100%;
+            width: 380px; height: 100%;
+            background: #08080a;
+            border-left: 1px solid var(--card-border);
+            z-index: 2000; transition: 0.4s cubic-bezier(0.4,0,0.2,1);
+            padding: 50px 32px 32px;
+            display: flex; flex-direction: column;
+        }
+        .cart-overlay.open { right: 0; }
+        .cart-overlay-title {
+            font-family: 'Cinzel', serif;
+            color: var(--gold); font-size: 1.1rem;
+            letter-spacing: 3px; margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--card-border);
+        }
+        .cart-items { flex: 1; overflow-y: auto; }
+        .cart-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(201,168,76,0.07);
+            font-size: 0.85rem;
+        }
+        .cart-item-name { color: var(--text); }
+        .cart-item-price { color: var(--gold); font-weight: 600; }
+        #cart-total-price {
+            margin-top: 20px; padding-top: 16px;
+            border-top: 1px solid var(--card-border);
+            font-size: 1.1rem; font-weight: 600;
+            color: var(--gold-light);
+            font-family: 'Cinzel', serif;
+        }
+        .cart-close {
+            position: absolute; top: 18px; right: 20px;
+            background: none; border: none;
+            color: var(--text-muted); font-size: 1.4rem;
+            cursor: pointer; transition: color 0.2s;
+        }
+        .cart-close:hover { color: var(--gold); }
+
+        /* ─── FOOTER ─────────────────────────────── */
         footer {
-            padding: 40px;
             text-align: center;
-            border-top: 1px solid rgba(212, 175, 55, 0.2);
-            background: rgba(0, 0, 0, 0.9);
+            padding: 50px 20px;
+            border-top: 1px solid var(--card-border);
+            background: #030303;
         }
+        .footer-logo { width: 90px; margin: 0 auto 20px; opacity: 0.8; }
+        .footer-logo img { width: 100%; }
+        footer p { font-size: 0.72rem; color: var(--text-muted); letter-spacing: 2px; }
 
-        .footer-logo #logo_cz_small {
-            height: 30px;
-            fill: rgba(212, 175, 55, 0.5);
-            margin-bottom: 20px;
-        }
+        /* ─── АНІМАЦІЇ ───────────────────────────── */
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-24px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInUp   { from { opacity: 0; transform: translateY(24px);  } to { opacity: 1; transform: translateY(0); } }
+        .fade-in { opacity: 0; transform: translateY(28px); transition: opacity 0.9s ease, transform 0.9s ease; }
+        .fade-in.visible { opacity: 1; transform: none; }
 
-        /* Адаптивність */
+        /* ─── АДАПТИВ ─────────────────────────────── */
         @media (max-width: 768px) {
-            .nav {
-                display: none;
-                flex-direction: column;
-                position: absolute;
-                top: 80px;
-                left: 0;
-                width: 100%;
-                background: var(--dark-grey);
-                padding: 20px;
-                box-sizing: border-box;
-                border-bottom: 1px solid var(--gold);
-            }
-
-            .nav.active { display: flex; }
-            .menu-toggle { display: block; }
-            .section-title { font-size: 2rem; }
-            .banner h1 { font-size: 2rem; }
+            .nav-links { display: none; }
+            .cart-overlay { width: 100%; }
+            .hero-logo { width: 220px; }
+            .section { padding: 70px 5%; }
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <a href="#" class="logo-link">
-            <svg id="logo_cz" viewBox="0 0 100 100">
-                <path d="M50 0 C77.6 0 100 22.4 100 50 C100 77.6 77.6 100 50 100 C22.4 100 0 77.6 0 50 C0 22.4 22.4 0 50 0 M50 10 C27.9 10 10 27.9 10 50 C10 72.1 27.9 90 50 90 C72.1 90 90 72.1 90 50 C90 27.9 72.1 10 50 10 M35 70 L65 70 L35 30 L65 30 Z M40 65 C40 68 43 70 45 70 M60 30 C60 27 57 25 55 25" />
-            </svg>
-            <span class="logo-text">Olena Zolotova</span>
-        </a>
-        <button class="menu-toggle" onclick="toggleMenu()">☰</button>
-        <nav class="nav" id="mainNav">
-            <a href="#about" class="nav-link">Про бренд</a>
-            <a href="#products" class="nav-link">Товари</a>
-            <a href="#results" class="nav-link">До/Після</a>
-            <a href="#order" class="cart-status nav-link">Кошик (<span id="cart-count">0</span>)</a>
-        </nav>
-    </header>
+<!-- ─── НАВІГАЦІЯ ────────────────────────────────────── -->
+<nav class="nav">
+    <div class="nav-logo">
+        <!--
+            ЛОГОТИП у навігації:
+            Файл: monogram.png (тільки CZ монограма — Image 2)
+            Помістіть поруч з index.html або вкажіть правильний шлях.
+        -->
+        <img src="monogram.png" alt="Olena Zolotova" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <span style="display:none;font-family:'Cinzel',serif;color:var(--gold);font-size:1.4rem;letter-spacing:3px;">CZ</span>
+    </div>
+    <div class="nav-links">
+        <a href="#about">Бренд</a>
+        <a href="#products">Колекція</a>
+        <a href="#before-after">Результати</a>
+        <a href="#order">Замовити</a>
+    </div>
+    <div class="cart-btn" onclick="toggleCart()">
+        Кошик <span id="cart-count">0</span>
+    </div>
+</nav>
 
-    <main>
-        
-        <section class="banner section" id="banner">
-            <svg id="logo_cz_large" viewBox="0 0 100 100">
-                <path d="M50 0 C77.6 0 100 22.4 100 50 C100 77.6 77.6 100 50 100 C22.4 100 0 77.6 0 50 C0 22.4 22.4 0 50 0 M50 10 C27.9 10 10 27.9 10 50 C10 72.1 27.9 90 50 90 C72.1 90 90 72.1 90 50 C90 27.9 72.1 10 50 10 M35 70 L65 70 L35 30 L65 30 Z M40 65 C40 68 43 70 45 70 M60 30 C60 27 57 25 55 25" />
-            </svg>
-            <h1>Zolotova Lab Series</h1>
-            <p>Професійний догляд вдома. Власні формули. 15 років досвіду.</p>
-        </section>
-
-        <section class="about section container" id="about">
-            <h2 class="section-title">Філософія бренду</h2>
-            <p>
-                Поєднання 15-річного досвіду косметолога та формулятора. Ми створюємо власні формули, що працюють на рівні салонних процедур. Наша косметика — це не просто догляд, це емоція.
-            </p>
-        </section>
-
-        <section class="products section container" id="products">
-            <h2 class="section-title">Преміум товари</h2>
-            <div class="product-grid">
-                
-                <div class="flip-card">
-                    <div class="flip-card-inner">
-                        <div class="flip-card-front product-1-img">
-                            <h3>Сироватка для обличчя</h3>
-                            <p>(30 мл)</p>
-                            <div class="price">1 200 грн</div>
-                            <p>(Поклацай)</p>
-                        </div>
-                        <div class="flip-card-back">
-                            <h3>Ефект</h3>
-                            <p class="effect">Глибоке зволоження, вирівнювання тону та ліфтинг.</p>
-                            <button class="btn" onclick="addToCart('Сироватка', 1200)">В кошик</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flip-card">
-                    <div class="flip-card-inner">
-                        <div class="flip-card-front product-2-img">
-                            <h3>Крем для шкіри</h3>
-                            <p>(30 мл)</p>
-                            <div class="price">900 грн</div>
-                        </div>
-                        <div class="flip-card-back">
-                            <h3>Ефект</h3>
-                            <p class="effect">Захисний бар'єр, живлення та оксамитова текстура.</p>
-                            <button class="btn" onclick="addToCart('Крем', 900)">В кошик</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flip-card">
-                    <div class="flip-card-inner">
-                        <div class="flip-card-front product-3-img">
-                            <h3>Парфум Унісекс</h3>
-                            <p>(20 мл)</p>
-                            <div class="price">600 грн</div>
-                        </div>
-                        <div class="flip-card-back">
-                            <h3>Настрій</h3>
-                            <p class="effect">Унікальний аромат, що впливає на емоції.</p>
-                            <button class="btn" onclick="addToCart('Парфум', 600)">В кошик</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="order section" id="order">
-            <div class="container order-form">
-                <h2 class="section-title">Оформлення замовлення</h2>
-                <div class="form-fields">
-                    
-                    <div class="order-summary" id="order-summary">
-                        <h3>Ваше замовлення:</h3>
-                        <p id="empty-cart">Кошик порожній. Додайте товари!</p>
-                        <div id="cart-items"></div>
-                        <p id="total-price"></p>
-                        <span id="clear-cart" onclick="clearCart()">Очистити кошик</span>
-                    </div>
-
-                    <form action="#" id="checkoutForm">
-                        <input type="text" placeholder="Ваше Ім'я" required>
-                        <input type="tel" placeholder="Номер телефону" required>
-                        <input type="text" placeholder="Адреса доставки (Нова Пошта)" required>
-                        <textarea placeholder="Ваші замовлення (Автоматично заповниться)" readonly id="form-order-details"></textarea>
-                        <button type="submit" class="btn" style="width: 100%; background: var(--gold); color: black;">Оформити та перейти до оплати</button>
-                    </form>
-                </div>
-            </div>
-        </section>
-
-        <section class="results section" id="results">
-            <h2 class="section-title">Результати: До / Після</h2>
-            <div class="results-slider">
-                <img src="data:image/jpeg;base64,..." alt="До - Результат 1">
-                <img src="data:image/jpeg;base64,..." alt="Після - Результат 1">
-                <img src="data:image/jpeg;base64,..." alt="До - Результат 2">
-                <img src="data:image/jpeg;base64,..." alt="Після - Результат 2">
-            </div>
-        </section>
-
-    </main>
-
-    <footer>
-        <div class="footer-logo">
-            <svg id="logo_cz_small" viewBox="0 0 100 100">
-                <path d="M50 0 C77.6 0 100 22.4 100 50 C100 77.6 77.6 100 50 100 C22.4 100 0 77.6 0 50 C0 22.4 22.4 0 50 0 M50 10 C27.9 10 10 27.9 10 50 C10 72.1 27.9 90 50 90 C72.1 90 90 72.1 90 50 C90 27.9 72.1 10 50 10 M35 70 L65 70 L35 30 L65 30 Z M40 65 C40 68 43 70 45 70 M60 30 C60 27 57 25 55 25" />
-            </svg>
+<!-- ─── HERO ─────────────────────────────────────────── -->
+<section class="hero">
+    <div>
+        <!--
+            ЛОГОТИП HERO:
+            Файл: logo_full.png (логотип з написом OLENA ZOLOTOVA — Image 1)
+        -->
+        <div class="hero-logo">
+            <img src="logo_full.png" alt="Olena Zolotova Lab Series"
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+            <div style="display:none;font-family:'Cinzel',serif;color:var(--gold);font-size:4rem;text-shadow:0 0 30px rgba(201,168,76,0.4);">CZ</div>
         </div>
-        <p>&copy; 2024 Olena Zolotova | Lab Series. Професійна косметика.</p>
-        <p>м. Вінниця | Тел: +38 (0XX) XXX-XX-XX</p>
-    </footer>
+        <p class="hero-tagline">Професійний догляд вдома</p>
+        <p class="hero-sub">Власні формули · 15 років досвіду</p>
+        <a href="#products" class="btn-gold">Переглянути колекцію</a>
+    </div>
+</section>
 
-    <script>
-        // Мобільне меню
-        function toggleMenu() {
-            document.getElementById('mainNav').classList.toggle('active');
+<!-- ─── ПРО БРЕНД ────────────────────────────────────── -->
+<section id="about" class="section fade-in">
+    <h2 class="section-title">Про бренд</h2>
+    <div class="about-grid">
+        <div class="about-card">
+            <div class="about-icon">◈</div>
+            <h3>15 років досвіду</h3>
+            <p>Поєднання знань косметолога та формулятора для створення продуктів, які справді працюють.</p>
+        </div>
+        <div class="about-card">
+            <div class="about-icon">◇</div>
+            <h3>Парфуми настрою</h3>
+            <p>Наші аромати не просто пахнуть — вони впливають на ваш емоційний стан і створюють атмосферу.</p>
+        </div>
+        <div class="about-card">
+            <div class="about-icon">◈</div>
+            <h3>Салон вдома</h3>
+            <p>Результат, за яким раніше ходили в салон, тепер доступний у вашій ванній кімнаті.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ─── ТОВАРИ ────────────────────────────────────────── -->
+<section id="products" class="section fade-in">
+    <h2 class="section-title">Наша Колекція</h2>
+    <div class="products-grid">
+
+        <!-- ══════════════════════════════════════════════
+             ТОВАР 1 — СИРОВАТКА
+             Щоб змінити зображення: замініть src у <img class="card-img">
+             Щоб змінити ціну:       змініть data-price та текст .card-price
+             Щоб змінити опис:       відредагуйте <p class="card-desc">
+             ══════════════════════════════════════════════ -->
+        <div class="card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <!-- ФОТО ТОВАРУ: замінити src -->
+                    <div class="card-img-placeholder">💧</div>
+                    <!-- Якщо є фото: <img class="card-img" src="images/serum.jpg" alt="Сироватка"> -->
+
+                    <div class="card-front-body">
+                        <div>
+                            <h3>Сироватка для обличчя</h3>
+                            <span class="card-volume">30 мл</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;align-items:flex-end;">
+                            <span class="card-price">1 200 грн</span>
+                            <span class="card-hint">↻ деталі</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-back">
+                    <div>
+                        <p class="card-back-title">Ефект</p>
+                        <h3>Глибоке зволоження та ліфтинг</h3>
+                        <!-- ОПИС ТОВАРУ: відредагуйте тут -->
+                        <p class="card-desc">Власна унікальна формула з активними пептидами. Відновлює пружність, вирівнює рельєф та дає природне сяяння вже після першого застосування.</p>
+                    </div>
+                    <div class="card-mood">
+                        <span>Настрій</span>
+                        <strong>Впевненість і легкість</strong>
+                    </div>
+                    <button class="btn-cart" onclick="addToCart(event, 'Сироватка для обличчя', 1200)">В кошик</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════════
+             ТОВАР 2 — КРЕМ
+             ══════════════════════════════════════════════ -->
+        <div class="card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <!-- ФОТО ТОВАРУ: замінити src -->
+                    <div class="card-img-placeholder">🧴</div>
+                    <!-- Якщо є фото: <img class="card-img" src="images/cream.jpg" alt="Крем"> -->
+
+                    <div class="card-front-body">
+                        <div>
+                            <h3>Крем для шкіри</h3>
+                            <span class="card-volume">30 мл</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;align-items:flex-end;">
+                            <span class="card-price">900 грн</span>
+                            <span class="card-hint">↻ деталі</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-back">
+                    <div>
+                        <p class="card-back-title">Ефект</p>
+                        <h3>Захисний бар'єр та живлення</h3>
+                        <!-- ОПИС ТОВАРУ: відредагуйте тут -->
+                        <p class="card-desc">Відновлює ліпідний захисний бар'єр шкіри, живить та зволожує. Оксамитова текстура, що миттєво вбирається без відчуття плівки.</p>
+                    </div>
+                    <div class="card-mood">
+                        <span>Настрій</span>
+                        <strong>Спокій і захищеність</strong>
+                    </div>
+                    <button class="btn-cart" onclick="addToCart(event, 'Крем для шкіри', 900)">В кошик</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════════
+             ТОВАР 3 — ПАРФУМ
+             ══════════════════════════════════════════════ -->
+        <div class="card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <!-- ФОТО ТОВАРУ: замінити src -->
+                    <div class="card-img-placeholder">✦</div>
+                    <!-- Якщо є фото: <img class="card-img" src="images/perfume.jpg" alt="Парфум"> -->
+
+                    <div class="card-front-body">
+                        <div>
+                            <h3>Парфум Унісекс</h3>
+                            <span class="card-volume">20 мл</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;align-items:flex-end;">
+                            <span class="card-price">600 грн</span>
+                            <span class="card-hint">↻ деталі</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-back">
+                    <div>
+                        <p class="card-back-title">Ефект</p>
+                        <h3>Унікальний аромат будь-якої ситуації</h3>
+                        <!-- ОПИС ТОВАРУ: відредагуйте тут -->
+                        <p class="card-desc">Парфум, що змінює настрій. Стійкий шлейф з ексклюзивними компонентами — для тих, хто цінує унікальність та якість у кожній деталі.</p>
+                    </div>
+                    <div class="card-mood">
+                        <span>Настрій</span>
+                        <strong>Енергія та магнетизм</strong>
+                    </div>
+                    <button class="btn-cart" onclick="addToCart(event, 'Парфум Унісекс', 600)">В кошик</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- ─── ДО / ПІСЛЯ ───────────────────────────────────── -->
+<section id="before-after" class="section fade-in">
+    <h2 class="section-title">До / Після</h2>
+    <div class="ba-grid">
+
+        <!-- ══════════════════════════════════════════════
+             ФОТО ДО/ПІСЛЯ:
+             Замініть .ba-placeholder на реальне фото:
+             <img src="images/before1.jpg" alt="До">
+             Рекомендований розмір: 600×800px (портрет)
+             ══════════════════════════════════════════════ -->
+
+        <div class="ba-item">
+            <div class="ba-placeholder">
+                <span class="ba-placeholder-icon">📷</span>
+                Фото до використання
+            </div>
+            <div class="ba-label">До</div>
+        </div>
+        <div class="ba-item">
+            <div class="ba-placeholder">
+                <span class="ba-placeholder-icon">✨</span>
+                Фото після курсу
+            </div>
+            <div class="ba-label">Після</div>
+        </div>
+        <div class="ba-item">
+            <div class="ba-placeholder">
+                <span class="ba-placeholder-icon">📷</span>
+                Фото до використання
+            </div>
+            <div class="ba-label">До</div>
+        </div>
+        <div class="ba-item">
+            <div class="ba-placeholder">
+                <span class="ba-placeholder-icon">✨</span>
+                Фото після курсу
+            </div>
+            <div class="ba-label">Після</div>
+        </div>
+    </div>
+</section>
+
+<!-- ─── ФОРМА ЗАМОВЛЕННЯ ─────────────────────────────── -->
+<div class="order-wrap">
+<section id="order" class="section fade-in">
+    <h2 class="section-title">Оформлення замовлення</h2>
+    <form class="order-form" id="main-form">
+        <div class="cart-summary" id="order-summary">Кошик порожній — додайте товари вище</div>
+
+        <div class="form-field">
+            <label>Ваше ім'я</label>
+            <input type="text" id="name" placeholder="Олена Золотова" required>
+        </div>
+        <div class="form-field">
+            <label>Номер телефону</label>
+            <input type="tel" id="phone" placeholder="+380 __ ___ __ __" required>
+        </div>
+        <div class="form-field">
+            <label>Адреса доставки</label>
+            <textarea id="address" placeholder="Нова Пошта, місто, відділення або адресна доставка" required></textarea>
+        </div>
+
+        <!-- ════════════════════════════════════════════
+             ОПЛАТА — підключення платіжної системи:
+
+             Варіант 1 — LiqPay (найпростіший для України):
+             1. Зареєструйтесь на liqpay.ua
+             2. Отримайте public_key і private_key
+             3. Замість кнопки "Підтвердити замовлення" вставте
+                форму LiqPay або викличте їхній JS API.
+             Документація: https://www.liqpay.ua/documentation/api/aquiring/checkout/
+
+             Варіант 2 — WayForPay:
+             Аналогічно: wayforpay.com/uk/api-merchants
+             Після заповнення форми передайте суму і товари у
+             запит до WayForPay API.
+
+             Варіант 3 — Посилання на оплату Monobank:
+             Створюйте invoice через Monobank Acquiring API
+             і відкривайте посилання в новій вкладці.
+        ════════════════════════════════════════════ -->
+
+        <button type="submit" class="btn-gold" style="font-size:0.8rem;">
+            Підтвердити замовлення
+        </button>
+    </form>
+</section>
+</div>
+
+<!-- ─── FOOTER ───────────────────────────────────────── -->
+<footer>
+    <div class="footer-logo">
+        <img src="monogram.png" alt="OZ" onerror="this.style.display='none'">
+    </div>
+    <p>© 2026 Olena Zolotova Lab Series</p>
+</footer>
+
+<!-- ─── КОШИК OVERLAY ────────────────────────────────── -->
+<div class="cart-overlay" id="cart-overlay">
+    <button class="cart-close" onclick="toggleCart()">✕</button>
+    <div class="cart-overlay-title">Ваш вибір</div>
+    <div class="cart-items">
+        <div id="cart-items-list"></div>
+    </div>
+    <div id="cart-total-price"></div>
+    <button class="btn-gold" style="width:100%;margin-top:24px;text-align:center;" onclick="toggleCart()">
+        Оформити замовлення
+    </button>
+</div>
+
+<script>
+    let cart = JSON.parse(localStorage.getItem('cz_cart')) || [];
+
+    function updateUI() {
+        const count = cart.reduce((sum, item) => sum + item.qty, 0);
+        document.getElementById('cart-count').innerText = count;
+
+        const list    = document.getElementById('cart-items-list');
+        const summary = document.getElementById('order-summary');
+        const total   = document.getElementById('cart-total-price');
+
+        if (cart.length === 0) {
+            list.innerHTML    = '<p style="color:var(--text-muted);font-size:0.85rem;">Поки порожньо</p>';
+            summary.innerHTML = 'Кошик порожній — додайте товари вище';
+            total.innerText   = '';
+        } else {
+            list.innerHTML = cart.map(item => `
+                <div class="cart-item">
+                    <span class="cart-item-name">${item.name} × ${item.qty}</span>
+                    <span class="cart-item-price">${item.price * item.qty} грн</span>
+                </div>
+            `).join('');
+
+            const totalSum = cart.reduce((sum, i) => sum + i.price * i.qty, 0);
+            total.innerText = `Разом: ${totalSum} грн`;
+            summary.innerHTML = `<strong>Ваше замовлення:</strong><br>` +
+                cart.map(i => `${i.name} (${i.qty} шт.)`).join('<br>') +
+                `<br><br><strong>До сплати: ${totalSum} грн</strong>`;
         }
+        localStorage.setItem('cz_cart', JSON.stringify(cart));
+    }
 
-        // Логіка Кошика (localStorage для демо)
-        let cart = JSON.parse(localStorage.getItem('zolotova_cart')) || [];
-        updateCartUI();
-
-        function addToCart(item, price) {
-            cart.push({ name: item, price: price });
-            localStorage.setItem('zolotova_cart', JSON.stringify(cart));
-            updateCartUI();
-            alert(item + ' додано до кошика! Деталі у формі замовлення.');
-            document.getElementById('order').scrollIntoView({behavior: 'smooth'});
+    function addToCart(event, name, price) {
+        event.stopPropagation();
+        const existing = cart.find(i => i.name === name);
+        if (existing) {
+            existing.qty++;
+        } else {
+            cart.push({ name, price, qty: 1 });
         }
+        updateUI();
 
-        function clearCart() {
-            cart = [];
-            localStorage.removeItem('zolotova_cart');
-            updateCartUI();
+        // Маленьке підтвердження замість alert
+        const btn = event.currentTarget;
+        const orig = btn.innerText;
+        btn.innerText = '✓ Додано';
+        btn.style.borderColor = '#6a9';
+        btn.style.color = '#6a9';
+        setTimeout(() => {
+            btn.innerText = orig;
+            btn.style.borderColor = '';
+            btn.style.color = '';
+        }, 1400);
+    }
+
+    function toggleCart() {
+        document.getElementById('cart-overlay').classList.toggle('open');
+    }
+
+    // ════════════════════════════════════════════════════
+    // TELEGRAM БОТ — сповіщення про замовлення:
+    //
+    // 1. Створіть бота через @BotFather в Telegram
+    //    → Отримайте BOT_TOKEN (формат: 123456:ABCdef...)
+    //
+    // 2. Напишіть боту /start, щоб отримати CHAT_ID
+    //    Або використайте @userinfobot
+    //
+    // 3. Замініть значення нижче:
+    //    const BOT_TOKEN = 'ВАШ_ТОКЕН_БОТА';
+    //    const CHAT_ID   = 'ВАШ_CHAT_ID';
+    //
+    // 4. Функція sendTelegramNotification вже підключена
+    //    до форми — просто вставте правильні дані.
+    // ════════════════════════════════════════════════════
+
+    const BOT_TOKEN = '8539395724:AAHmhK1tqwr7W61q7wwGyqA8iH-Bd4Q_d2M'; // ← сюди токен
+    const CHAT_ID   = '-1003554081452';    // ← сюди chat_id
+
+    async function sendTelegramNotification(orderData) {
+        const text = `
+🛍 *Нове замовлення!*
+
+👤 Ім'я: ${orderData.name}
+📞 Телефон: ${orderData.phone}
+📦 Адреса: ${orderData.address}
+
+🛒 Товари:
+${orderData.items}
+
+💰 Сума: ${orderData.total} грн
+        `.trim();
+
+        try {
+            await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: CHAT_ID,
+                    text: text,
+                    parse_mode: 'Markdown'
+                })
+            });
+        } catch (err) {
+            console.error('Telegram error:', err);
         }
+    }
 
-        function updateCartUI() {
-            const countSpan = document.getElementById('cart-count');
-            const summaryDiv = document.getElementById('order-summary');
-            const emptyP = document.getElementById('empty-cart');
-            const itemsDiv = document.getElementById('cart-items');
-            const totalP = document.getElementById('total-price');
-            const formDetailsArea = document.getElementById('form-order-details');
+    document.getElementById('main-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        if (cart.length === 0) return alert('Додайте щось у кошик!');
 
-            // Оновлення лічильника в хедері
-            countSpan.innerText = cart.length;
+        const total = cart.reduce((sum, i) => sum + i.price * i.qty, 0);
+        const items = cart.map(i => `• ${i.name} × ${i.qty} = ${i.price * i.qty} грн`).join('\n');
 
-            if (cart.length === 0) {
-                emptyP.style.display = 'block';
-                itemsDiv.innerHTML = '';
-                totalP.innerText = '';
-                formDetailsArea.value = '';
-                document.getElementById('clear-cart').style.display = 'none';
-            } else {
-                emptyP.style.display = 'none';
-                document.getElementById('clear-cart').style.display = 'inline-block';
-                
-                let totalPrice = 0;
-                let itemsList = '';
-                let formText = 'Ваше замовлення:\n';
-
-                cart.forEach((product, index) => {
-                    totalPrice += product.price;
-                    itemsList += `<p>${product.name} - ${product.price} грн</p>`;
-                    formText += `${index + 1}. ${product.name} - ${product.price} грн\n`;
-                });
-
-                itemsDiv.innerHTML = itemsList;
-                totalP.innerHTML = `<strong>Разом до оплати: ${totalPrice} грн</strong>`;
-                formText += `--------------------\nЗагальна сума: ${totalPrice} грн`;
-                formDetailsArea.value = formText;
-            }
-        }
-
-        // Форма замовлення (демо-відправка)
-        document.getElementById('checkoutForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            if (cart.length === 0) {
-                alert('Кошик порожній! Додайте товари.');
-            } else {
-                alert('Демо-версія: Замовлення сформовано. Перехід до оплати (тут ви підключите monopay/LiqPay).');
-                clearCart();
-                this.reset();
-            }
+        // Відправка в Telegram
+        await sendTelegramNotification({
+            name:    this.name.value,
+            phone:   this.phone.value,
+            address: this.address.value,
+            items,
+            total
         });
-    </script>
 
+        // ════════════════════════════════════════════
+        // ОПЛАТА — після підтвердження замовлення:
+        // Тут можна запустити платіжну форму:
+        //
+        // Приклад LiqPay:
+        // LiqPayCheckout.init({
+        //     data: '...base64...',
+        //     signature: '...sha1...',
+        //     embedTo: '#liqpay_checkout',
+        //     mode: 'popup'
+        // });
+        //
+        // Або redirect на посилання WayForPay / Monobank
+        // ════════════════════════════════════════════
+
+        alert('Дякуємо! Замовлення прийнято.\nМи зв\'яжемося з вами найближчим часом. 🙏');
+        cart = [];
+        updateUI();
+        this.reset();
+    });
+
+    // Анімація появи секцій
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            if (e.isIntersecting) e.target.classList.add('visible');
+        });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    updateUI();
+</script>
 </body>
 </html>
