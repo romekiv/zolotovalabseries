@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Olena Zolotova | Lab Series - Демо</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #d4af37;
+            --black: #0a0a0a;
+            --dark-grey: #1a1a1a;
+            --white: #ffffff;
+            --transition: 0.3s ease-in-out;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Playfair Display', serif;
+            background-color: var(--black);
+            color: var(--white);
+            line-height: 1.6;
+        }
+
+        /* Заголовок (Header) */
+        header {
+            padding: 20px;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .logo-link {
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        /* SVG Лого з image_0.png, імітація */
+        #logo_cz {
+            height: 40px;
+            fill: var(--gold);
+        }
+
+        .logo-text {
+            color: var(--gold);
+            font-size: 1.2rem;
+            margin-left: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        .nav {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-link {
+            color: var(--white);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            color: var(--gold);
+        }
+
+        .cart-status {
+            color: var(--gold);
+            font-size: 1rem;
+            text-decoration: none;
+            position: relative;
+        }
+
+        #cart-count {
+            background: var(--white);
+            color: var(--black);
+            font-size: 0.7rem;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: 5px;
+            font-weight: bold;
+        }
+
+        /* Мобільне меню */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--white);
+            font-size: 1.5rem;
+        }
+
+        /* Основний контент */
+        main {
+            padding-top: 100px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .section {
+            margin-bottom: 80px;
+        }
+
+        .section-title {
+            color: var(--gold);
+            font-size: 2.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        /* Баннер */
+        .banner {
+            text-align: center;
+            padding: 100px 20px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .banner #logo_cz_large {
+            height: 150px;
+            fill: var(--gold);
+            margin-bottom: 20px;
+        }
+
+        .banner h1 {
+            color: var(--gold);
+            font-size: 3rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .banner p {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Блок О бренді */
+        .about p {
+            font-size: 1.2rem;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Товари (Grid) */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        /* Фліп-карта */
+        .flip-card {
+            background-color: transparent;
+            width: 100%;
+            height: 450px;
+            perspective: 1000px;
+            border: 1px solid var(--gold);
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        .flip-card:hover .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+            padding: 30px;
+            box-sizing: border-box;
+            background: var(--dark-grey);
+        }
+
+        .flip-card-front {
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        /* Імітація фото товарів */
+        .product-1-img { background-color: #222; background-image: url('data:image/jpeg;base64,...'); }
+        .product-2-img { background-color: #333; background-image: url('data:image/jpeg;base64,...'); }
+        .product-3-img { background-color: #444; background-image: url('data:image/jpeg;base64,...'); }
+
+        .price {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--gold);
+        }
+
+        .flip-card-back {
+            transform: rotateY(180deg);
+            background: var(--gold);
+            color: var(--black);
+        }
+
+        .flip-card-back h3 { color: var(--black); }
+
+        .flip-card-back .effect {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        /* Кнопки */
+        .btn {
+            background: var(--black);
+            color: var(--gold);
+            border: 1px solid var(--gold);
+            padding: 12px 30px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            letter-spacing: 1px;
+            font-size: 1rem;
+        }
+
+        .flip-card-back .btn {
+            background: var(--black);
+            color: var(--white);
+            border: none;
+        }
+
+        .btn:hover {
+            background: var(--gold);
+            color: var(--black);
+        }
+
+        .flip-card-back .btn:hover {
+            background: var(--white);
+            color: var(--black);
+        }
+
+        /* Форма замовлення */
+        .order-form {
+            background: var(--dark-grey);
+            padding: 40px;
+            border-top: 2px solid var(--gold);
+        }
+
+        .form-fields {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .order-summary {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .order-summary h3 { color: var(--gold); margin-top: 0; }
+        .order-summary p { margin: 5px 0; }
+        #clear-cart { color: #aaa; text-decoration: underline; cursor: pointer; font-size: 0.9rem; margin-top: 10px; display: inline-block; }
+
+        input, textarea {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--white);
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        textarea { height: 100px; resize: vertical; }
+
+        /* До/Після */
+        .results-slider {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            padding: 10px;
+        }
+
+        .results-slider img {
+            width: 300px;
+            border: 1px solid var(--gold);
+            flex-shrink: 0;
+            object-fit: cover;
+        }
+
+        /* Футер */
+        footer {
+            padding: 40px;
+            text-align: center;
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+            background: rgba(0, 0, 0, 0.9);
+        }
+
+        .footer-logo #logo_cz_small {
+            height: 30px;
+            fill: rgba(212, 175, 55, 0.5);
+            margin-bottom: 20px;
+        }
+
+        /* Адаптивність */
+        @media (max-width: 768px) {
+            .nav {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 80px;
+                left: 0;
+                width: 100%;
+                background: var(--dark-grey);
+                padding: 20px;
+                box-sizing: border-box;
+                border-bottom: 1px solid var(--gold);
+            }
+
+            .nav.active { display: flex; }
+            .menu-toggle { display: block; }
+            .section-title { font-size: 2rem; }
+            .banner h1 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="#" class="logo-link">
+            <svg id="logo_cz" viewBox="0 0 100 100">
+                <path d="M50 0 C77.6 0 100 22.4 100 50 C100 77.6 77.6 100 50 100 C22.4 100 0 77.6 0 50 C0 22.4 22.4 0 50 0 M50 10 C27.9 10 10 27.9 10 50 C10 72.1 27.9 90 50 90 C72.1 90 90 72.1 90 50 C90 27.9 72.1 10 50 10 M35 70 L65 70 L35 30 L65 30 Z M40 65 C40 68 43 70 45 70 M60 30 C60 27 57 25 55 25" />
+            </svg>
+            <span class="logo-text">Olena Zolotova</span>
+        </a>
+        <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+        <nav class="nav" id="mainNav">
+            <a href="#about" class="nav-link">Про бренд</a>
+            <a href="#products" class="nav-link">Товари</a>
+            <a href="#results" class="nav-link">До/Після</a>
+            <a href="#order" class="cart-status nav-link">Кошик (<span id="cart-count">0</span>)</a>
+        </nav>
+    </header>
+
+    <main>
+        
+        <section class="banner section" id="banner">
+            <svg id="logo_cz_large" viewBox="0 0 100 100">
+                <path d="M50 0 C77.6 0 100 22.4 100 50 C100 77.6 77.6 100 50 100 C22.4 100 0 77.6 0 50 C0 22.4 22.4 0 50 0 M50 10 C27.9 10 10 27.9 10 50 C10 72.1 27.9 90 50 90 C72.1 90 90 72.1 90 50 C90 27.9 72.1 10 50 10 M35 70 L65 70 L35 30 L65 30 Z M40 65 C40 68 43 70 45 70 M60 30 C60 27 57 25 55 25" />
+            </svg>
+            <h1>Zolotova Lab Series</h1>
+            <p>Професійний догляд вдома. Власні формули. 15 років досвіду.</p>
+        </section>
+
+        <section class="about section container" id="about">
+            <h2 class="section-title">Філософія бренду</h2>
+            <p>
+                Поєднання 15-річного досвіду косметолога та формулятора. Ми створюємо власні формули, що працюють на рівні салонних процедур. Наша косметика — це не просто догляд, це емоція.
+            </p>
+        </section>
+
+        <section class="products section container" id="products">
+            <h2 class="section-title">Преміум товари</h2>
+            <div class="product-grid">
+                
+                <div class="flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front product-1-img">
+                            <h3>Сироватка для обличчя</h3>
+                            <p>(30 мл)</p>
+                            <div class="price">1 200 грн</div>
+                            <p>(Поклацай)</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3>Ефект</h3>
+                            <p class="effect">Глибоке зволоження, вирівнювання тону та ліфтинг.</p>
+                            <button class="btn" onclick="addToCart('Сироватка', 1200)">В кошик</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front product-2-img">
+                            <h3>Крем для шкіри</h3>
+                            <p>(30 мл)</p>
+                            <div class="price">900 грн</div>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3>Ефект</h3>
+                            <p class="effect">Захисний бар'єр, живлення та оксамитова текстура.</p>
+                            <button class="btn" onclick="addToCart('Крем', 900)">В кошик</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front product-3-img">
+                            <h3>Парфум Унісекс</h3>
+                            <p>(20 мл)</p>
+                            <div class="price">600 грн</div>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3>Настрій</h3>
+                            <p class="effect">Унікальний аромат, що впливає на емоції.</p>
+                            <button class="btn" onclick="addToCart('Парфум', 600)">В кошик</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="order section" id="order">
+            <div class="container order-form">
+                <h2 class="section-title">Оформлення замовлення</h2>
+                <div class="form-fields">
+                    
+                    <div class="order-summary" id="order-summary">
+                        <h3>Ваше замовлення:</h3>
+                        <p id="empty-cart">Кошик порожній. Додайте товари!</p>
+                        <div id="cart-items"></div>
+                        <p id="total-price"></p>
+                        <span id="clear-cart" onclick="clearCart()">Очистити кошик</span>
+                    </div>
+
+                    <form action="#" id="checkoutForm">
+                        <input type="text" placeholder="Ваше Ім'я" required>
+                        <input type="tel" placeholder="Номер телефону" required>
+                        <input type="text" placeholder="Адреса доставки (Нова Пошта)" required>
+                        <textarea placeholder="Ваші замовлення (Автоматично заповниться)" readonly id="form-order-details"></textarea>
+                        <button type="submit" class="btn" style="width: 100%; background: var(--gold); color: black;">Оформити та перейти до оплати</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <section class="results section" id="results">
+            <h2 class="section-title">Результати: До / Після</h2>
+            <div class="results-slider">
+                <img src="data:image/jpeg;base64,..." alt="До - Результат 1">
+                <img src="data:image/jpeg;base64,..." alt="Після - Результат 1">
+                <img src="data:image/jpeg;base64,..." alt="До - Результат 2">
+                <img src="data:image/jpeg;base64,..." alt="Після - Результат 2">
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="footer-logo">
+            <svg id="logo_cz_small" viewBox="0 0 100 100">
+                <path d="M50 0 C77.6 0 100 22.4 100 50 C100 77.6 77.6 100 50 100 C22.4 100 0 77.6 0 50 C0 22.4 22.4 0 50 0 M50 10 C27.9 10 10 27.9 10 50 C10 72.1 27.9 90 50 90 C72.1 90 90 72.1 90 50 C90 27.9 72.1 10 50 10 M35 70 L65 70 L35 30 L65 30 Z M40 65 C40 68 43 70 45 70 M60 30 C60 27 57 25 55 25" />
+            </svg>
+        </div>
+        <p>&copy; 2024 Olena Zolotova | Lab Series. Професійна косметика.</p>
+        <p>м. Вінниця | Тел: +38 (0XX) XXX-XX-XX</p>
+    </footer>
+
+    <script>
+        // Мобільне меню
+        function toggleMenu() {
+            document.getElementById('mainNav').classList.toggle('active');
+        }
+
+        // Логіка Кошика (localStorage для демо)
+        let cart = JSON.parse(localStorage.getItem('zolotova_cart')) || [];
+        updateCartUI();
+
+        function addToCart(item, price) {
+            cart.push({ name: item, price: price });
+            localStorage.setItem('zolotova_cart', JSON.stringify(cart));
+            updateCartUI();
+            alert(item + ' додано до кошика! Деталі у формі замовлення.');
+            document.getElementById('order').scrollIntoView({behavior: 'smooth'});
+        }
+
+        function clearCart() {
+            cart = [];
+            localStorage.removeItem('zolotova_cart');
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const countSpan = document.getElementById('cart-count');
+            const summaryDiv = document.getElementById('order-summary');
+            const emptyP = document.getElementById('empty-cart');
+            const itemsDiv = document.getElementById('cart-items');
+            const totalP = document.getElementById('total-price');
+            const formDetailsArea = document.getElementById('form-order-details');
+
+            // Оновлення лічильника в хедері
+            countSpan.innerText = cart.length;
+
+            if (cart.length === 0) {
+                emptyP.style.display = 'block';
+                itemsDiv.innerHTML = '';
+                totalP.innerText = '';
+                formDetailsArea.value = '';
+                document.getElementById('clear-cart').style.display = 'none';
+            } else {
+                emptyP.style.display = 'none';
+                document.getElementById('clear-cart').style.display = 'inline-block';
+                
+                let totalPrice = 0;
+                let itemsList = '';
+                let formText = 'Ваше замовлення:\n';
+
+                cart.forEach((product, index) => {
+                    totalPrice += product.price;
+                    itemsList += `<p>${product.name} - ${product.price} грн</p>`;
+                    formText += `${index + 1}. ${product.name} - ${product.price} грн\n`;
+                });
+
+                itemsDiv.innerHTML = itemsList;
+                totalP.innerHTML = `<strong>Разом до оплати: ${totalPrice} грн</strong>`;
+                formText += `--------------------\nЗагальна сума: ${totalPrice} грн`;
+                formDetailsArea.value = formText;
+            }
+        }
+
+        // Форма замовлення (демо-відправка)
+        document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (cart.length === 0) {
+                alert('Кошик порожній! Додайте товари.');
+            } else {
+                alert('Демо-версія: Замовлення сформовано. Перехід до оплати (тут ви підключите monopay/LiqPay).');
+                clearCart();
+                this.reset();
+            }
+        });
+    </script>
+
+</body>
+</html>
