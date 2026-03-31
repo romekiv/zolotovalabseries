@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Olena Zolotova | Lab Series</title>
+    <!-- Іконка у вкладці браузера: файл monogram.png поруч з index.html -->
+    <link rel="icon" type="image/png" href="monogram.png">
+    <link rel="shortcut icon" type="image/png" href="monogram.png">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -178,7 +181,17 @@
         .about-card p { font-size: 0.85rem; line-height: 1.8; color: var(--text-muted); }
 
         /* ─── КАРТКИ ТОВАРІВ (FLIP) ───────────────── */
-        .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 32px; }
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+        }
+        @media (max-width: 1000px) {
+            .products-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 620px) {
+            .products-grid { grid-template-columns: 1fr; }
+        }
 
         .card { height: 480px; perspective: 1400px; cursor: pointer; }
         .card-inner {
@@ -354,12 +367,17 @@
         }
         .ba-placeholder-icon { font-size: 2rem; opacity: 0.3; }
         .ba-label {
-            position: absolute; bottom: 0; left: 0; right: 0;
-            padding: 10px 20px;
-            background: linear-gradient(transparent, rgba(0,0,0,0.85));
-            font-size: 0.72rem; letter-spacing: 3px;
-            text-transform: uppercase; color: var(--gold);
+            position: absolute;
+            bottom: 16px; left: 16px;
+            padding: 6px 16px;
+            background: var(--gold);
+            color: var(--dark);
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
             font-family: 'Cinzel', serif;
+            border-radius: 2px;
         }
 
         /* ─── ФОРМА ЗАМОВЛЕННЯ ───────────────────── */
@@ -536,17 +554,13 @@
 
         <!-- ══════════════════════════════════════════════
              ТОВАР 1 — СИРОВАТКА
-             Щоб змінити зображення: замініть src у <img class="card-img">
-             Щоб змінити ціну:       змініть data-price та текст .card-price
-             Щоб змінити опис:       відредагуйте <p class="card-desc">
+             Фото: images/serum.jpg  (рекомендований розмір: 600×360px)
              ══════════════════════════════════════════════ -->
         <div class="card" onclick="this.classList.toggle('flipped')">
             <div class="card-inner">
                 <div class="card-front">
-                    <!-- ФОТО ТОВАРУ: замінити src -->
+                    <!-- Замініть заглушку на фото: <img class="card-img" src="images/serum.jpg" alt="Сироватка"> -->
                     <div class="card-img-placeholder">💧</div>
-                    <!-- Якщо є фото: <img class="card-img" src="images/serum.jpg" alt="Сироватка"> -->
-
                     <div class="card-front-body">
                         <div>
                             <h3>Сироватка для обличчя</h3>
@@ -562,28 +576,61 @@
                     <div>
                         <p class="card-back-title">Ефект</p>
                         <h3>Глибоке зволоження та ліфтинг</h3>
-                        <!-- ОПИС ТОВАРУ: відредагуйте тут -->
                         <p class="card-desc">Власна унікальна формула з активними пептидами. Відновлює пружність, вирівнює рельєф та дає природне сяяння вже після першого застосування.</p>
                     </div>
                     <div class="card-mood">
                         <span>Настрій</span>
                         <strong>Впевненість і легкість</strong>
                     </div>
-                    <button class="btn-cart" onclick="addToCart(event, 'Сироватка для обличчя', 1200)">В кошик</button>
+                    <button class="btn-cart" onclick="addToCart(event, 'Сироватка для обличчя 30 мл', 1200)">В кошик</button>
                 </div>
             </div>
         </div>
 
         <!-- ══════════════════════════════════════════════
-             ТОВАР 2 — КРЕМ
+             ТОВАР 2 — ЛОСЬОН ДЛЯ ВМИВАННЯ
+             Фото: images/lotion.jpg  (рекомендований розмір: 600×360px)
              ══════════════════════════════════════════════ -->
         <div class="card" onclick="this.classList.toggle('flipped')">
             <div class="card-inner">
                 <div class="card-front">
-                    <!-- ФОТО ТОВАРУ: замінити src -->
-                    <div class="card-img-placeholder">🧴</div>
-                    <!-- Якщо є фото: <img class="card-img" src="images/cream.jpg" alt="Крем"> -->
+                    <!-- Замініть заглушку на фото: <img class="card-img" src="images/lotion.jpg" alt="Лосьон"> -->
+                    <div class="card-img-placeholder">🫧</div>
+                    <div class="card-front-body">
+                        <div>
+                            <h3>Лосьон для вмивання</h3>
+                            <span class="card-volume">600 мл</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;align-items:flex-end;">
+                            <span class="card-price">350 грн</span>
+                            <span class="card-hint">↻ деталі</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-back">
+                    <div>
+                        <p class="card-back-title">Ефект</p>
+                        <h3>Делікатне очищення та свіжість</h3>
+                        <p class="card-desc">Легкий скраб з м'якою текстурою — ніжно відлущує та очищує шкіру, легко змивається. Залишає обличчя свіжим і готовим до подальшого догляду.</p>
+                    </div>
+                    <div class="card-mood">
+                        <span>Настрій</span>
+                        <strong>Свіжість і чистота</strong>
+                    </div>
+                    <button class="btn-cart" onclick="addToCart(event, 'Лосьон для вмивання 600 мл', 350)">В кошик</button>
+                </div>
+            </div>
+        </div>
 
+        <!-- ══════════════════════════════════════════════
+             ТОВАР 3 — КРЕМ
+             Фото: images/cream.jpg  (рекомендований розмір: 600×360px)
+             ══════════════════════════════════════════════ -->
+        <div class="card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <!-- Замініть заглушку на фото: <img class="card-img" src="images/cream.jpg" alt="Крем"> -->
+                    <div class="card-img-placeholder">🧴</div>
                     <div class="card-front-body">
                         <div>
                             <h3>Крем для шкіри</h3>
@@ -599,28 +646,61 @@
                     <div>
                         <p class="card-back-title">Ефект</p>
                         <h3>Захисний бар'єр та живлення</h3>
-                        <!-- ОПИС ТОВАРУ: відредагуйте тут -->
                         <p class="card-desc">Відновлює ліпідний захисний бар'єр шкіри, живить та зволожує. Оксамитова текстура, що миттєво вбирається без відчуття плівки.</p>
                     </div>
                     <div class="card-mood">
                         <span>Настрій</span>
                         <strong>Спокій і захищеність</strong>
                     </div>
-                    <button class="btn-cart" onclick="addToCart(event, 'Крем для шкіри', 900)">В кошик</button>
+                    <button class="btn-cart" onclick="addToCart(event, 'Крем для шкіри 30 мл', 900)">В кошик</button>
                 </div>
             </div>
         </div>
 
         <!-- ══════════════════════════════════════════════
-             ТОВАР 3 — ПАРФУМ
+             ТОВАР 4 — ПАРФУМ 10 МЛ
+             Фото: images/perfume10.jpg  (рекомендований розмір: 600×360px)
              ══════════════════════════════════════════════ -->
         <div class="card" onclick="this.classList.toggle('flipped')">
             <div class="card-inner">
                 <div class="card-front">
-                    <!-- ФОТО ТОВАРУ: замінити src -->
+                    <!-- Замініть заглушку на фото: <img class="card-img" src="images/perfume10.jpg" alt="Парфум 10 мл"> -->
                     <div class="card-img-placeholder">✦</div>
-                    <!-- Якщо є фото: <img class="card-img" src="images/perfume.jpg" alt="Парфум"> -->
+                    <div class="card-front-body">
+                        <div>
+                            <h3>Парфум Унісекс</h3>
+                            <span class="card-volume">10 мл</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;align-items:flex-end;">
+                            <span class="card-price">600 грн</span>
+                            <span class="card-hint">↻ деталі</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-back">
+                    <div>
+                        <p class="card-back-title">Ефект</p>
+                        <h3>Унікальний аромат будь-якої ситуації</h3>
+                        <p class="card-desc">Парфум, що змінює настрій. Стійкий шлейф з ексклюзивними компонентами — компактний формат для подорожей та сумочки.</p>
+                    </div>
+                    <div class="card-mood">
+                        <span>Настрій</span>
+                        <strong>Енергія та магнетизм</strong>
+                    </div>
+                    <button class="btn-cart" onclick="addToCart(event, 'Парфум Унісекс 10 мл', 600)">В кошик</button>
+                </div>
+            </div>
+        </div>
 
+        <!-- ══════════════════════════════════════════════
+             ТОВАР 5 — ПАРФУМ 20 МЛ
+             Фото: images/perfume20.jpg  (рекомендований розмір: 600×360px)
+             ══════════════════════════════════════════════ -->
+        <div class="card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <!-- Замініть заглушку на фото: <img class="card-img" src="images/perfume20.jpg" alt="Парфум 20 мл"> -->
+                    <div class="card-img-placeholder">❋</div>
                     <div class="card-front-body">
                         <div>
                             <h3>Парфум Унісекс</h3>
@@ -635,15 +715,57 @@
                 <div class="card-back">
                     <div>
                         <p class="card-back-title">Ефект</p>
-                        <h3>Унікальний аромат будь-якої ситуації</h3>
-                        <!-- ОПИС ТОВАРУ: відредагуйте тут -->
+                        <h3>Аромат, що залишає шлейф</h3>
                         <p class="card-desc">Парфум, що змінює настрій. Стійкий шлейф з ексклюзивними компонентами — для тих, хто цінує унікальність та якість у кожній деталі.</p>
                     </div>
                     <div class="card-mood">
                         <span>Настрій</span>
                         <strong>Енергія та магнетизм</strong>
                     </div>
-                    <button class="btn-cart" onclick="addToCart(event, 'Парфум Унісекс', 600)">В кошик</button>
+                    <button class="btn-cart" onclick="addToCart(event, 'Парфум Унісекс 20 мл', 600)">В кошик</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════════
+             ТОВАР 6 — НАБІР ДОМАШНЬОГО ДОГЛЯДУ
+             Фото: images/kit.jpg  (рекомендований розмір: 600×360px)
+             Склад набору: сироватка дренажна від набряків,
+             сироватка glass skin, крем шовковий фініш,
+             лосьон для вмивання.
+             ══════════════════════════════════════════════ -->
+        <div class="card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <!-- Замініть заглушку на фото: <img class="card-img" src="images/kit.jpg" alt="Набір догляду"> -->
+                    <div class="card-img-placeholder">◈</div>
+                    <div class="card-front-body">
+                        <div>
+                            <h3>Набір домашнього догляду</h3>
+                            <span class="card-volume">4 продукти · повний догляд</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;align-items:flex-end;">
+                            <span class="card-price">2 800 грн</span>
+                            <span class="card-hint">↻ деталі</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-back">
+                    <div>
+                        <p class="card-back-title">Склад набору</p>
+                        <h3>Повний ритуал догляду</h3>
+                        <p class="card-desc">
+                            · Сироватка дренажна від набряків<br>
+                            · Сироватка Glass Skin<br>
+                            · Крем шовковий фініш<br>
+                            · Лосьон для вмивання
+                        </p>
+                    </div>
+                    <div class="card-mood">
+                        <span>Результат</span>
+                        <strong>Досконала шкіра вдома</strong>
+                    </div>
+                    <button class="btn-cart" onclick="addToCart(event, 'Набір домашнього догляду', 2800)">В кошик</button>
                 </div>
             </div>
         </div>
