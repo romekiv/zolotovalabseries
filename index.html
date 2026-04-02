@@ -337,6 +337,47 @@
             color: var(--dark);
         }
 
+        /* ─── БЕЙДЖ НА КАРТЦІ ─────────────────────── */
+        .card-front { position: relative; }
+        .card-badge {
+            position: absolute;
+            top: 12px; left: 12px;
+            background: var(--gold);
+            color: var(--dark);
+            font-size: 0.58rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 5px 11px;
+            font-family: 'Cinzel', serif;
+            border-radius: 2px;
+            z-index: 3;
+            white-space: nowrap;
+        }
+        .card-premium {
+            position: absolute;
+            top: 10px; right: 12px;
+            font-size: 1.2rem;
+            z-index: 3;
+            filter: drop-shadow(0 0 6px rgba(201,168,76,0.6));
+        }
+        .card-warn {
+            font-size: 0.72rem;
+            color: #8a6a40;
+            line-height: 1.7;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(201,168,76,0.1);
+        }
+        .card-warn span {
+            display: block;
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--gold-dim);
+            margin-bottom: 3px;
+        }
+
         /* ─── ДО/ПІСЛЯ ───────────────────────────── */
         .ba-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
         .ba-item {
@@ -553,14 +594,156 @@
     <div class="products-grid">
 
         <!-- ══════════════════════════════════════════════
-             ТОВАР 1 — СИРОВАТКА
-             Фото: images/serum.jpg  (рекомендований розмір: 600×360px)
+             ТОВАР 1 — CLEANSING OIL
+             Фото: images/cleansing_oil.jpg
              ══════════════════════════════════════════════ -->
         <div class="card" onclick="this.classList.toggle('flipped')">
             <div class="card-inner">
                 <div class="card-front">
-                    <img class="card-img" src="images/serum.jpg" alt="Сироватка для зменшення набряків з ефектом ліфтингу">
-                    <div class="card-img-placeholder">🧯</div>
+                    <img class="card-img" src="images/cleansing_oil.jpg" alt="Cleansing Oil" onerror="this.style.display='none'">
+                    <div class="card-img-placeholder">🧴</div>
+                    <div class="card-front-body">
+                        <div>
+                            <h3>CLEANSING OIL</h3>
+                            <span class="card-volume">50 мл</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;align-items:flex-end;">
+                            <span class="card-price">480 грн</span>
+                            <span class="card-hint">↻ деталі</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-back">
+                    <div>
+                        <p class="card-back-title">Ефект</p>
+                        <h3>Глибоке очищення без ефекту «панда»</h3>
+                        <p class="card-desc">Власна формула, що розчиняє макіяж, SPF і забруднення. Не потребує другого етапу очищення, залишає шкіру чистою та комфортною. Без жирної плівки.</p>
+                    </div>
+                    <div class="card-mood">
+                        <span>Активи</span>
+                        <strong>SQUALANE • SAFFLOWER OIL</strong>
+                    </div>
+                    <button class="btn-cart" onclick="addToCart(event, 'Cleansing Oil 50 мл', 480)">В кошик</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════════
+             ТОВАР 2 — SILK FINISH CREAM
+             Фото: images/silk_cream.jpg
+             ══════════════════════════════════════════════ -->
+        <div class="card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <div class="card-premium">💎</div>
+                    <img class="card-img" src="images/silk_cream.jpg" alt="Silk Finish Cream" onerror="this.style.display='none'">
+                    <div class="card-img-placeholder">🫧</div>
+                    <div class="card-front-body">
+                        <div>
+                            <h3>SILK FINISH CREAM</h3>
+                            <span class="card-volume">30 мл</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;align-items:flex-end;">
+                            <span class="card-price">1 200 грн</span>
+                            <span class="card-hint">↻ деталі</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-back">
+                    <div>
+                        <p class="card-back-title">Ефект</p>
+                        <h3>Шовковий фініш та відновлення бар'єру</h3>
+                        <p class="card-desc">Власна формула запечатує вологу та активи, усуває липкість після сироваток і створює ефект доглянутої шкіри.</p>
+                    </div>
+                    <div class="card-mood">
+                        <span>Активи</span>
+                        <strong>PEPTIDES • ECTOIN • MICROBIOME COMPLEX • POLYGLUTAMIC ACID • NIACINAMIDE</strong>
+                    </div>
+                    <button class="btn-cart" onclick="addToCart(event, 'Silk Finish Cream 30 мл', 1200)">В кошик</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════════
+             ТОВАР 3 — GLASS SKIN PEPTIDE SERUM
+             Фото: images/glass_skin.jpg
+             ══════════════════════════════════════════════ -->
+        <div class="card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <div class="card-premium">💎</div>
+                    <img class="card-img" src="images/glass_skin.jpg" alt="Glass Skin Peptide Serum" onerror="this.style.display='none'">
+                    <div class="card-img-placeholder">✦</div>
+                    <div class="card-front-body">
+                        <div>
+                            <h3>GLASS SKIN PEPTIDE SERUM</h3>
+                            <span class="card-volume">30 мл</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;align-items:flex-end;">
+                            <span class="card-price">1 400 грн</span>
+                            <span class="card-hint">↻ деталі</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-back">
+                    <div>
+                        <p class="card-back-title">Ефект</p>
+                        <h3>Глибоке зволоження та ефект «glass skin»</h3>
+                        <p class="card-desc">Власна формула відновлює бар'єр, наповнює шкіру вологою та створює гладку, сяючу текстуру.</p>
+                    </div>
+                    <div class="card-mood">
+                        <span>Активи</span>
+                        <strong>PEPTIDES • ECTOIN • MICROBIOME COMPLEX • POLYGLUTAMIC ACID • NIACINAMIDE</strong>
+                    </div>
+                    <button class="btn-cart" onclick="addToCart(event, 'Glass Skin Peptide Serum 30 мл', 1400)">В кошик</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════════
+             ТОВАР 4 — PHA SKIN REFINING LOTION
+             Фото: images/pha_lotion.jpg
+             ══════════════════════════════════════════════ -->
+        <div class="card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <img class="card-img" src="images/pha_lotion.jpg" alt="PHA Skin Refining Lotion" onerror="this.style.display='none'">
+                    <div class="card-img-placeholder">🌿</div>
+                    <div class="card-front-body">
+                        <div>
+                            <h3>PHA SKIN REFINING LOTION</h3>
+                            <span class="card-volume">60 мл</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;align-items:flex-end;">
+                            <span class="card-price">1 100 грн</span>
+                            <span class="card-hint">↻ деталі</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-back">
+                    <div>
+                        <p class="card-back-title">Ефект</p>
+                        <h3>Гладка, сяюча та оновлена шкіра</h3>
+                        <p class="card-desc">Власна формула з ефектом щоденного делікатного оновлення, що працює як альтернатива агресивним пілінгам.</p>
+                    </div>
+                    <div class="card-mood">
+                        <span>Активи</span>
+                        <strong>GLUCONOLACTONE • BAKUCHIOL • P3 COMPLEX • MICROBIOME • ECTOIN</strong>
+                    </div>
+                    <button class="btn-cart" onclick="addToCart(event, 'PHA Skin Refining Lotion 60 мл', 1100)">В кошик</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════════
+             ТОВАР 5 — EYE DRAINAGE & LIFT SERUM
+             Фото: images/eye_serum.jpg
+             ══════════════════════════════════════════════ -->
+        <div class="card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <img class="card-img" src="images/eye_serum.jpg" alt="Eye Drainage & Lift Serum" onerror="this.style.display='none'">
+                    <div class="card-img-placeholder">👁</div>
                     <div class="card-front-body">
                         <div>
                             <h3>EYE DRAINAGE & LIFT SERUM</h3>
@@ -575,69 +758,34 @@
                 <div class="card-back">
                     <div>
                         <p class="card-back-title">Ефект</p>
-                        <h3>Дренаж, гладкість та підтягнутий контур</h3>
-                        <p class="card-desc">Власна унікальна формула з активними пептидами. Відновлює пружність, вирівнює рельєф та зменшує набряки вже після першого застосування.</p>
+                        <h3>Дренаж, зміцнення судин та ліфтинг</h3>
+                        <p class="card-desc">Власна формула з потужним дренажним та заспокійливим ефектом. Працює з набряками, почервонінням і втомленою шкірою.</p>
                     </div>
                     <div class="card-mood">
                         <span>Активи</span>
-                        <strong>пептидний комплекс, дренажні компоненти, зволожуючі агенти</strong>
+                        <strong>HESPERIDIN • ECTOIN • PEPTIDES • NEUTROX</strong>
                     </div>
-                    <button class="btn-cart" onclick="addToCart(event, 'Сироватка для зменшення набряків з ефектом ліфтингу 15 мл', 750)">В кошик</button>
+                    <button class="btn-cart" onclick="addToCart(event, 'Eye Drainage & Lift Serum 15 мл', 750)">В кошик</button>
                 </div>
             </div>
         </div>
 
         <!-- ══════════════════════════════════════════════
-             ТОВАР 2 — ЛОСЬОН ДЛЯ ВМИВАННЯ
-             Фото: images/lotion.jpg  (рекомендований розмір: 600×360px)
+             ТОВАР 6 — SPICULE RENEWAL GEL
+             Фото: images/spicule_gel.jpg
              ══════════════════════════════════════════════ -->
         <div class="card" onclick="this.classList.toggle('flipped')">
             <div class="card-inner">
                 <div class="card-front">
-                    <!-- Замініть заглушку на фото: <img class="card-img" src="images/lotion.jpg" alt="Лосьон"> -->
-                    <div class="card-img-placeholder">🫧</div>
+                    <img class="card-img" src="images/spicule_gel.jpg" alt="Spicule Renewal Gel" onerror="this.style.display='none'">
+                    <div class="card-img-placeholder">◈</div>
                     <div class="card-front-body">
                         <div>
-                            <h3>Лосьон для вмивання</h3>
-                            <span class="card-volume">600 мл</span>
-                        </div>
-                        <div style="display:flex;justify-content:space-between;align-items:flex-end;">
-                            <span class="card-price">350 грн</span>
-                            <span class="card-hint">↻ деталі</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-back">
-                    <div>
-                        <p class="card-back-title">Ефект</p>
-                        <h3>Делікатне очищення та свіжість</h3>
-                        <p class="card-desc">Легкий скраб з м'якою текстурою — ніжно відлущує та очищує шкіру, легко змивається. Залишає обличчя свіжим і готовим до подальшого догляду.</p>
-                    </div>
-                    <div class="card-mood">
-                        <span>Настрій</span>
-                        <strong>Свіжість і чистота</strong>
-                    </div>
-                    <button class="btn-cart" onclick="addToCart(event, 'Лосьон для вмивання 600 мл', 350)">В кошик</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- ══════════════════════════════════════════════
-             ТОВАР 3 — КРЕМ
-             Фото: images/cream.jpg  (рекомендований розмір: 600×360px)
-             ══════════════════════════════════════════════ -->
-        <div class="card" onclick="this.classList.toggle('flipped')">
-            <div class="card-inner">
-                <div class="card-front">
-                    <!-- Замініть заглушку на фото: <img class="card-img" src="images/cream.jpg" alt="Крем"> -->
-                    <div class="card-img-placeholder">🧴</div>
-                    <div class="card-front-body">
-                        <div>
-                            <h3>Крем для шкіри</h3>
+                            <h3>SPICULE RENEWAL GEL</h3>
                             <span class="card-volume">30 мл</span>
                         </div>
                         <div style="display:flex;justify-content:space-between;align-items:flex-end;">
-                            <span class="card-price">900 грн</span>
+                            <span class="card-price">1 000 грн</span>
                             <span class="card-hint">↻ деталі</span>
                         </div>
                     </div>
@@ -645,26 +793,30 @@
                 <div class="card-back">
                     <div>
                         <p class="card-back-title">Ефект</p>
-                        <h3>Захисний бар'єр та живлення</h3>
-                        <p class="card-desc">Відновлює ліпідний захисний бар'єр шкіри, живить та зволожує. Оксамитова текстура, що миттєво вбирається без відчуття плівки.</p>
+                        <h3>Anti-age оновлення та вирівнювання текстури</h3>
+                        <p class="card-desc">Власна формула зі спікулами забезпечує мікростимуляцію шкіри, активує процеси регенерації та підсилює ефективність активів. Для обличчя та тіла.</p>
+                        <div class="card-warn">
+                            <span>Протипоказання</span>
+                            Запалена, чутлива або пошкоджена шкіра
+                        </div>
                     </div>
                     <div class="card-mood">
-                        <span>Настрій</span>
-                        <strong>Спокій і захищеність</strong>
+                        <span>Показання</span>
+                        <strong>Тьмяна шкіра • нерівна текстура • пори • зниження тонусу</strong>
                     </div>
-                    <button class="btn-cart" onclick="addToCart(event, 'Крем для шкіри 30 мл', 900)">В кошик</button>
+                    <button class="btn-cart" onclick="addToCart(event, 'Spicule Renewal Gel 30 мл', 1000)">В кошик</button>
                 </div>
             </div>
         </div>
 
         <!-- ══════════════════════════════════════════════
-             ТОВАР 4 — ПАРФУМ 10 МЛ
-             Фото: images/perfume10.jpg  (рекомендований розмір: 600×360px)
+             ТОВАР 7 — ПАРФУМ 10 МЛ
+             Фото: images/perfume10.jpg
              ══════════════════════════════════════════════ -->
         <div class="card" onclick="this.classList.toggle('flipped')">
             <div class="card-inner">
                 <div class="card-front">
-                    <img class="card-img" src="images/perfume10.jpg" alt="Парфум 10 мл">
+                    <img class="card-img" src="images/perfume10.jpg" alt="Парфум 10 мл" onerror="this.style.display='none'">
                     <div class="card-img-placeholder">✦</div>
                     <div class="card-front-body">
                         <div>
@@ -693,13 +845,13 @@
         </div>
 
         <!-- ══════════════════════════════════════════════
-             ТОВАР 5 — ПАРФУМ 20 МЛ
-             Фото: images/perfume20.jpg  (рекомендований розмір: 600×360px)
+             ТОВАР 8 — ПАРФУМ 20 МЛ
+             Фото: images/perfume20.jpg
              ══════════════════════════════════════════════ -->
         <div class="card" onclick="this.classList.toggle('flipped')">
             <div class="card-inner">
                 <div class="card-front">
-                    <img class="card-img" src="images/perfume20.jpg" alt="Парфум 20 мл">
+                    <img class="card-img" src="images/perfume20.jpg" alt="Парфум 20 мл" onerror="this.style.display='none'">
                     <div class="card-img-placeholder">❋</div>
                     <div class="card-front-body">
                         <div>
@@ -722,30 +874,28 @@
                         <span>Настрій</span>
                         <strong>Енергія та магнетизм</strong>
                     </div>
-                    <button class="btn-cart" onclick="addToCart(event, 'Парфум Унісекс 20 мл', 600)">В кошик</button>
+                    <button class="btn-cart" onclick="addToCart(event, 'Парфум Унісекс 20 мл', 900)">В кошик</button>
                 </div>
             </div>
         </div>
 
         <!-- ══════════════════════════════════════════════
-             ТОВАР 6 — НАБІР ДОМАШНЬОГО ДОГЛЯДУ
-             Фото: images/kit.jpg  (рекомендований розмір: 600×360px)
-             Склад набору: сироватка дренажна від набряків,
-             сироватка glass skin, крем шовковий фініш,
-             лосьон для вмивання.
+             НАБІР 9 — ANTI-AGE CORE SYSTEM (ХІТ ПРОДАЖІВ)
+             Фото: images/kit_antiage.jpg
              ══════════════════════════════════════════════ -->
         <div class="card" onclick="this.classList.toggle('flipped')">
             <div class="card-inner">
                 <div class="card-front">
-                    <img class="card-img" src="images/kit.jpg" alt="Набір догляду">
+                    <div class="card-badge">🔥 Хіт продажів!</div>
+                    <img class="card-img" src="images/kit_antiage.jpg" alt="Anti-Age Core System" onerror="this.style.display='none'">
                     <div class="card-img-placeholder">◈</div>
                     <div class="card-front-body">
                         <div>
-                            <h3>Набір домашнього догляду</h3>
-                            <span class="card-volume">4 продукти · повний догляд</span>
+                            <h3>ANTI-AGE CORE SYSTEM</h3>
+                            <span class="card-volume">Набір · 3 продукти</span>
                         </div>
                         <div style="display:flex;justify-content:space-between;align-items:flex-end;">
-                            <span class="card-price">2 800 грн</span>
+                            <span class="card-price">3 250 грн</span>
                             <span class="card-hint">↻ деталі</span>
                         </div>
                     </div>
@@ -753,19 +903,95 @@
                 <div class="card-back">
                     <div>
                         <p class="card-back-title">Склад набору</p>
-                        <h3>Повний ритуал догляду</h3>
+                        <h3>Пружність та anti-age ефект</h3>
                         <p class="card-desc">
-                            · Сироватка дренажна від набряків<br>
-                            · Сироватка Glass Skin<br>
-                            · Крем шовковий фініш<br>
-                            · Лосьон для вмивання
+                            · PHA Skin Refining Lotion<br>
+                            · Glass Skin Peptide Serum<br>
+                            · Silk Finish Cream
                         </p>
                     </div>
                     <div class="card-mood">
                         <span>Результат</span>
-                        <strong>Досконала шкіра вдома</strong>
+                        <strong>Комплексний anti-age догляд</strong>
                     </div>
-                    <button class="btn-cart" onclick="addToCart(event, 'Набір домашнього догляду', 2800)">В кошик</button>
+                    <button class="btn-cart" onclick="addToCart(event, 'Anti-Age Core System (набір)', 3250)">В кошик</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════════
+             НАБІР 10 — HYDRATION SYSTEM
+             Фото: images/kit_hydration.jpg
+             ══════════════════════════════════════════════ -->
+        <div class="card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <div class="card-premium">💎</div>
+                    <img class="card-img" src="images/kit_hydration.jpg" alt="Hydration System" onerror="this.style.display='none'">
+                    <div class="card-img-placeholder">💧</div>
+                    <div class="card-front-body">
+                        <div>
+                            <h3>HYDRATION SYSTEM</h3>
+                            <span class="card-volume">Набір · 2 продукти</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;align-items:flex-end;">
+                            <span class="card-price">2 250 грн</span>
+                            <span class="card-hint">↻ деталі</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-back">
+                    <div>
+                        <p class="card-back-title">Склад набору</p>
+                        <h3>Зволоження та відновлення шкіри</h3>
+                        <p class="card-desc">
+                            · Glass Skin Peptide Serum<br>
+                            · Silk Finish Cream
+                        </p>
+                    </div>
+                    <div class="card-mood">
+                        <span>Результат</span>
+                        <strong>Максимальне зволоження та бар'єр</strong>
+                    </div>
+                    <button class="btn-cart" onclick="addToCart(event, 'Hydration System (набір)', 2250)">В кошик</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════════
+             НАБІР 11 — CLEAN & GLOW SYSTEM
+             Фото: images/kit_cleanglow.jpg
+             ══════════════════════════════════════════════ -->
+        <div class="card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <img class="card-img" src="images/kit_cleanglow.jpg" alt="Clean & Glow System" onerror="this.style.display='none'">
+                    <div class="card-img-placeholder">✨</div>
+                    <div class="card-front-body">
+                        <div>
+                            <h3>CLEAN & GLOW SYSTEM</h3>
+                            <span class="card-volume">Набір · 2 продукти</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;align-items:flex-end;">
+                            <span class="card-price">1 350 грн</span>
+                            <span class="card-hint">↻ деталі</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-back">
+                    <div>
+                        <p class="card-back-title">Склад набору</p>
+                        <h3>Очищення та сяяння шкіри</h3>
+                        <p class="card-desc">
+                            · Cleansing Oil<br>
+                            · PHA Skin Refining Lotion
+                        </p>
+                    </div>
+                    <div class="card-mood">
+                        <span>Результат</span>
+                        <strong>Чиста, сяюча та оновлена шкіра</strong>
+                    </div>
+                    <button class="btn-cart" onclick="addToCart(event, 'Clean & Glow System (набір)', 1350)">В кошик</button>
                 </div>
             </div>
         </div>
