@@ -8,6 +8,21 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <title>Olena Zolotova | Lab Series</title>
+
+    <!-- ─── OPEN GRAPH — превью при публікації в соцмережах ─── -->
+    <!-- Замініть og:image на реальне фото продукту (мін. 1200×630px) -->
+    <meta property="og:type"        content="website">
+    <meta property="og:title"       content="Olena Zolotova Lab Series">
+    <meta property="og:description" content="Власні формули для глибокого зволоження, anti-age ефекту та glass skin. Професійний догляд вдома.">
+    <meta property="og:image"       content="images/og_preview.jpg">
+    <meta property="og:url"         content="">
+    <meta property="og:locale"      content="uk_UA">
+    <meta name="twitter:card"       content="summary_large_image">
+    <meta name="twitter:title"      content="Olena Zolotova Lab Series">
+    <meta name="twitter:description" content="Власні формули для глибокого зволоження, anti-age ефекту та glass skin.">
+    <meta name="twitter:image"      content="images/og_preview.jpg">
+    <!-- ──────────────────────────────────────────────────────── -->
+
     <link rel="icon" type="image/png" href="monogram.png">
     <link rel="shortcut icon" type="image/png" href="monogram.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -396,46 +411,59 @@
         }
 
         /* ─── ДО/ПІСЛЯ ───────────────────────────── */
-        .ba-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+        .ba-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px;
+        }
         .ba-item {
             position: relative;
-            height: 380px;
             border-radius: 6px;
             overflow: hidden;
             border: 1px solid var(--card-border);
             background: #0f0f0f;
+            box-shadow: 0 18px 42px rgba(0, 0, 0, 0.22);
         }
-
-        /* ═══════════════════════════════════════════
-           ФОТО ДО/ПІСЛЯ — замінити src тут:
-           Приклад: <img src="images/before1.jpg" ...>
-           Для кожного результату — пара фото "до" і "після".
-           ═══════════════════════════════════════════ */
-        .ba-item img {
-            width: 100%; height: 100%;
-            object-fit: cover; object-position: center;
+        .ba-collage {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            overflow: hidden;
+            background: rgba(201, 168, 76, 0.06);
+        }
+        .ba-collage img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
             display: block;
         }
-        .ba-placeholder {
-            width: 100%; height: 100%;
-            display: flex; align-items: center; justify-content: center;
-            flex-direction: column; gap: 10px;
-            color: #333;
-            font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase;
-        }
-        .ba-placeholder-icon { font-size: 2rem; opacity: 0.3; }
         .ba-label {
             position: absolute;
-            bottom: 16px; left: 16px;
             padding: 6px 16px;
-            background: var(--gold);
-            color: var(--dark);
+            background: rgba(8, 8, 8, 0.72);
+            border: 1px solid rgba(201, 168, 76, 0.32);
+            color: var(--gold-light);
             font-size: 0.7rem;
             font-weight: 700;
             letter-spacing: 3px;
             text-transform: uppercase;
             font-family: 'Cinzel', serif;
             border-radius: 2px;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+        }
+        .ba-label--top-left {
+            top: 16px;
+            left: 16px;
+        }
+        .ba-label--bottom-left {
+            bottom: 16px;
+            left: 16px;
+        }
+        .ba-label--bottom-right {
+            bottom: 16px;
+            right: 16px;
         }
 
         /* ─── ФОРМА ЗАМОВЛЕННЯ ───────────────────── */
@@ -566,8 +594,8 @@
             Файл: monogram.png (тільки CZ монограма — Image 2)
             Помістіть поруч з index.html або вкажіть правильний шлях.
         -->
-        <img src="monogram.png" alt="Olena Zolotova" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
-        <span style="display:none;font-family:'Cinzel',serif;color:var(--gold);font-size:1.4rem;letter-spacing:3px;">CZ</span>
+        <img src="monogram.png" alt="Olena Zolotova" class="js-img-fallback" data-fallback-text="CZ">
+        <span class="js-img-fallback-text" style="display:none;font-family:'Cinzel',serif;color:var(--gold);font-size:1.4rem;letter-spacing:3px;">CZ</span>
     </div>
     <div class="nav-links">
         <a href="#about">Бренд</a>
@@ -575,7 +603,7 @@
         <a href="#before-after">Результати</a>
         <a href="#order">Замовити</a>
     </div>
-    <div class="cart-btn" onclick="toggleCart()">
+    <div class="cart-btn" id="js-cart-open">
         Кошик <span id="cart-count">0</span>
     </div>
 </nav>
@@ -588,9 +616,8 @@
             Файл: logo_full.png (логотип з написом OLENA ZOLOTOVA — Image 1)
         -->
         <div class="hero-logo">
-            <img src="logo_full.png" alt="Olena Zolotova Lab Series"
-                 onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
-            <div style="display:none;font-family:'Cinzel',serif;color:var(--gold);font-size:4rem;text-shadow:0 0 30px rgba(201,168,76,0.4);">CZ</div>
+            <img src="logo_full.png" alt="Olena Zolotova Lab Series" class="js-img-fallback" data-fallback-text="CZ">
+            <div class="js-img-fallback-text" style="display:none;font-family:'Cinzel',serif;color:var(--gold);font-size:4rem;text-shadow:0 0 30px rgba(201,168,76,0.4);">CZ</div>
         </div>
         <p class="hero-tagline">Професійний догляд вдома</p>
         <p class="hero-sub">Власні формули · 15 років досвіду</p>
@@ -629,10 +656,10 @@
              ТОВАР 1 — CLEANSING OIL
              Фото: images/cleansing_oil.jpg
              ══════════════════════════════════════════════ -->
-        <div class="card" onclick="this.classList.toggle('flipped')">
+        <div class="card">
             <div class="card-inner">
                 <div class="card-front">
-                    <img class="card-img" src="images/cleansing_oil.jpg" alt="Cleansing Oil" onerror="this.style.display='none'">
+                    <img class="card-img" src="images/cleansing_oil.jpg" alt="Cleansing Oil" loading="lazy">
                     <div class="card-img-placeholder">🧴</div>
                     <div class="card-front-body">
                         <div>
@@ -655,7 +682,7 @@
                         <span>Активи</span>
                         <strong>SQUALANE • SAFFLOWER OIL</strong>
                     </div>
-                    <button class="btn-cart" onclick="addToCart(event, 'Cleansing Oil 50 мл', 480)">В кошик</button>
+                    <button class="btn-cart" data-name="Cleansing Oil 50 мл" data-price="480">В кошик</button>
                 </div>
             </div>
         </div>
@@ -664,11 +691,11 @@
              ТОВАР 2 — SILK FINISH CREAM
              Фото: images/silk_cream.jpg
              ══════════════════════════════════════════════ -->
-        <div class="card" onclick="this.classList.toggle('flipped')">
+        <div class="card">
             <div class="card-inner">
                 <div class="card-front">
                     <div class="card-premium">💎</div>
-                    <img class="card-img" src="images/silk_cream.jpg" alt="Silk Finish Cream" onerror="this.style.display='none'">
+                    <img class="card-img" src="images/silk_cream.jpg" alt="Silk Finish Cream" loading="lazy">
                     <div class="card-img-placeholder">🫧</div>
                     <div class="card-front-body">
                         <div>
@@ -691,7 +718,7 @@
                         <span>Активи</span>
                         <strong>PEPTIDES • ECTOIN • MICROBIOME COMPLEX • POLYGLUTAMIC ACID • NIACINAMIDE</strong>
                     </div>
-                    <button class="btn-cart" onclick="addToCart(event, 'Silk Finish Cream 30 мл', 1200)">В кошик</button>
+                    <button class="btn-cart" data-name="Silk Finish Cream 30 мл" data-price="1200">В кошик</button>
                 </div>
             </div>
         </div>
@@ -700,11 +727,11 @@
              ТОВАР 3 — GLASS SKIN PEPTIDE SERUM
              Фото: images/glass_skin.jpg
              ══════════════════════════════════════════════ -->
-        <div class="card" onclick="this.classList.toggle('flipped')">
+        <div class="card">
             <div class="card-inner">
                 <div class="card-front">
                     <div class="card-premium">💎</div>
-                    <img class="card-img" src="images/glass_skin.jpg" alt="Glass Skin Peptide Serum" onerror="this.style.display='none'">
+                    <img class="card-img" src="images/glass_skin.jpg" alt="Glass Skin Peptide Serum" loading="lazy">
                     <div class="card-img-placeholder">✦</div>
                     <div class="card-front-body">
                         <div>
@@ -727,7 +754,7 @@
                         <span>Активи</span>
                         <strong>PEPTIDES • ECTOIN • MICROBIOME COMPLEX • POLYGLUTAMIC ACID • NIACINAMIDE</strong>
                     </div>
-                    <button class="btn-cart" onclick="addToCart(event, 'Glass Skin Peptide Serum 30 мл', 1400)">В кошик</button>
+                    <button class="btn-cart" data-name="Glass Skin Peptide Serum 30 мл" data-price="1400">В кошик</button>
                 </div>
             </div>
         </div>
@@ -736,10 +763,10 @@
              ТОВАР 4 — PHA SKIN REFINING LOTION
              Фото: images/pha_lotion.jpg
              ══════════════════════════════════════════════ -->
-        <div class="card" onclick="this.classList.toggle('flipped')">
+        <div class="card">
             <div class="card-inner">
                 <div class="card-front">
-                    <img class="card-img" src="images/pha_lotion.jpg" alt="PHA Skin Refining Lotion" onerror="this.style.display='none'">
+                    <img class="card-img" src="images/pha_lotion.jpg" alt="PHA Skin Refining Lotion" loading="lazy">
                     <div class="card-img-placeholder">🌿</div>
                     <div class="card-front-body">
                         <div>
@@ -762,7 +789,7 @@
                         <span>Активи</span>
                         <strong>GLUCONOLACTONE • BAKUCHIOL • P3 COMPLEX • MICROBIOME • ECTOIN</strong>
                     </div>
-                    <button class="btn-cart" onclick="addToCart(event, 'PHA Skin Refining Lotion 60 мл', 1100)">В кошик</button>
+                    <button class="btn-cart" data-name="PHA Skin Refining Lotion 60 мл" data-price="1100">В кошик</button>
                 </div>
             </div>
         </div>
@@ -771,10 +798,10 @@
              ТОВАР 5 — EYE DRAINAGE & LIFT SERUM
              Фото: images/eye_serum.jpg
              ══════════════════════════════════════════════ -->
-        <div class="card" onclick="this.classList.toggle('flipped')">
+        <div class="card">
             <div class="card-inner">
                 <div class="card-front">
-                    <img class="card-img" src="images/eye_serum.jpg" alt="Eye Drainage & Lift Serum" onerror="this.style.display='none'">
+                    <img class="card-img" src="images/eye_serum.jpg" alt="Eye Drainage & Lift Serum" loading="lazy">
                     <div class="card-img-placeholder">👁</div>
                     <div class="card-front-body">
                         <div>
@@ -797,7 +824,7 @@
                         <span>Активи</span>
                         <strong>HESPERIDIN • ECTOIN • PEPTIDES • NEUTROX</strong>
                     </div>
-                    <button class="btn-cart" onclick="addToCart(event, 'Eye Drainage & Lift Serum 15 мл', 750)">В кошик</button>
+                    <button class="btn-cart" data-name="Eye Drainage & Lift Serum 15 мл" data-price="750">В кошик</button>
                 </div>
             </div>
         </div>
@@ -806,10 +833,10 @@
              ТОВАР 6 — SPICULE RENEWAL GEL
              Фото: images/spicule_gel.jpg
              ══════════════════════════════════════════════ -->
-        <div class="card" onclick="this.classList.toggle('flipped')">
+        <div class="card">
             <div class="card-inner">
                 <div class="card-front">
-                    <img class="card-img" src="images/spicule_gel.jpg" alt="Spicule Renewal Gel" onerror="this.style.display='none'">
+                    <img class="card-img" src="images/spicule_gel.jpg" alt="Spicule Renewal Gel" loading="lazy">
                     <div class="card-img-placeholder">◈</div>
                     <div class="card-front-body">
                         <div>
@@ -836,7 +863,7 @@
                         <span>Показання</span>
                         <strong>Тьмяна шкіра • нерівна текстура • пори • зниження тонусу</strong>
                     </div>
-                    <button class="btn-cart" onclick="addToCart(event, 'Spicule Renewal Gel 30 мл', 1000)">В кошик</button>
+                    <button class="btn-cart" data-name="Spicule Renewal Gel 30 мл" data-price="1000">В кошик</button>
                 </div>
             </div>
         </div>
@@ -845,10 +872,10 @@
              ТОВАР 7 — ПАРФУМ 10 МЛ
              Фото: images/perfume10.jpg
              ══════════════════════════════════════════════ -->
-        <div class="card" onclick="this.classList.toggle('flipped')">
+        <div class="card">
             <div class="card-inner">
                 <div class="card-front">
-                    <img class="card-img" src="images/perfume10.jpg" alt="Парфум 10 мл" onerror="this.style.display='none'">
+                    <img class="card-img" src="images/perfume10.jpg" alt="Парфум 10 мл" loading="lazy">
                     <div class="card-img-placeholder">✦</div>
                     <div class="card-front-body">
                         <div>
@@ -871,7 +898,7 @@
                         <span>Настрій</span>
                         <strong>Енергія та магнетизм</strong>
                     </div>
-                    <button class="btn-cart" onclick="addToCart(event, 'Парфум Унісекс 10 мл', 600)">В кошик</button>
+                    <button class="btn-cart" data-name="Парфум Унісекс 10 мл" data-price="600">В кошик</button>
                 </div>
             </div>
         </div>
@@ -880,10 +907,10 @@
              ТОВАР 8 — ПАРФУМ 20 МЛ
              Фото: images/perfume20.jpg
              ══════════════════════════════════════════════ -->
-        <div class="card" onclick="this.classList.toggle('flipped')">
+        <div class="card">
             <div class="card-inner">
                 <div class="card-front">
-                    <img class="card-img" src="images/perfume20.jpg" alt="Парфум 20 мл" onerror="this.style.display='none'">
+                    <img class="card-img" src="images/perfume20.jpg" alt="Парфум 20 мл" loading="lazy">
                     <div class="card-img-placeholder">❋</div>
                     <div class="card-front-body">
                         <div>
@@ -906,7 +933,7 @@
                         <span>Настрій</span>
                         <strong>Енергія та магнетизм</strong>
                     </div>
-                    <button class="btn-cart" onclick="addToCart(event, 'Парфум Унісекс 20 мл', 900)">В кошик</button>
+                    <button class="btn-cart" data-name="Парфум Унісекс 20 мл" data-price="900">В кошик</button>
                 </div>
             </div>
         </div>
@@ -915,11 +942,11 @@
              НАБІР 9 — ANTI-AGE CORE SYSTEM (ХІТ ПРОДАЖІВ)
              Фото: images/kit_antiage.jpg
              ══════════════════════════════════════════════ -->
-        <div class="card" onclick="this.classList.toggle('flipped')">
+        <div class="card">
             <div class="card-inner">
                 <div class="card-front">
                     <div class="card-badge">🔥 Хіт продажів!</div>
-                    <img class="card-img" src="images/kit_antiage.jpg" alt="Anti-Age Core System" onerror="this.style.display='none'">
+                    <img class="card-img" src="images/kit_antiage.jpg" alt="Anti-Age Core System" loading="lazy">
                     <div class="card-img-placeholder">◈</div>
                     <div class="card-front-body">
                         <div>
@@ -949,7 +976,7 @@
                         <span>Результат</span>
                         <strong>Комплексний anti-age догляд</strong>
                     </div>
-                    <button class="btn-cart" onclick="addToCart(event, 'Anti-Age Core System (набір)', 3250)">В кошик</button>
+                    <button class="btn-cart" data-name="Anti-Age Core System (набір)" data-price="3250">В кошик</button>
                 </div>
             </div>
         </div>
@@ -958,11 +985,11 @@
              НАБІР 10 — HYDRATION SYSTEM
              Фото: images/kit_hydration.jpg
              ══════════════════════════════════════════════ -->
-        <div class="card" onclick="this.classList.toggle('flipped')">
+        <div class="card">
             <div class="card-inner">
                 <div class="card-front">
                     <div class="card-premium">💎</div>
-                    <img class="card-img" src="images/kit_hydration.jpg" alt="Hydration System" onerror="this.style.display='none'">
+                    <img class="card-img" src="images/kit_hydration.jpg" alt="Hydration System" loading="lazy">
                     <div class="card-img-placeholder">💧</div>
                     <div class="card-front-body">
                         <div>
@@ -988,7 +1015,7 @@
                         <span>Результат</span>
                         <strong>Максимальне зволоження та бар'єр</strong>
                     </div>
-                    <button class="btn-cart" onclick="addToCart(event, 'Hydration System (набір)', 2250)">В кошик</button>
+                    <button class="btn-cart" data-name="Hydration System (набір)" data-price="2250">В кошик</button>
                 </div>
             </div>
         </div>
@@ -997,10 +1024,10 @@
              НАБІР 11 — CLEAN & GLOW SYSTEM
              Фото: images/kit_cleanglow.jpg
              ══════════════════════════════════════════════ -->
-        <div class="card" onclick="this.classList.toggle('flipped')">
+        <div class="card">
             <div class="card-inner">
                 <div class="card-front">
-                    <img class="card-img" src="images/kit_cleanglow.jpg" alt="Clean &amp; Glow System" onerror="this.style.display='none'">
+                    <img class="card-img" src="images/kit_cleanglow.jpg" alt="Clean &amp; Glow System" loading="lazy">
                     <div class="card-img-placeholder">✨</div>
                     <div class="card-front-body">
                         <div>
@@ -1026,7 +1053,7 @@
                         <span>Результат</span>
                         <strong>Чиста, сяюча та оновлена шкіра</strong>
                     </div>
-                    <button class="btn-cart" onclick="addToCart(event, 'Clean &amp; Glow System (набір)', 1350)">В кошик</button>
+                    <button class="btn-cart" data-name="Clean &amp; Glow System (набір)" data-price="1350">В кошик</button>
                 </div>
             </div>
         </div>
@@ -1035,11 +1062,11 @@
              НАБІР 12 — FULL SYSTEM (ВСІ ПРОДУКТИ)
              Фото: images/kit_full.jpg
              ══════════════════════════════════════════════ -->
-        <div class="card" onclick="this.classList.toggle('flipped')">
+        <div class="card">
             <div class="card-inner">
                 <div class="card-front">
                     <div class="card-badge">⭐ Максимальний результат</div>
-                    <img class="card-img" src="images/kit_full.jpg" alt="Full System" onerror="this.style.display='none'">
+                    <img class="card-img" src="images/kit_full.jpg" alt="Full System" loading="lazy">
                     <div class="card-img-placeholder" style="font-size:2.8rem;">✦◈✦</div>
                     <div class="card-front-body">
                         <div>
@@ -1071,7 +1098,7 @@
                         <span>Результат</span>
                         <strong>Комплексний догляд від очищення до anti-age</strong>
                     </div>
-                    <button class="btn-cart" onclick="addToCart(event, 'Full System (всі продукти)', 4450)">В кошик</button>
+                    <button class="btn-cart" data-name="Full System (всі продукти)" data-price="4450">В кошик</button>
                 </div>
             </div>
         </div>
@@ -1084,41 +1111,54 @@
     <h2 class="section-title">До / Після</h2>
     <div class="ba-grid">
 
-        <!-- ══════════════════════════════════════════════
-             ФОТО ДО/ПІСЛЯ:
-             Замініть .ba-placeholder на реальне фото:
-             <img src="images/before1.jpg" alt="До">
-             Рекомендований розмір: 600×800px (портрет)
-             ══════════════════════════════════════════════ -->
+        <div class="ba-item ba-item--first">
+            <div class="ba-collage">
+                <!-- КАРТОЧКА 1 -->
+                <!-- Покласти файл у папку: images/results/ -->
+                <!-- Назва файлу: ba-1.jpg -->
+                <!-- Відповідає поточному вкладенню: 1.jpg -->
+                <img src="images/results/ba-1.jpg" alt="Колаж результату догляду 1" class="js-img-fallback" data-fallback-text="До / Після">
+                <div class="ba-label ba-label--bottom-left">До</div>
+                <div class="ba-label ba-label--bottom-right">Після</div>
+            </div>
+        </div>
 
         <div class="ba-item">
-            <div class="ba-placeholder">
-                <span class="ba-placeholder-icon">📷</span>
-                Фото до використання
+            <div class="ba-collage">
+                <!-- КАРТОЧКА 2 -->
+                <!-- Покласти файл у папку: images/results/ -->
+                <!-- Назва файлу: ba-2.jpg -->
+                <!-- Відповідає поточному вкладенню: 2.jpg -->
+                <img src="images/results/ba-2.jpg" alt="Колаж результату догляду 2" class="js-img-fallback" data-fallback-text="До / Після">
+                <div class="ba-label ba-label--top-left">До</div>
+                <div class="ba-label ba-label--bottom-left">Після</div>
             </div>
-            <div class="ba-label">До</div>
         </div>
+
         <div class="ba-item">
-            <div class="ba-placeholder">
-                <span class="ba-placeholder-icon">✨</span>
-                Фото після курсу
+            <div class="ba-collage">
+                <!-- КАРТОЧКА 3 -->
+                <!-- Покласти файл у папку: images/results/ -->
+                <!-- Назва файлу: ba-3.jpg -->
+                <!-- Відповідає поточному вкладенню: 3.jpg -->
+                <img src="images/results/ba-3.jpg" alt="Колаж результату догляду 3" class="js-img-fallback" data-fallback-text="До / Після">
+                <div class="ba-label ba-label--top-left">До</div>
+                <div class="ba-label ba-label--bottom-left">Після</div>
             </div>
-            <div class="ba-label">Після</div>
         </div>
+
         <div class="ba-item">
-            <div class="ba-placeholder">
-                <span class="ba-placeholder-icon">📷</span>
-                Фото до використання
+            <div class="ba-collage">
+                <!-- КАРТОЧКА 4 -->
+                <!-- Покласти файл у папку: images/results/ -->
+                <!-- Назва файлу: ba-4.jpg -->
+                <!-- Відповідає поточному вкладенню: 4.jpg -->
+                <img src="images/results/ba-4.jpg" alt="Колаж результату догляду 4" class="js-img-fallback" data-fallback-text="До / Після">
+                <div class="ba-label ba-label--top-left">До</div>
+                <div class="ba-label ba-label--bottom-left">Після</div>
             </div>
-            <div class="ba-label">До</div>
         </div>
-        <div class="ba-item">
-            <div class="ba-placeholder">
-                <span class="ba-placeholder-icon">✨</span>
-                Фото після курсу
-            </div>
-            <div class="ba-label">Після</div>
-        </div>
+
     </div>
 </section>
 
@@ -1179,21 +1219,76 @@
 
 <!-- ─── КОШИК OVERLAY ────────────────────────────────── -->
 <div class="cart-overlay" id="cart-overlay">
-    <button class="cart-close" onclick="toggleCart()">✕</button>
+    <button class="cart-close" id="js-cart-close">✕</button>
     <div class="cart-overlay-title">Ваш вибір</div>
     <div class="cart-items">
         <div id="cart-items-list"></div>
     </div>
     <div id="cart-total-price"></div>
-    <button class="btn-gold" style="width:100%;margin-top:24px;text-align:center;" onclick="goToOrder()">
+    <button class="btn-gold" id="js-cart-checkout" style="width:100%;margin-top:24px;text-align:center;">
         Оформити замовлення
     </button>
 </div>
 
 <script>
-    let cart = [];
+document.addEventListener('DOMContentLoaded', function() {
+
+    // ─── СТАН ──────────────────────────────────────────────
+    var cart = [];
     try { cart = JSON.parse(localStorage.getItem('cz_cart')) || []; } catch(e) { cart = []; }
 
+    var BOT_TOKEN = '8539395724:AAHmhK1tqwr7W61q7wwGyqA8iH-Bd4Q_d2M';
+    var CHAT_ID   = '-1003554081452';
+
+    // ─── FALLBACK ДЛЯ ЗОБРАЖЕНЬ ЛОГОТИПУ ──────────────────
+    document.querySelectorAll('.js-img-fallback').forEach(function(img) {
+        img.addEventListener('error', function() {
+            img.style.display = 'none';
+            var fallback = img.nextElementSibling;
+            if (fallback && fallback.classList.contains('js-img-fallback-text')) {
+                fallback.style.display = 'block';
+            }
+        });
+    });
+
+    // ─── КАРТОЧКИ — ФЛІП ──────────────────────────────────
+    document.querySelectorAll('.card').forEach(function(card) {
+        card.addEventListener('click', function() {
+            card.classList.toggle('flipped');
+        });
+    });
+
+    // ─── КНОПКИ "В КОШИК" ─────────────────────────────────
+    document.querySelectorAll('.btn-cart').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            var name  = btn.getAttribute('data-name');
+            var price = parseInt(btn.getAttribute('data-price'), 10);
+            addToCart(btn, name, price);
+        });
+    });
+
+    // ─── КОШИК — ВІДКРИТИ / ЗАКРИТИ ───────────────────────
+    var cartOverlay = document.getElementById('cart-overlay');
+
+    document.getElementById('js-cart-open').addEventListener('click', function() {
+        cartOverlay.classList.toggle('open');
+    });
+    document.getElementById('js-cart-close').addEventListener('click', function() {
+        cartOverlay.classList.remove('open');
+    });
+    document.getElementById('js-cart-checkout').addEventListener('click', function() {
+        cartOverlay.classList.remove('open');
+        setTimeout(function() {
+            var el = document.getElementById('order');
+            if (el) {
+                var top = el.getBoundingClientRect().top + window.pageYOffset - 80;
+                window.scrollTo({ top: top, behavior: 'smooth' });
+            }
+        }, 350);
+    });
+
+    // ─── ФУНКЦІЇ КОШИКА ───────────────────────────────────
     function updateUI() {
         var count = cart.reduce(function(sum, item){ return sum + item.qty; }, 0);
         document.getElementById('cart-count').textContent = count;
@@ -1224,13 +1319,12 @@
         try { localStorage.setItem('cz_cart', JSON.stringify(cart)); } catch(e) {}
     }
 
-    function removeFromCart(idx) {
+    window.removeFromCart = function(idx) {
         cart.splice(idx, 1);
         updateUI();
-    }
+    };
 
-    function addToCart(event, name, price) {
-        event.stopPropagation();
+    function addToCart(btn, name, price) {
         var existing = null;
         for (var i = 0; i < cart.length; i++) {
             if (cart[i].name === name) { existing = cart[i]; break; }
@@ -1242,7 +1336,6 @@
         }
         updateUI();
 
-        var btn = event.currentTarget;
         var orig = btn.textContent;
         btn.textContent = '✓ Додано';
         btn.style.borderColor = '#6a9';
@@ -1254,45 +1347,30 @@
         }, 1400);
     }
 
-    function toggleCart() {
-        document.getElementById('cart-overlay').classList.toggle('open');
-    }
-
-    function goToOrder() {
-        document.getElementById('cart-overlay').classList.remove('open');
-        setTimeout(function() {
-            var el = document.getElementById('order');
-            if (el) {
-                var top = el.getBoundingClientRect().top + window.pageYOffset - 80;
-                window.scrollTo({ top: top, behavior: 'smooth' });
-            }
-        }, 350);
-    }
-
-    var BOT_TOKEN = '8539395724:AAHmhK1tqwr7W61q7wwGyqA8iH-Bd4Q_d2M';
-    var CHAT_ID   = '-1003554081452';
-
+    // ─── TELEGRAM ─────────────────────────────────────────
     function sendTelegramNotification(orderData) {
         var text = [
-            '\uD83D\uDED4 *Нове замовлення!*',
-            '',
-            '\uD83D\uDC64 Ім\'я: ' + orderData.name,
-            '\uD83D\uDCDE Телефон: ' + orderData.phone,
-            '\uD83D\uDCE6 Адреса: ' + orderData.address,
-            '',
-            '\uD83D\uDED2 Товари:',
-            orderData.items,
-            '',
-            '\uD83D\uDCB0 Сума: ' + orderData.total + ' грн'
+            '\uD83D\uDECD *Нове замовлення!*', '',
+            '\uD83D\uDC64 Ім\'я: '    + orderData.name,
+            '\uD83D\uDCDE Телефон: '  + orderData.phone,
+            '\uD83D\uDCE6 Адреса: '   + orderData.address,
+            '', '\uD83D\uDED2 Товари:', orderData.items,
+            '', '\uD83D\uDCB0 Сума: ' + orderData.total + ' грн'
         ].join('\n');
 
         return fetch('https://api.telegram.org/bot' + BOT_TOKEN + '/sendMessage', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ chat_id: CHAT_ID, text: text, parse_mode: 'Markdown' })
-        }).catch(function(err){ console.error('Telegram error:', err); });
+        }).then(function(response) {
+            if (!response.ok) {
+                throw new Error('Telegram API error: ' + response.status + ' ' + response.statusText);
+            }
+            return response;
+        });
     }
 
+    // ─── ФОРМА ЗАМОВЛЕННЯ ──────────────────────────────────
     document.getElementById('main-form').addEventListener('submit', function(e) {
         e.preventDefault();
         if (cart.length === 0) { alert('Додайте щось у кошик!'); return; }
@@ -1300,20 +1378,38 @@
         var form    = this;
         var total   = cart.reduce(function(sum, i){ return sum + i.price * i.qty; }, 0);
         var items   = cart.map(function(i){ return '• ' + i.name + ' × ' + i.qty + ' = ' + (i.price * i.qty) + ' грн'; }).join('\n');
-        var nameVal = document.getElementById('name').value;
-        var phone   = document.getElementById('phone').value;
-        var addr    = document.getElementById('address').value;
 
-        sendTelegramNotification({ name: nameVal, phone: phone, address: addr, items: items, total: total })
-            .finally(function() {
-                alert('Дякуємо! Замовлення прийнято.\nМи зв\'яжемося з вами найближчим часом. \uD83D\uDE4F');
-                cart = [];
-                updateUI();
-                form.reset();
-            });
+        // Опціонально: заблокувати кнопку під час відправки
+        // var btn = form.querySelector('button[type="submit"]');
+        // btn.disabled = true;
+
+        sendTelegramNotification({
+            name:    document.getElementById('name').value,
+            phone:   document.getElementById('phone').value,
+            address: document.getElementById('address').value,
+            items:   items,
+            total:   total
+        })
+        .then(function() {
+            // Спрацює ТІЛЬКИ якщо запит пройшов успішно
+            alert('Дякуємо! Замовлення прийнято.\nМи зв\'яжемося з вами найближчим часом. \uD83D\uDE4F');
+            cart = [];
+            updateUI();
+            form.reset();
+        })
+        .catch(function(error) {
+            // Спрацює при помилці (немає мережі, збій API тощо)
+            console.error('Помилка відправки:', error);
+            alert('Вибачте, сталася помилка при відправці замовлення. Будь ласка, спробуйте ще раз або зв\'яжіться з нами в Instagram.');
+        })
+        .finally(function() {
+            // Спрацює в будь-якому випадку в самому кінці
+            // Тут зручно повертати кнопку в активний стан
+            // btn.disabled = false;
+        });
     });
 
-    // Анімація появи секцій
+    // ─── АНІМАЦІЯ ПОЯВИ СЕКЦІЙ ────────────────────────────
     if ('IntersectionObserver' in window) {
         var observer = new IntersectionObserver(function(entries) {
             entries.forEach(function(e) {
@@ -1325,7 +1421,10 @@
         document.querySelectorAll('.fade-in').forEach(function(el){ el.classList.add('visible'); });
     }
 
+    // ─── ІНІЦІАЛІЗАЦІЯ ────────────────────────────────────
     updateUI();
+
+}); // end DOMContentLoaded
 </script>
 </body>
 </html>
