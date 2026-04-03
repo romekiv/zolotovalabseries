@@ -2,11 +2,16 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#080808">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <title>Olena Zolotova | Lab Series</title>
-    <!-- Іконка у вкладці браузера: файл monogram.png поруч з index.html -->
     <link rel="icon" type="image/png" href="monogram.png">
     <link rel="shortcut icon" type="image/png" href="monogram.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -22,7 +27,9 @@
             --radius: 6px;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 
         body {
             font-family: 'Montserrat', sans-serif;
@@ -30,6 +37,9 @@
             color: var(--text);
             scroll-behavior: smooth;
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
         }
 
         /* ─── УТИЛІТИ ─────────────────────────────── */
@@ -39,13 +49,16 @@
         /* ─── НАВІГАЦІЯ ───────────────────────────── */
         .nav {
             position: fixed; top: 0; width: 100%;
-            display: flex; align-items: center; justify-content: space-between;
+            display: -webkit-flex; display: flex;
+            -webkit-align-items: center; align-items: center;
+            -webkit-justify-content: space-between; justify-content: space-between;
             padding: 16px 5%;
             background: rgba(8,8,8,0.96);
+            -webkit-backdrop-filter: blur(12px);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--card-border);
             z-index: 1000;
-            transition: padding 0.3s;
+            -webkit-transition: padding 0.3s; transition: padding 0.3s;
         }
 
         /* ═══════════════════════════════════════════
@@ -196,14 +209,17 @@
         .card { height: 480px; perspective: 1400px; cursor: pointer; }
         .card-inner {
             position: relative; width: 100%; height: 100%;
-            transform-style: preserve-3d;
+            -webkit-transform-style: preserve-3d; transform-style: preserve-3d;
+            -webkit-transition: -webkit-transform 0.85s cubic-bezier(0.4, 0, 0.2, 1);
             transition: transform 0.85s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .card.flipped .card-inner { transform: rotateY(180deg); }
+        .card.flipped .card-inner {
+            -webkit-transform: rotateY(180deg); transform: rotateY(180deg);
+        }
 
         .card-front, .card-back {
             position: absolute; inset: 0;
-            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden; backface-visibility: hidden;
             border-radius: 8px;
             overflow: hidden;
             border: 1px solid var(--card-border);
@@ -273,11 +289,12 @@
 
         /* ── ЗАДНЯ СТОРОНА КАРТКИ ── */
         .card-back {
-            transform: rotateY(180deg);
+            -webkit-transform: rotateY(180deg); transform: rotateY(180deg);
             background: #0d0b06;
-            display: flex; flex-direction: column;
+            display: -webkit-flex; display: flex;
+            -webkit-flex-direction: column; flex-direction: column;
             padding: 36px 32px;
-            justify-content: space-between;
+            -webkit-justify-content: space-between; justify-content: space-between;
         }
         .card-back-title {
             font-family: 'Cormorant Garamond', serif;
@@ -476,13 +493,28 @@
         }
         .cart-items { flex: 1; overflow-y: auto; }
         .cart-item {
-            display: flex; justify-content: space-between; align-items: center;
+            display: -webkit-flex; display: flex;
+            -webkit-justify-content: space-between; justify-content: space-between;
+            -webkit-align-items: center; align-items: center;
             padding: 12px 0;
             border-bottom: 1px solid rgba(201,168,76,0.07);
             font-size: 0.85rem;
+            gap: 8px;
         }
-        .cart-item-name { color: var(--text); }
-        .cart-item-price { color: var(--gold); font-weight: 600; }
+        .cart-item-name { color: var(--text); -webkit-flex: 1; flex: 1; }
+        .cart-item-price { color: var(--gold); font-weight: 600; white-space: nowrap; }
+        .cart-item-remove {
+            background: none;
+            border: none;
+            color: #5a4030;
+            font-size: 1rem;
+            cursor: pointer;
+            padding: 2px 4px;
+            line-height: 1;
+            -webkit-transition: color 0.2s; transition: color 0.2s;
+            -webkit-flex-shrink: 0; flex-shrink: 0;
+        }
+        .cart-item-remove:hover { color: #c0503a; }
         #cart-total-price {
             margin-top: 20px; padding-top: 16px;
             border-top: 1px solid var(--card-border);
@@ -601,7 +633,7 @@
             <div class="card-inner">
                 <div class="card-front">
                     <img class="card-img" src="images/cleansing_oil.jpg" alt="Cleansing Oil" onerror="this.style.display='none'">
-                    <div class="card-img-placeholder">🧴</div>
+                    <div class="card-img-placeholder">🫧</div>
                     <div class="card-front-body">
                         <div>
                             <h3>CLEANSING OIL</h3>
@@ -637,7 +669,7 @@
                 <div class="card-front">
                     <div class="card-premium">💎</div>
                     <img class="card-img" src="images/silk_cream.jpg" alt="Silk Finish Cream" onerror="this.style.display='none'">
-                    <div class="card-img-placeholder">🫧</div>
+                    <div class="card-img-placeholder">🧴</div>
                     <div class="card-front-body">
                         <div>
                             <h3>SILK FINISH CREAM</h3>
@@ -794,10 +826,10 @@
                     <div>
                         <p class="card-back-title">Ефект</p>
                         <h3>Anti-age оновлення та вирівнювання текстури</h3>
-                        <p class="card-desc">Власна формула зі спікулами забезпечує мікростимуляцію шкіри, активує процеси регенерації та підсилює ефективність активів. Для обличчя та тіла.</p>
+                        <p class="card-desc">Власна формула зі спікулами забезпечує мікростимуляцію шкіри, активує процеси регенерації. Для обличчя та тіла.</p>
                         <div class="card-warn">
                             <span>Протипоказання</span>
-                            Запалена, чутлива або пошкоджена шкіра
+                            Запалена або пошкоджена шкіра
                         </div>
                     </div>
                     <div class="card-mood">
@@ -965,11 +997,11 @@
         <div class="card" onclick="this.classList.toggle('flipped')">
             <div class="card-inner">
                 <div class="card-front">
-                    <img class="card-img" src="images/kit_cleanglow.jpg" alt="Clean & Glow System" onerror="this.style.display='none'">
+                    <img class="card-img" src="images/kit_cleanglow.jpg" alt="Clean &amp; Glow System" onerror="this.style.display='none'">
                     <div class="card-img-placeholder">✨</div>
                     <div class="card-front-body">
                         <div>
-                            <h3>CLEAN & GLOW SYSTEM</h3>
+                            <h3>CLEAN &amp; GLOW SYSTEM</h3>
                             <span class="card-volume">Набір · 2 продукти</span>
                         </div>
                         <div style="display:flex;justify-content:space-between;align-items:flex-end;">
@@ -991,7 +1023,52 @@
                         <span>Результат</span>
                         <strong>Чиста, сяюча та оновлена шкіра</strong>
                     </div>
-                    <button class="btn-cart" onclick="addToCart(event, 'Clean & Glow System (набір)', 1350)">В кошик</button>
+                    <button class="btn-cart" onclick="addToCart(event, 'Clean &amp; Glow System (набір)', 1350)">В кошик</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════════
+             НАБІР 12 — FULL SYSTEM (ВСІ ПРОДУКТИ)
+             Фото: images/kit_full.jpg
+             ══════════════════════════════════════════════ -->
+        <div class="card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <div class="card-badge">⭐ Максимальний результат</div>
+                    <img class="card-img" src="images/kit_full.jpg" alt="Full System" onerror="this.style.display='none'">
+                    <div class="card-img-placeholder" style="font-size:2.8rem;">✦◈✦</div>
+                    <div class="card-front-body">
+                        <div>
+                            <h3>FULL SYSTEM</h3>
+                            <span class="card-volume">Всі продукти · 5 позицій</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;align-items:flex-end;">
+                            <div>
+                                <span class="card-price">4 450 грн</span>
+                                <div style="font-size:0.65rem;color:#6a9;letter-spacing:1px;margin-top:3px;">Економія 480 грн</div>
+                            </div>
+                            <span class="card-hint">↻ деталі</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-back">
+                    <div>
+                        <p class="card-back-title">Склад набору</p>
+                        <h3>Повний ритуал догляду</h3>
+                        <p class="card-desc">
+                            · Cleansing Oil 50 мл<br>
+                            · PHA Skin Refining Lotion 60 мл<br>
+                            · Glass Skin Peptide Serum 30 мл<br>
+                            · Eye Drainage &amp; Lift Serum 15 мл<br>
+                            · Silk Finish Cream 30 мл
+                        </p>
+                    </div>
+                    <div class="card-mood">
+                        <span>Результат</span>
+                        <strong>Комплексний догляд від очищення до anti-age</strong>
+                    </div>
+                    <button class="btn-cart" onclick="addToCart(event, 'Full System (всі продукти)', 4450)">В кошик</button>
                 </div>
             </div>
         </div>
@@ -1105,61 +1182,70 @@
         <div id="cart-items-list"></div>
     </div>
     <div id="cart-total-price"></div>
-    <button class="btn-gold" style="width:100%;margin-top:24px;text-align:center;" onclick="toggleCart()">
+    <button class="btn-gold" style="width:100%;margin-top:24px;text-align:center;" onclick="goToOrder()">
         Оформити замовлення
     </button>
 </div>
 
 <script>
-    let cart = JSON.parse(localStorage.getItem('cz_cart')) || [];
+    let cart = [];
+    try { cart = JSON.parse(localStorage.getItem('cz_cart')) || []; } catch(e) { cart = []; }
 
     function updateUI() {
-        const count = cart.reduce((sum, item) => sum + item.qty, 0);
-        document.getElementById('cart-count').innerText = count;
+        var count = cart.reduce(function(sum, item){ return sum + item.qty; }, 0);
+        document.getElementById('cart-count').textContent = count;
 
-        const list    = document.getElementById('cart-items-list');
-        const summary = document.getElementById('order-summary');
-        const total   = document.getElementById('cart-total-price');
+        var list    = document.getElementById('cart-items-list');
+        var summary = document.getElementById('order-summary');
+        var total   = document.getElementById('cart-total-price');
 
         if (cart.length === 0) {
             list.innerHTML    = '<p style="color:var(--text-muted);font-size:0.85rem;">Поки порожньо</p>';
             summary.innerHTML = 'Кошик порожній — додайте товари вище';
-            total.innerText   = '';
+            total.textContent = '';
         } else {
-            list.innerHTML = cart.map(item => `
-                <div class="cart-item">
-                    <span class="cart-item-name">${item.name} × ${item.qty}</span>
-                    <span class="cart-item-price">${item.price * item.qty} грн</span>
-                </div>
-            `).join('');
+            list.innerHTML = cart.map(function(item, idx) {
+                return '<div class="cart-item">' +
+                    '<span class="cart-item-name">' + item.name + ' &times; ' + item.qty + '</span>' +
+                    '<span class="cart-item-price">' + (item.price * item.qty) + ' грн</span>' +
+                    '<button class="cart-item-remove" onclick="removeFromCart(' + idx + ')" title="Видалити">&#10005;</button>' +
+                '</div>';
+            }).join('');
 
-            const totalSum = cart.reduce((sum, i) => sum + i.price * i.qty, 0);
-            total.innerText = `Разом: ${totalSum} грн`;
-            summary.innerHTML = `<strong>Ваше замовлення:</strong><br>` +
-                cart.map(i => `${i.name} (${i.qty} шт.)`).join('<br>') +
-                `<br><br><strong>До сплати: ${totalSum} грн</strong>`;
+            var totalSum = cart.reduce(function(sum, i){ return sum + i.price * i.qty; }, 0);
+            total.textContent = 'Разом: ' + totalSum + ' грн';
+            summary.innerHTML = '<strong>Ваше замовлення:</strong><br>' +
+                cart.map(function(i){ return i.name + ' (' + i.qty + ' шт.)'; }).join('<br>') +
+                '<br><br><strong>До сплати: ' + totalSum + ' грн</strong>';
         }
-        localStorage.setItem('cz_cart', JSON.stringify(cart));
+        try { localStorage.setItem('cz_cart', JSON.stringify(cart)); } catch(e) {}
+    }
+
+    function removeFromCart(idx) {
+        cart.splice(idx, 1);
+        updateUI();
     }
 
     function addToCart(event, name, price) {
         event.stopPropagation();
-        const existing = cart.find(i => i.name === name);
+        var existing = null;
+        for (var i = 0; i < cart.length; i++) {
+            if (cart[i].name === name) { existing = cart[i]; break; }
+        }
         if (existing) {
             existing.qty++;
         } else {
-            cart.push({ name, price, qty: 1 });
+            cart.push({ name: name, price: price, qty: 1 });
         }
         updateUI();
 
-        // Маленьке підтвердження замість alert
-        const btn = event.currentTarget;
-        const orig = btn.innerText;
-        btn.innerText = '✓ Додано';
+        var btn = event.currentTarget;
+        var orig = btn.textContent;
+        btn.textContent = '✓ Додано';
         btn.style.borderColor = '#6a9';
         btn.style.color = '#6a9';
-        setTimeout(() => {
-            btn.innerText = orig;
+        setTimeout(function() {
+            btn.textContent = orig;
             btn.style.borderColor = '';
             btn.style.color = '';
         }, 1400);
@@ -1169,99 +1255,72 @@
         document.getElementById('cart-overlay').classList.toggle('open');
     }
 
-    // ════════════════════════════════════════════════════
-    // TELEGRAM БОТ — сповіщення про замовлення:
-    //
-    // 1. Створіть бота через @BotFather в Telegram
-    //    → Отримайте BOT_TOKEN (формат: 123456:ABCdef...)
-    //
-    // 2. Напишіть боту /start, щоб отримати CHAT_ID
-    //    Або використайте @userinfobot
-    //
-    // 3. Замініть значення нижче:
-    //    const BOT_TOKEN = 'ВАШ_ТОКЕН_БОТА';
-    //    const CHAT_ID   = 'ВАШ_CHAT_ID';
-    //
-    // 4. Функція sendTelegramNotification вже підключена
-    //    до форми — просто вставте правильні дані.
-    // ════════════════════════════════════════════════════
-
-    const BOT_TOKEN = '8539395724:AAHmhK1tqwr7W61q7wwGyqA8iH-Bd4Q_d2M'; // ← сюди токен
-    const CHAT_ID   = '-1003554081452';    // ← сюди chat_id
-
-    async function sendTelegramNotification(orderData) {
-        const text = `
-🛍 *Нове замовлення!*
-
-👤 Ім'я: ${orderData.name}
-📞 Телефон: ${orderData.phone}
-📦 Адреса: ${orderData.address}
-
-🛒 Товари:
-${orderData.items}
-
-💰 Сума: ${orderData.total} грн
-        `.trim();
-
-        try {
-            await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    chat_id: CHAT_ID,
-                    text: text,
-                    parse_mode: 'Markdown'
-                })
-            });
-        } catch (err) {
-            console.error('Telegram error:', err);
-        }
+    function goToOrder() {
+        document.getElementById('cart-overlay').classList.remove('open');
+        setTimeout(function() {
+            var el = document.getElementById('order');
+            if (el) {
+                var top = el.getBoundingClientRect().top + window.pageYOffset - 80;
+                window.scrollTo({ top: top, behavior: 'smooth' });
+            }
+        }, 350);
     }
 
-    document.getElementById('main-form').addEventListener('submit', async function(e) {
+    var BOT_TOKEN = '8539395724:AAHmhK1tqwr7W61q7wwGyqA8iH-Bd4Q_d2M';
+    var CHAT_ID   = '-1003554081452';
+
+    function sendTelegramNotification(orderData) {
+        var text = [
+            '\uD83D\uDED4 *Нове замовлення!*',
+            '',
+            '\uD83D\uDC64 Ім\'я: ' + orderData.name,
+            '\uD83D\uDCDE Телефон: ' + orderData.phone,
+            '\uD83D\uDCE6 Адреса: ' + orderData.address,
+            '',
+            '\uD83D\uDED2 Товари:',
+            orderData.items,
+            '',
+            '\uD83D\uDCB0 Сума: ' + orderData.total + ' грн'
+        ].join('\n');
+
+        return fetch('https://api.telegram.org/bot' + BOT_TOKEN + '/sendMessage', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ chat_id: CHAT_ID, text: text, parse_mode: 'Markdown' })
+        }).catch(function(err){ console.error('Telegram error:', err); });
+    }
+
+    document.getElementById('main-form').addEventListener('submit', function(e) {
         e.preventDefault();
-        if (cart.length === 0) return alert('Додайте щось у кошик!');
+        if (cart.length === 0) { alert('Додайте щось у кошик!'); return; }
 
-        const total = cart.reduce((sum, i) => sum + i.price * i.qty, 0);
-        const items = cart.map(i => `• ${i.name} × ${i.qty} = ${i.price * i.qty} грн`).join('\n');
+        var form    = this;
+        var total   = cart.reduce(function(sum, i){ return sum + i.price * i.qty; }, 0);
+        var items   = cart.map(function(i){ return '• ' + i.name + ' × ' + i.qty + ' = ' + (i.price * i.qty) + ' грн'; }).join('\n');
+        var nameVal = document.getElementById('name').value;
+        var phone   = document.getElementById('phone').value;
+        var addr    = document.getElementById('address').value;
 
-        // Відправка в Telegram
-        await sendTelegramNotification({
-            name:    this.name.value,
-            phone:   this.phone.value,
-            address: this.address.value,
-            items,
-            total
-        });
-
-        // ════════════════════════════════════════════
-        // ОПЛАТА — після підтвердження замовлення:
-        // Тут можна запустити платіжну форму:
-        //
-        // Приклад LiqPay:
-        // LiqPayCheckout.init({
-        //     data: '...base64...',
-        //     signature: '...sha1...',
-        //     embedTo: '#liqpay_checkout',
-        //     mode: 'popup'
-        // });
-        //
-        // Або redirect на посилання WayForPay / Monobank
-        // ════════════════════════════════════════════
-
-        alert('Дякуємо! Замовлення прийнято.\nМи зв\'яжемося з вами найближчим часом. 🙏');
-        cart = [];
-        updateUI();
-        this.reset();
+        sendTelegramNotification({ name: nameVal, phone: phone, address: addr, items: items, total: total })
+            .finally(function() {
+                alert('Дякуємо! Замовлення прийнято.\nМи зв\'яжемося з вами найближчим часом. \uD83D\uDE4F');
+                cart = [];
+                updateUI();
+                form.reset();
+            });
     });
 
     // Анімація появи секцій
-    const observer = new IntersectionObserver(entries => {
-        entries.forEach(e => {
-            if (e.isIntersecting) e.target.classList.add('visible');
-        });
-    }, { threshold: 0.08 });
-    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    if ('IntersectionObserver' in window) {
+        var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(e) {
+                if (e.isIntersecting) e.target.classList.add('visible');
+            });
+        }, { threshold: 0.08 });
+        document.querySelectorAll('.fade-in').forEach(function(el){ observer.observe(el); });
+    } else {
+        document.querySelectorAll('.fade-in').forEach(function(el){ el.classList.add('visible'); });
+    }
 
     updateUI();
 </script>
