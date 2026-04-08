@@ -686,6 +686,23 @@
         }
         .footer-logo { width: 90px; margin: 0 auto 20px; opacity: 0.8; }
         .footer-logo img { width: 100%; }
+        .footer-socials {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 18px;
+        }
+        .footer-socials a {
+            color: var(--text-muted);
+            opacity: 0.7;
+            transition: opacity 0.2s ease, color 0.2s ease;
+            display: flex;
+            align-items: center;
+        }
+        .footer-socials a:hover {
+            opacity: 1;
+            color: var(--gold);
+        }
         footer p { font-size: 0.72rem; color: var(--text-muted); letter-spacing: 2px; }
 
         /* ─── АНІМАЦІЇ ───────────────────────────── */
@@ -1360,8 +1377,19 @@
 
 <!-- ─── FOOTER ───────────────────────────────────────── -->
 <footer>
-    <div class="footer-logo">
-        <!-- <img src="monogram.png" alt="OZ" onerror="this.style.display='none'"> -->
+    <div class="footer-socials">
+        <a href="https://www.instagram.com/kosmetolog_zolotova/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                <circle cx="12" cy="12" r="4"/>
+                <circle cx="17.5" cy="6.5" r="0.01" stroke-width="3"/>
+            </svg>
+        </a>
+        <a href="https://www.tiktok.com/@kosmetologzolotova" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/>
+            </svg>
+        </a>
     </div>
     <p>© 2026 Olena Zolotova Lab Series | +380636999624</p>
 </footer>
