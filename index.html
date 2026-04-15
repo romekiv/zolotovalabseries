@@ -765,7 +765,7 @@
         /* [AI PATCH] Картка: висота — по контенту, не фіксована */
         .card {
             height: auto;
-            height: 480px; /* [AI PATCH] перекриває desktop height:480px; 640px — вистачає для найбільшої картки */
+            height: 640px; /* [AI PATCH] перекриває desktop height:480px; 640px — вистачає для найбільшої картки */
         }
 
         /* [AI PATCH] Внутрішній контейнер картки:
@@ -775,7 +775,7 @@
             position: relative;
             width: 100%;
             height: 100%; /* [AI PATCH] mob: inner росте від min-height батька */
-            min-height: 480px; /* [AI PATCH] */
+            min-height: 640px; /* [AI PATCH] */
         }
 
         /* [AI PATCH] Обидві сторони займають 100% висоти
@@ -796,7 +796,7 @@
         /* [AI PATCH] Зображення займає фіксовану частину висоти */
         .card-img,
         .card-img-placeholder {
-            height: 45%;
+            height: 65%;
             flex-shrink: 0;
         }
 
