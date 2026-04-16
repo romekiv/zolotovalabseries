@@ -1647,7 +1647,7 @@ Promise.all([        sendTelegramNotification({
                                            phone: document.getElementById('phone').value,
                                            email: '',
                                            comment: document.getElementById('address').value,
-                                           items: cart.map(function(i){ return {name:i.name,price:i.price,quantity:i.qty,sku:''}; })
+                                           items: cart.map(function(i){ return {name:i.name,price:i.price,quantity:i.qty,sku:''}; }))
                                                            })
                        ])
         .then(function() {
