@@ -1615,6 +1615,13 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+function sendToKeepinCRM(d){
+            return fetch('https://site-order-api.romek-ivanchenko.workers.dev/order',{
+                          method:'POST',
+                          headers:{'Content-Type':'application/json'},
+                          body:JSON.stringify(d)
+                                      });
+          }
     // ─── ФОРМА ЗАМОВЛЕННЯ ──────────────────────────────────
     document.getElementById('main-form').addEventListener('submit', function(e) {
         e.preventDefault();
@@ -1628,13 +1635,21 @@ document.addEventListener('DOMContentLoaded', function() {
         // var btn = form.querySelector('button[type="submit"]');
         // btn.disabled = true;
 
-        sendTelegramNotification({
+Promise.all([        sendTelegramNotification({
             name:    document.getElementById('name').value,
             phone:   document.getElementById('phone').value,
             address: document.getElementById('address').value,
             items:   items,
             total:   total
-        })
+        }),
+                         sendToKeepinCRM({
+                                           fullName: document.getElementById('name').value,
+                                           phone: document.getElementById('phone').value,
+                                           email: '',
+                                           comment: document.getElementById('address').value,
+                                           items: cart.map(function(i){ return {name:i.name,price:i.price,quantity:i.qty,sku:''}; })
+                                                           })
+                       ])
         .then(function() {
             // Спрацює ТІЛЬКИ якщо запит пройшов успішно
             alert('Дякуємо! Замовлення прийнято.\nМи зв\'яжемося з вами найближчим часом. \uD83D\uDE4F');
