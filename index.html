@@ -1578,7 +1578,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (existing) {
             existing.qty++;
         } else {
-            cart.push({ name: name, price: price, qty: 1, sku: btn.getAttribute('data-sku') || '' });
+            cart.push({ name: name, price: price, qty: 1, sku: sku });
         }
         updateUI();
 
