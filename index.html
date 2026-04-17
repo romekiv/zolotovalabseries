@@ -1509,7 +1509,8 @@ document.addEventListener('DOMContentLoaded', function() {
             e.stopPropagation();
             var name  = btn.getAttribute('data-name');
             var price = parseInt(btn.getAttribute('data-price'), 10);
-            addToCart(btn, name, price);
+            var sku   = btn.getAttribute('data-sku') || ''; // ← читаем SKU из кнопки
+            addToCart(btn, name, price, sku);
         });
     });
 
