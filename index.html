@@ -1569,7 +1569,7 @@ document.addEventListener('DOMContentLoaded', function() {
         updateUI();
     };
 
-    function addToCart(btn, name, price) {
+    function addToCart(btn, name, price, sku) {
         var existing = null;
         for (var i = 0; i < cart.length; i++) {
             if (cart[i].name === name) { existing = cart[i]; break; }
@@ -1577,7 +1577,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (existing) {
             existing.qty++;
         } else {
-            cart.push({ name: name, price: price, qty: 1 });
+            cart.push({ name: name, price: price, qty: 1, sku: btn.getAttribute('data-sku') || '' });
         }
         updateUI();
 
@@ -1647,7 +1647,7 @@ Promise.all([        sendTelegramNotification({
                                            phone: document.getElementById('phone').value,
                                            email: '',
                                            comment: document.getElementById('address').value,
-                                           items: cart.map(function(i){ return {name:i.name,price:i.price,quantity:i.qty,sku:''}; })
+                                           items: cart.map(function(i){ return {name:i.name,price:i.price,quantity:i.qty,sku:i.sku''}; })
                                                            })
                        ])
         .then(function() {
