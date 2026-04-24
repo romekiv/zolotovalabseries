@@ -484,7 +484,7 @@ function loadGoogleReviews() {
                     +   '</div>'
                     + '</div>';
 
-                var track = document.getElementById('reviews-track'); track.insertBefore(card, document.getElementById('reviews-prev'));
+                        var track = document.getElementById('reviews-track'); track.appendChild(card);
             });
 
             /* Після додавання нових карток — переініціалізуємо слайдер */
