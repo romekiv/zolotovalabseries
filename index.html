@@ -1706,7 +1706,7 @@ Promise.all([        sendTelegramNotification({
                 });
                 // Вставляємо HTML-секцію
                 tmp.querySelectorAll('section').forEach(function(s){
-                    wrap.appendChild(s.cloneNode(true));
+                    wrap.appendChild(s.cloneNode(true)); wrap.querySelectorAll('.fade-in').forEach(function(f){f.classList.add('visible');});
                 });
                 // Виконуємо inline-скрипти
                 tmp.querySelectorAll('script').forEach(function(s){
