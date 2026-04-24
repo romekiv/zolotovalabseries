@@ -1397,6 +1397,9 @@
     </div>
 </section>
 
+<!-- ─── ВІДГУКИ (підключається з reviews-section.html) ─── -->
+<div id="reviews-embed"></div>
+
 <!-- ─── ФОРМА ЗАМОВЛЕННЯ ─────────────────────────────── -->
 <div class="order-wrap">
 <section id="order" class="section fade-in">
@@ -1687,6 +1690,33 @@ Promise.all([        sendTelegramNotification({
     updateUI();
 
 }); // end DOMContentLoaded
+
+    // ── Підключення блоку відгуків із зовнішнього файлу reviews-section.html ──
+    (function(){
+        fetch('reviews-section.html')
+            .then(function(r){ return r.text(); })
+            .then(function(html){
+                var wrap = document.getElementById('reviews-embed');
+                if (!wrap) return;
+                var tmp = document.createElement('div');
+                tmp.innerHTML = html;
+                // Вставляємо стилі у <head>
+                tmp.querySelectorAll('style').forEach(function(s){
+                    document.head.appendChild(s.cloneNode(true));
+                });
+                // Вставляємо HTML-секцію
+                tmp.querySelectorAll('section').forEach(function(s){
+                    wrap.appendChild(s.cloneNode(true));
+                });
+                // Виконуємо inline-скрипти
+                tmp.querySelectorAll('script').forEach(function(s){
+                    var ns = document.createElement('script');
+                    ns.textContent = s.textContent;
+                    document.body.appendChild(ns);
+                });
+            })
+            .catch(function(e){ console.warn('reviews-section.html не завантажено:', e); });
+    })();
 </script>
 </body>
 </html>

@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<style>
+/* Зовнішня обгортка секції — трохи темніший фон, 
+   щоб секція відрізнялась від ДО/ПІСЛЯ */
+.reviews-wrap {
+    background: var(--dark-2);
+}
+
+/* ─── Агрегований рейтинг вгорі ───────────────────────── */
+.reviews-aggregate {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-top: -40px;   /* підтягуємо ближче до заголовка */
+    margin-bottom: 52px;
+}
+
+/* Велика цифра "4.9" */
+.reviews-score {
+    font-family: 'Cinzel', serif;
+    font-size: 2.8rem;
+    color: var(--gold);
+    line-height: 1;
+}
+
+.reviews-stars-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* Ряд зірочок поруч з цифрою */
+.reviews-stars { display: flex; gap: 5px; }
+.reviews-star {
+    width: 15px;
+    height: 15px;
+    background: var(--gold);
+    /* CSS clip-path — зірка без жодного SVG або символу */
+    clip-path: polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);
+}
+
+/* Підпис "47 відгуків" */
+.reviews-count {
+    font-size: 0.68rem;
+    letter-spacing: 2.5px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+}
+
+/* ─── Слайдер ──────────────────────────────────────────── */
+
+/* Обрізаємо те, що виходить за межі */
+.reviews-overflow { overflow: hidden; }
+
+/* Горизонтальна стрічка карток */
+.reviews-track {
+    display: flex;
+    gap: 20px;
+    transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+    align-items: stretch; /* всі картки однакової висоти в ряду */
+}
+
+/* ─── Картка відгуку ───────────────────────────────────── */
+.review-card {
+    /* На десктопі — 3 картки в ряд.
+       Формула: (100% - 2 відступи по 20px) / 3 */
+    flex: 0 0 calc(33.333% - 14px);
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+    padding: 32px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    transition: border-color 0.3s;
+    box-sizing: border-box;
+}
+.review-card:hover {
+    border-color: rgba(201,168,76,0.42);
+}
+
+/* Зірочки на картці — менші, ніж у рейтинг-агрегаторі */
+.review-card-stars { display: flex; gap: 4px; }
+.review-card-star {
+    width: 12px;
+    height: 12px;
+    background: var(--gold);
+    clip-path: polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);
+}
+
+/* Великі лапки — декоративний елемент */
+.review-quote-mark {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3.5rem;
+    color: rgba(201,168,76,0.15); /* напівпрозорі */
+    line-height: 0.7;
+    display: block;
+}
+
+/* Текст відгуку — курсивний Cormorant */
+.review-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--text);
+    flex: 1; /* розтягується, щоб підвал був завжди внизу */
+}
+
+/* ─── Підвал картки: ім'я + джерело ─────────────────────── */
+.review-footer {
+    border-top: 1px solid rgba(201,168,76,0.1);
+    padding-top: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.review-author-name {
+    font-family: 'Cinzel', serif;
+    font-size: 0.78rem;
+    letter-spacing: 2px;
+    color: var(--gold-light);
+    text-transform: uppercase;
+}
+.review-author-meta {
+    font-size: 0.67rem;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-top: 4px;
+}
+/* Мітка джерела: "● Instagram" або "● Google" */
+.review-source {
+    font-size: 0.62rem;
+    letter-spacing: 2px;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.review-source-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--gold);
+    flex-shrink: 0;
+}
+
+/* ─── Спеціальна картка для embed (Instagram / TikTok) ──── */
+/* Відрізняється від звичайної — немає внутрішніх відступів,
+   весь простір займає вбудований пост */
+.review-card--embed {
+    padding: 0;
+    overflow: hidden;
+    min-height: 420px;
+    justify-content: center;
+    align-items: center;
+    background: #0a0803; /* трохи темніший — щоб рамка поста виглядала гарно */
+}
+/* Коли Instagram/TikTok завантажили свій iframe — прибираємо їхні зовнішні відступи */
+.review-card--embed blockquote,
+.review-card--embed iframe {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    border: none !important;
+    flex-shrink: 0;
+}
+
+/* ─── Навігація: кнопки і точки ────────────────────────── */
+.reviews-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 44px;
+}
+.reviews-nav-btn {
+    width: 42px; height: 42px;
+    border: 1px solid rgba(201,168,76,0.35);
+    background: transparent;
+    color: var(--gold);
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 2px;
+    transition: 0.3s;
+    font-family: 'Montserrat', sans-serif;
+}
+.reviews-nav-btn:hover {
+    background: rgba(201,168,76,0.1);
+    border-color: var(--gold);
+}
+
+/* Горизонтальні риски-точки замість звичних кружечків —
+   в дусі мінімалізму сайту */
+.reviews-dots { display: flex; gap: 8px; }
+.reviews-dot {
+    width: 28px; height: 1px;
+    background: rgba(201,168,76,0.25);
+    cursor: pointer;
+    transition: 0.3s;
+    border: none; padding: 0;
+}
+.reviews-dot.active { background: var(--gold); }
+
+/* ─── Адаптив ───────────────────────────────────────────── */
+@media (max-width: 900px) {
+    /* На планшеті показуємо 2 картки */
+    .review-card { flex: 0 0 calc(50% - 10px); }
+}
+@media (max-width: 580px) {
+    /* На телефоні — одна картка на весь екран */
+    .review-card { flex: 0 0 100%; }
+    .reviews-score { font-size: 2rem; }
+}
+</style>
+</head>
+<body>
+
+<section class="reviews-wrap fade-in" id="reviews">
+  <div class="section">
+
+    <!-- Заголовок секції — використовує існуючий клас section-title
+         (gold-лінія під ним додається через ::after в основному CSS) -->
+    <h2 class="section-title">Відгуки</h2>
+
+    <!-- ─── Агрегований рейтинг ──────────────────────────────
+         Значення 4.9 і 47 відгуків беремо з JSON-LD (уже є в коді).
+         При підключенні Google API — ці цифри замінюємо динамічно
+         через JS (функція renderGoogleAggregate нижче)           -->
+    <div class="reviews-aggregate">
+      <span class="reviews-score" id="reviews-score">4.9</span>
+      <div class="reviews-stars-wrap">
+        <div class="reviews-stars">
+          <!-- 5 зірочок — CSS clip-path, без символів Unicode -->
+          <div class="reviews-star"></div>
+          <div class="reviews-star"></div>
+          <div class="reviews-star"></div>
+          <div class="reviews-star"></div>
+          <div class="reviews-star"></div>
+        </div>
+        <span class="reviews-count" id="reviews-count">47 відгуків</span>
+      </div>
+    </div>
+
+    <!-- ─── Слайдер ──────────────────────────────────────────
+         overflow: hidden приховує картки, що вийшли за межу.
+         Рух здійснюється через transform: translateX() в JS    -->
+    <div class="reviews-overflow">
+      <div class="reviews-track" id="reviews-track">
+
+        
+
+        <!-- Статичний відгук #1 -->
+        <div class="review-card">
+          <span class="review-quote-mark">"</span>
+          <div class="review-card-stars">
+            <div class="review-card-star"></div>
+            <div class="review-card-star"></div>
+            <div class="review-card-star"></div>
+            <div class="review-card-star"></div>
+            <div class="review-card-star"></div>
+          </div>
+          
+          <p class="review-text">Після курсу RF-ліфтингу шкіра стала значно пружнішою. Олена — справжній профі. Результат видно вже після другого сеансу!</p>
+          <div class="review-footer">
+            <div>
+              
+              <p class="review-author-name">Марина К.</p>
+              <p class="review-author-meta">RF-ліфтинг · 4 процедури</p>
+            </div>
+            
+            <div class="review-source">
+              <div class="review-source-dot"></div>Facebook
+            </div>
+          </div>
+        </div>
+
+        <!-- Статичний відгук #2 -->
+        <div class="review-card">
+          <span class="review-quote-mark">"</span>
+          <div class="review-card-stars">
+            <div class="review-card-star"></div>
+            <div class="review-card-star"></div>
+            <div class="review-card-star"></div>
+            <div class="review-card-star"></div>
+            <div class="review-card-star"></div>
+          </div>
+          <p class="review-text">Замовила сироватку Lab Series — доставили швидко. Вже тиждень використовую і вже бачу різницю. Шкіра зволожена й сяє зсередини.</p>
+          <div class="review-footer">
+            <div>
+              <p class="review-author-name">Анна С.</p>
+              <p class="review-author-meta">Сироватка · доставка</p>
+            </div>
+            <div class="review-source">
+              <div class="review-source-dot"></div>Instagram
+            </div>
+          </div>
+        </div>
+
+        <!-- Статичний відгук #3 -->
+        <div class="review-card">
+          <span class="review-quote-mark">"</span>
+          <div class="review-card-stars">
+            <div class="review-card-star"></div>
+            <div class="review-card-star"></div>
+            <div class="review-card-star"></div>
+            <div class="review-card-star"></div>
+            <div class="review-card-star"></div>
+          </div>
+          <p class="review-text">Дуже задоволена кавітацією! Підхід індивідуальний, все пояснює. Відчуваю себе на руках у фахівця. Рекомендую всім у Вінниці.</p>
+          <div class="review-footer">
+            <div>
+              <p class="review-author-name">Катерина В.</p>
+              <p class="review-author-meta">Кавітація · 4 процедури</p>
+            </div>
+            <div class="review-source">
+              <div class="review-source-dot"></div>TikTok
+            </div>
+          </div>
+        </div>
+
+        <!-- Статичний відгук #4 -->
+        <div class="review-card">
+          <span class="review-quote-mark">"</span>
+          <div class="review-card-stars">
+            <div class="review-card-star"></div>
+            <div class="review-card-star"></div>
+            <div class="review-card-star"></div>
+            <div class="review-card-star"></div>
+            <div class="review-card-star"></div>
+          </div>
+          <p class="review-text">Олена — косметолог від Бога. Після пілінгу шкіра просто сяє. Їду до неї вже третій рік поспіль і не збираюся змінювати.</p>
+          <div class="review-footer">
+            <div>
+              <p class="review-author-name">Вікторія Л.</p>
+              <p class="review-author-meta">Пілінг · постійна клієнтка</p>
+            </div>
+            <div class="review-source">
+              <div class="review-source-dot"></div>TikTok
+            </div>
+          </div>
+        </div>
+
+        
+        <div id="google-reviews-slot">
+          <!-- JS вставить картки з Google тут -->
+        </div>
+
+        
+
+        <!-- Instagram пост #1 (ПРИКЛАД — замініть на реальний embed) -->
+        <div class="review-card review-card--embed">                  
+            <blockquote 
+				class="instagram-media" 
+				data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/reel/DV8WYPBjZep/?utm_source=ig_embed&amp;utm_campaign=loading" 
+				data-instgrm-version="14" 
+				style=" background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:540px; min-width:326px; padding:0; width:99.375%; width:-webkit-calc(100% - 2px); width:calc(100% - 2px);"><div style="padding:16px;"> 
+					<a href="https://www.instagram.com/reel/DV8WYPBjZep/?utm_source=ig_embed&amp;utm_campaign=loading" style=" background:#FFFFFF; line-height:0; padding:0 0; text-align:center; text-decoration:none; width:100%;" target="_blank">
+			</blockquote>			
+        </div>
+
+        <!-- Instagram пост #2 (за потреби — додайте ще один такий блок) -->
+		<div class="review-card review-card--embed">                  
+            <blockquote 
+				class="instagram-media" 
+				data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/p/DS0JwRMDeDk/" 
+				data-instgrm-version="14"				
+			</blockquote>			
+        </div>
+        
+
+        <!-- TikTok відео #1 (ПРИКЛАД — замініть) -->
+        <div class="review-card review-card--embed">
+          <!--
+            ПРИКЛАД КОДУ TIKTOK EMBED (замініть cite та дані):
+
+            <blockquote 
+              class="tiktok-embed" 
+              cite="https://www.tiktok.com/@kosmetologzolotova/video/ЗАМІНІТЬ_НА_РЕАЛЬНИЙ_ID"
+              data-video-id="ЗАМІНІТЬ_НА_РЕАЛЬНИЙ_ID"
+              style="max-width:100%; min-width:100%;">
+              <section></section>
+            </blockquote>
+
+            ВАЖЛИВО: скрипт TikTok вже підключений нижче в JS-блоці.
+            Додавати окремо НЕ ТРЕБА.
+          -->
+          <p style="color:var(--text-muted);font-size:0.75rem;text-align:center;padding:20px;letter-spacing:2px;">
+            ВСТАВТЕ КОД EMBED З TIKTOK
+          </p>
+        </div>
+
+      </div>
+    </div><!-- /.reviews-overflow -->
+
+    <!-- ─── Навігація слайдера ───────────────────────────────
+         Точки і кнопки генеруються автоматично в JS.
+         Кількість точок = кількість "сторінок" слайдера.      -->
+    <div class="reviews-controls">
+      <button class="reviews-nav-btn" id="reviews-prev">&#8592;</button>
+      <div class="reviews-dots" id="reviews-dots"></div>
+      <button class="reviews-nav-btn" id="reviews-next">&#8594;</button>
+    </div>
+
+  </div><!-- /.section -->
+</section>
+
+<script>
+var GOOGLE_PLACE_ID = 'ChIJJyWVSnRcLUcRTl-AqMszLKM';   /* 'ChIJxxxxxxxxxxxxxxxx' — вставте свій */
+var GOOGLE_API_KEY  = 'AIzaSyDX8t_99BXU2TKjQrCqqfdOStypZsizbuQ';   /* 'AIzaXXXXXXXXXXXXXXXX' — вставте свій */
+
+function loadGoogleReviews() {
+    /* Якщо ключ або ID не заповнені — виходимо тихо */
+    if (!GOOGLE_PLACE_ID || !GOOGLE_API_KEY) return;
+
+    var slot = document.getElementById('google-reviews-slot');
+    if (!slot) return;
+
+    /* Запит до Google Places Details API
+       fields=reviews — просимо тільки відгуки (не адресу, фото тощо),
+       щоб не витрачати безкоштовний ліміт запитів              */
+    var url = 'https://maps.googleapis.com/maps/api/place/details/json'
+            + '?place_id=' + GOOGLE_PLACE_ID
+            + '&fields=reviews,rating,user_ratings_total'
+            + '&language=uk'          /* відгуки українською якщо є */
+            + '&key=' + GOOGLE_API_KEY;
+
+    fetch(url)
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            /* Якщо API повернув помилку або немає відгуків — виходимо */
+            if (!data.result || !data.result.reviews) return;
+
+            var reviews = data.result.reviews;
+
+            /* Оновлюємо агрегований рейтинг вгорі секції */
+            if (data.result.rating) {
+                var scoreEl = document.getElementById('reviews-score');
+                var countEl = document.getElementById('reviews-count');
+                if (scoreEl) scoreEl.textContent = data.result.rating.toFixed(1);
+                if (countEl && data.result.user_ratings_total) {
+                    countEl.textContent = data.result.user_ratings_total + ' відгуків';
+                }
+            }
+
+            /* Формуємо HTML картки для кожного відгуку з Google */
+            reviews.forEach(function(rev) {
+                /* Пропускаємо відгуки без тексту */
+                if (!rev.text) return;
+
+                /* Генеруємо зірочки відповідно до оцінки (1–5) */
+                var starsHTML = '';
+                for (var i = 0; i < 5; i++) {
+                    /* Заповнена зірка якщо i < рейтинг, інакше напівпрозора */
+                    starsHTML += '<div class="review-card-star"'
+                        + (i >= rev.rating ? ' style="opacity:0.2"' : '')
+                        + '></div>';
+                }
+
+                /* Скорочуємо дуже довгі відгуки до 220 символів */
+                var text = rev.text;
+                if (text.length > 220) text = text.substring(0, 220) + '…';
+
+                /* Збираємо картку */
+                var card = document.createElement('div');
+                card.className = 'review-card';
+                card.innerHTML =
+                    '<span class="review-quote-mark">"</span>'
+                    + '<div class="review-card-stars">' + starsHTML + '</div>'
+                    + '<p class="review-text">' + text + '</p>'
+                    + '<div class="review-footer">'
+                    +   '<div>'
+                    +     '<p class="review-author-name">' + rev.author_name + '</p>'
+                    +     '<p class="review-author-meta">Google Maps</p>'
+                    +   '</div>'
+                    +   '<div class="review-source">'
+                    +     '<div class="review-source-dot"></div>Google'
+                    +   '</div>'
+                    + '</div>';
+
+                slot.appendChild(card);
+            });
+
+            /* Після додавання нових карток — переініціалізуємо слайдер */
+            initReviewsSlider();
+        })
+        .catch(function(err) {
+            /* Тиха помилка — блок просто не показується */
+            console.warn('Google Reviews: не вдалося завантажити.', err);
+        });
+}
+
+var reviewsCurrent = 0; /* поточний індекс зміщення */
+
+function initReviewsSlider() {
+    var track    = document.getElementById('reviews-track');
+    var dotsWrap = document.getElementById('reviews-dots');
+    var btnPrev  = document.getElementById('reviews-prev');
+    var btnNext  = document.getElementById('reviews-next');
+
+    if (!track) return;
+
+    /* Збираємо всі картки (і статичні, і динамічні з Google) */
+    var cards = track.querySelectorAll('.review-card');
+    if (cards.length === 0) return;
+
+    /* Скільки карток показуємо одночасно (береться з ширини вікна) */
+    function perView() {
+        if (window.innerWidth <= 580) return 1;
+        if (window.innerWidth <= 900) return 2;
+        return 3;
+    }
+
+    /* Максимально можливий індекс зміщення */
+    function maxPage() {
+        return Math.max(0, cards.length - perView());
+    }
+
+    /* Перебудовуємо точки навігації при кожній ініціалізації */
+    dotsWrap.innerHTML = '';
+    for (var i = 0; i <= maxPage(); i++) {
+        (function(idx) {
+            var dot = document.createElement('button');
+            dot.className = 'reviews-dot' + (idx === 0 ? ' active' : '');
+            dot.setAttribute('aria-label', 'Відгук ' + (idx + 1));
+            dot.addEventListener('click', function() { goTo(idx); });
+            dotsWrap.appendChild(dot);
+        })(i);
+    }
+
+    /* Переміщуємо стрічку до потрібної картки */
+    function goTo(idx) {
+        reviewsCurrent = Math.max(0, Math.min(idx, maxPage()));
+        /* Ширина картки + відступ */
+        var cardW = cards[0].offsetWidth + 20;
+        track.style.transform = 'translateX(-' + (reviewsCurrent * cardW) + 'px)';
+        /* Оновлюємо активну точку */
+        dotsWrap.querySelectorAll('.reviews-dot').forEach(function(d, i) {
+            d.classList.toggle('active', i === reviewsCurrent);
+        });
+    }
+
+    /* Відключаємо старі обробники перед повторною ініціалізацією */
+    if (btnPrev._handler) btnPrev.removeEventListener('click', btnPrev._handler);
+    if (btnNext._handler) btnNext.removeEventListener('click', btnNext._handler);
+
+    btnPrev._handler = function() { goTo(reviewsCurrent - 1); };
+    btnNext._handler = function() { goTo(reviewsCurrent + 1); };
+
+    btnPrev.addEventListener('click', btnPrev._handler);
+    btnNext.addEventListener('click', btnNext._handler);
+
+    /* Перемальовуємо при зміні розміру вікна */
+    window.addEventListener('resize', function() { goTo(reviewsCurrent); });
+
+    /* Стартуємо з першої картки */
+    goTo(0);
+}
+
+function loadInstagramEmbed() {
+    /* Перевіряємо чи є на сторінці Instagram-пости */
+    if (!document.querySelector('.instagram-media')) return;
+
+    /* Якщо скрипт вже завантажений — просто перезапускаємо рендер */
+    if (window.instgrm) {
+        window.instgrm.Embeds.process();
+        return;
+    }
+
+    /* Завантажуємо скрипт одноразово */
+    var script = document.createElement('script');
+    script.src = 'https://www.instagram.com/embed.js';
+    script.async = true;
+    document.body.appendChild(script);
+}
+
+function loadTikTokEmbed() {
+    /* Перевіряємо чи є TikTok-пости */
+    if (!document.querySelector('.tiktok-embed')) return;
+
+    /* Уникаємо подвійного завантаження */
+    if (document.querySelector('script[src*="tiktok.com/embed"]')) return;
+
+    var script = document.createElement('script');
+    script.src = 'https://www.tiktok.com/embed.js';
+    script.async = true;
+    document.body.appendChild(script);
+}
+
+initReviewsSlider();    /* слайдер зі статичними картками */
+loadGoogleReviews();    /* Google Reviews (якщо ключ заповнений) */
+loadInstagramEmbed();   /* Instagram embeds (якщо є blockquote) */
+loadTikTokEmbed();      /* TikTok embeds (якщо є blockquote) */
+</script>
+
+</body>
+</html>
