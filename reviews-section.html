@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="uk">
 <head>
@@ -483,7 +484,7 @@ function loadGoogleReviews() {
                     +   '</div>'
                     + '</div>';
 
-                track.appendChild(card);
+                var track = document.getElementById('reviews-track'); track.appendChild(card);
             });
 
             /* Після додавання нових карток — переініціалізуємо слайдер */
