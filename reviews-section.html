@@ -488,7 +488,8 @@ function loadGoogleReviews() {
             });
 
             /* Після додавання нових карток — переініціалізуємо слайдер */
-            initReviewsSlider();
+            clearTimeout(_sliderFallbackTimer); /* Скасовуємо fallback — Google відповів */
+        initReviewsSlider();
         })
         .catch(function(err) {
             /* Тиха помилка — блок просто не показується */
@@ -601,7 +602,14 @@ function loadTikTokEmbed() {
     document.body.appendChild(script);
 }
 
-initReviewsSlider();    /* слайдер зі статичними картками */
+/* ПРАВКА 4: НE викликаємо initReviewsSlider() одразу — чекаємо Google Reviews.
+   Fallback: якщо Google не відповів за 3с — ініціалізуємо зі статичними картками */
+var _sliderFallbackTimer = setTimeout(function() {
+    var track = document.getElementById('reviews-track');
+    if (track && !track.querySelector('.review-author-meta')) {
+        initReviewsSlider(); /* Google не відповів — ініціалізуємо зі статичними */
+    }
+}, 3000);
 loadGoogleReviews();    /* Google Reviews (якщо ключ заповнений) */
 loadInstagramEmbed();   /* Instagram embeds (якщо є blockquote) */
 loadTikTokEmbed();      /* TikTok embeds (якщо є blockquote) */
