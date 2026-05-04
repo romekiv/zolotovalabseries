@@ -415,13 +415,9 @@
 </section>
 
 <script>
-var GOOGLE_PLACE_ID = 'ChIJLeE-hVpdLUcRB2GcaYMfNuA';   /* 'ChIJxxxxxxxxxxxxxxxx' — вставте свій */
-var GOOGLE_API_KEY  = 'AIzaSyDX8t_99BXU2TKjQrCqqfdOStypZsizbuQ';   /* 'AIzaXXXXXXXXXXXXXXXX' — вставте свій */
 
 function loadGoogleReviews() {
-    /* Якщо ключ або ID не заповнені — виходимо тихо */
-    if (!GOOGLE_PLACE_ID || !GOOGLE_API_KEY) return;
-
+    
     var slot = document.getElementById('google-reviews-slot');
     if (!slot) return;
 
