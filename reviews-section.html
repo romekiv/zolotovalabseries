@@ -425,10 +425,7 @@ function loadGoogleReviews() {
        fields=reviews — просимо тільки відгуки (не адресу, фото тощо),
        щоб не витрачати безкоштовний ліміт запитів              */
     var url = 'https://google-reviews-proxy.romek-ivanchenko.workers.dev/'
-            + '?place_id=' + GOOGLE_PLACE_ID
-            + '&fields=reviews,rating,user_ratings_total'
-            + '&language=uk'          /* відгуки українською якщо є */
-            + '&key=' + GOOGLE_API_KEY;
+            + '&language=uk'          /* відгуки українською якщо є */;
 
     fetch(url)
         .then(function(r) { return r.json(); })
