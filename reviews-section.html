@@ -566,8 +566,9 @@ function initReviewsSlider() {
         initReviewsSlider._resizeHandler = function() { goTo(reviewsCurrent); };
         window.addEventListener('resize', initReviewsSlider._resizeHandler);
 
-    /* Стартуємо з першої картки */
-    goTo(0);
+        /* ПРАВКА 3: Використовуємо requestAnimationFrame щоб дати браузеру час порахувати DOM і порахувати реальні ширини карток перед translateX —
+           інакше offsetWidth=0 і трек залишається зсунутим */
+                requestAnimationFrame(function() { requestAnimationFrame(function() { goTo(0); }); });
 }
 
 function loadInstagramEmbed() {
