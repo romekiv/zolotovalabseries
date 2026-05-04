@@ -424,9 +424,7 @@ function loadGoogleReviews() {
     /* Запит до Google Places Details API
        fields=reviews — просимо тільки відгуки (не адресу, фото тощо),
        щоб не витрачати безкоштовний ліміт запитів              */
-    var url = 'https://google-reviews-proxy.romek-ivanchenko.workers.dev/'
-            + '&language=uk'          /* відгуки українською якщо є */;
-
+    var url = 'https://google-reviews-proxy.romek-ivanchenko.workers.dev/'; // ПРАВКА: видалено зайвий '&language=uk' — Worker сам завжди повертає uk
     fetch(url)
         .then(function(r) { return r.json(); })
         .then(function(data) {
