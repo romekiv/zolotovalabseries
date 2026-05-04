@@ -55,7 +55,8 @@
 /* ─── Слайдер ──────────────────────────────────────────── */
 
 /* Обрізаємо те, що виходить за межі */
-.reviews-overflow { overflow: hidden; }
+/* ПРАВКА 6: overflow:hidden перенесено на .reviews-track — тепер .reviews-overflow відкритий і навігація не обрізається */
+.reviews-overflow { overflow: visible; }
 
 /* Горизонтальна стрічка карток */
 .reviews-track {
@@ -63,8 +64,9 @@
     gap: 20px;
     transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
     align-items: stretch; /* всі картки однакової висоти в ряду */
+    overflow: hidden; /* ПРАВКА 6: overflow:hidden тепер тут — обрізає тільки стрічку карток, не навігацію */
 }
-
+    
 /* ─── Картка відгуку ───────────────────────────────────── */
 .review-card {
     /* На десктопі — 3 картки в ряд.
