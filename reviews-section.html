@@ -479,7 +479,7 @@ function loadGoogleReviews() {
 
               /* ПРАВКА: track отримується тут (не всередині forEach) — безпечно додаємо картку */
               var track = document.getElementById('reviews-track');
-              if (track) track.appendChild(card);
+              if (track) if (track) track.appendChild(card); /* ПРАВКА: guard від null track */;
             });
 
             /* Після додавання нових карток — переініціалізуємо слайдер */
