@@ -522,7 +522,9 @@ function initReviewsSlider() {
         return Math.max(0, cards.length - perView());
     }
 
-    /* Перебудовуємо точки навігації при кожній ініціалізації */
+    /* ПРАВКА 1: При повторній ініціалізації (після fetch Google) скидаємо позицію на початок, щоб трек не залишався зсунутим */
+        reviewsCurrent = 0;
+        /* Перебудовуємо точки навігації при кожній ініціалізації */
     dotsWrap.innerHTML = '';
     for (var i = 0; i <= maxPage(); i++) {
         (function(idx) {
@@ -557,7 +559,12 @@ function initReviewsSlider() {
     btnNext.addEventListener('click', btnNext._handler);
 
     /* Перемальовуємо при зміні розміру вікна */
-    window.addEventListener('resize', function() { goTo(reviewsCurrent); });
+/* ПРАВКА 2: Зберігаємо resize-обробник у _resizeHandler щоб уникнути дублювання при повторній ініціалізації */
+        if (initReviewsSlider._resizeHandler) {
+            window.removeEventListener('resize', initReviewsSlider._resizeHandler);
+        }
+        initReviewsSlider._resizeHandler = function() { goTo(reviewsCurrent); };
+        window.addEventListener('resize', initReviewsSlider._resizeHandler);
 
     /* Стартуємо з першої картки */
     goTo(0);
