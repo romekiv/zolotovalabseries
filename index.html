@@ -1693,7 +1693,7 @@ Promise.all([        sendTelegramNotification({
 
     // ── Підключення блоку відгуків із зовнішнього файлу reviews-section.html ──
     (function(){
-        fetch('reviews-section.html')
+        fetch('reviews-section.html?v=2')
             .then(function(r){ return r.text(); })
             .then(function(html){
                 var wrap = document.getElementById('reviews-embed');
