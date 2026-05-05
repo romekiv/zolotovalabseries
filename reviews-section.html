@@ -352,9 +352,6 @@
         </div>
 
         
-        <div id="google-reviews-slot">
-          <!-- JS вставить картки з Google тут -->
-        </div>
 
         
 
@@ -399,8 +396,8 @@
         </div>
 
       </div>
-    </div><!-- /.reviews-track — закриває #reviews-track -->
-        </div><!-- /.reviews-overflow — ТЕПЕР ПРАВИЛЬНО закриває overflow: hidden — навігація буде видимою -->
+    </div><!-- /.reviews-track -->
+    </div><!-- /.reviews-overflow -->
 
     <!-- ─── Навігація слайдера ───────────────────────────────
          Точки і кнопки генеруються автоматично в JS.
@@ -417,144 +414,118 @@
 <script>
 
 function loadGoogleReviews() {
-    
-    var slot = document.getElementById('google-reviews-slot');
-    if (!slot) return;
+    var track = document.getElementById('reviews-track');
+    if (!track) return;
 
-    /* Запит до Google Places Details API
-       fields=reviews — просимо тільки відгуки (не адресу, фото тощо),
-       щоб не витрачати безкоштовний ліміт запитів              */
-    var url = 'https://google-reviews-proxy.romek-ivanchenko.workers.dev/'; // ПРАВКА: видалено зайвий '&language=uk' — Worker сам завжди повертає uk
-        fetch(url)
+    var url = 'https://google-reviews-proxy.romek-ivanchenko.workers.dev/';
+
+    fetch(url)
         .then(function(r) { return r.json(); })
         .then(function(data) {
-            /* Якщо API повернув помилку або немає відгуків — виходимо */
             if (!data.result || !data.result.reviews) return;
 
             var reviews = data.result.reviews;
 
-            /* Оновлюємо агрегований рейтинг вгорі секції */
             if (data.result.rating) {
                 var scoreEl = document.getElementById('reviews-score');
                 var countEl = document.getElementById('reviews-count');
-                if (scoreEl) scoreEl.textContent = data.result.rating.toFixed(1);
+                if (scoreEl) scoreEl.textContent = Number(data.result.rating).toFixed(1);
                 if (countEl && data.result.user_ratings_total) {
                     countEl.textContent = data.result.user_ratings_total + ' відгуків';
                 }
             }
 
-            /* Формуємо HTML картки для кожного відгуку з Google */
             reviews.forEach(function(rev) {
-                /* Пропускаємо відгуки без тексту */
                 if (!rev.text) return;
 
-                /* Генеруємо зірочки відповідно до оцінки (1–5) */
                 var starsHTML = '';
                 for (var i = 0; i < 5; i++) {
-                    /* Заповнена зірка якщо i < рейтинг, інакше напівпрозора */
-                    starsHTML += '<div class="review-card-star"'
-                        + (i >= rev.rating ? ' style="opacity:0.2"' : '')
-                        + '></div>';
+                    starsHTML += '<div class="review-card-star"' + (i >= rev.rating ? ' style="opacity:0.2"' : '') + '></div>';
                 }
 
-                /* Скорочуємо дуже довгі відгуки до 220 символів */
                 var text = rev.text;
                 if (text.length > 220) text = text.substring(0, 220) + '…';
 
-                /* Збираємо картку */
                 var card = document.createElement('div');
                 card.className = 'review-card';
                 card.innerHTML =
-                    '<span class="review-quote-mark">"</span>'
-                    + '<div class="review-card-stars">' + starsHTML + '</div>'
-                    + '<p class="review-text">' + text + '</p>'
-                    + '<div class="review-footer">'
-                    +   '<div>'
-                    +     '<p class="review-author-name">' + rev.author_name + '</p>'
-                    +     '<p class="review-author-meta">Google Maps</p>'
-                    +   '</div>'
-                    +   '<div class="review-source">'
-                    +     '<div class="review-source-dot"></div>Google'
-                    +   '</div>'
-                    + '</div>';
+                    '<span class="review-quote-mark">"</span>' +
+                    '<div class="review-card-stars">' + starsHTML + '</div>' +
+                    '<p class="review-text">' + text + '</p>' +
+                    '<div class="review-footer">' +
+                        '<div>' +
+                            '<p class="review-author-name">' + rev.author_name + '</p>' +
+                            '<p class="review-author-meta">Google Maps</p>' +
+                        '</div>' +
+                        '<div class="review-source">' +
+                            '<div class="review-source-dot"></div>Google' +
+                        '</div>' +
+                    '</div>';
 
-              /* ПРАВКА: track отримується тут (не всередині forEach) — безпечно додаємо картку */
-              var track = document.getElementById('reviews-track');
-              if (track) if (track) track.appendChild(card); /* ПРАВКА: guard від null track */;
+                track.appendChild(card);
             });
 
-            /* Після додавання нових карток — переініціалізуємо слайдер */
-            clearTimeout(_sliderFallbackTimer); /* Скасовуємо fallback — Google відповів */
-        initReviewsSlider();
+            clearTimeout(_sliderFallbackTimer);
+            initReviewsSlider();
         })
         .catch(function(err) {
-            /* Тиха помилка — блок просто не показується */
             console.warn('Google Reviews: не вдалося завантажити.', err);
         });
 }
 
-var reviewsCurrent = 0; /* поточний індекс зміщення */
+var reviewsCurrent = 0;
 
 function initReviewsSlider() {
-    var track    = document.getElementById('reviews-track');
+    var track = document.getElementById('reviews-track');
     var dotsWrap = document.getElementById('reviews-dots');
-    var btnPrev  = document.getElementById('reviews-prev');
-    var btnNext  = document.getElementById('reviews-next');
+    var btnPrev = document.getElementById('reviews-prev');
+    var btnNext = document.getElementById('reviews-next');
 
-    if (!track) return;
+    if (!track || !dotsWrap || !btnPrev || !btnNext) return;
 
-    /* Збираємо всі картки (і статичні, і динамічні з Google) */
-    var cards = track.querySelectorAll('.review-card');
-    if (cards.length === 0) return;
+    var cards = Array.from(track.children).filter(function(el) {
+        return el.classList && el.classList.contains('review-card');
+    });
 
-    /* Скільки карток показуємо одночасно (береться з ширини вікна) */
+    if (!cards.length) return;
+
     function perView() {
         if (window.innerWidth <= 580) return 1;
         if (window.innerWidth <= 900) return 2;
         return 3;
     }
 
-    /* Максимально можливий індекс зміщення */
     function maxPage() {
         return Math.max(0, cards.length - perView());
     }
 
-    /* ПРАВКА 1: При повторній ініціалізації (після fetch Google) скидаємо позицію на початок, щоб трек не залишався зсунутим */
-        reviewsCurrent = 0;
-        /* Перебудовуємо точки навігації при кожній ініціалізації */
-/* ПРАВКА: замість динамічного циклу точок — завжди рівно 3 точки навіть при 10+ відгуках */
-    if (dotsWrap && !dotsWrap.dataset.built) {
-      dotsWrap.innerHTML = '';
-      for (var d = 0; d < 3; d++) {
-        var dot = document.createElement('button');
-        dot.className = 'reviews-dot' + (d === 0 ? ' active' : '');
-        dot.setAttribute('aria-label', 'Відгук ' + (d + 1));
-        dot.addEventListener('click', (function(di) {
-          return function() {
-            /* Обчислюємо позицію для цієї точки: індекс = round(di/2 * maxPage()) */
-            goTo(Math.round(di / 2 * maxPage()));
-          };
-        })(d));
-        dotsWrap.appendChild(dot);
-      }
-      dotsWrap.dataset.built = '1';
+    function buildDots() {
+        dotsWrap.innerHTML = '';
+        for (var i = 0; i <= maxPage(); i++) {
+            var dot = document.createElement('button');
+            dot.className = 'reviews-dot' + (i === reviewsCurrent ? ' active' : '');
+            dot.setAttribute('aria-label', 'Відгук ' + (i + 1));
+            dot.addEventListener('click', (function(index) {
+                return function() { goTo(index); };
+            })(i));
+            dotsWrap.appendChild(dot);
+        }
     }
-    /* Переміщуємо стрічку до потрібної картки */
-    function goTo(idx) {
-        reviewsCurrent = Math.max(0, Math.min(idx, maxPage()));
-        /* Ширина картки + відступ */
-        var cardW = cards[0].offsetWidth + 20;
-        track.style.transform = 'translateX(-' + (reviewsCurrent * cardW) + 'px)';
-        /* Оновлюємо активну точку */
-/* ПРАВКА: активна точка = поточна зона (початок / середина / кінець) */
-        var mx = maxPage();
-        var dotIdx = mx === 0 ? 0 : Math.min(2, Math.round(reviewsCurrent / mx * 2));
-        dotsWrap.querySelectorAll('.reviews-dot').forEach(function(d, i) {
-          d.classList.toggle('active', i === dotIdx);
+
+    function updateDots() {
+        var dots = dotsWrap.querySelectorAll('.reviews-dot');
+        dots.forEach(function(dot, i) {
+            dot.classList.toggle('active', i === reviewsCurrent);
         });
     }
 
-    /* Відключаємо старі обробники перед повторною ініціалізацією */
+    function goTo(idx) {
+        reviewsCurrent = Math.max(0, Math.min(idx, maxPage()));
+        var cardW = cards[0].offsetWidth + 20;
+        track.style.transform = 'translateX(-' + (reviewsCurrent * cardW) + 'px)';
+        updateDots();
+    }
+
     if (btnPrev._handler) btnPrev.removeEventListener('click', btnPrev._handler);
     if (btnNext._handler) btnNext.removeEventListener('click', btnNext._handler);
 
@@ -564,17 +535,21 @@ function initReviewsSlider() {
     btnPrev.addEventListener('click', btnPrev._handler);
     btnNext.addEventListener('click', btnNext._handler);
 
-    /* Перемальовуємо при зміні розміру вікна */
-/* ПРАВКА 2: Зберігаємо resize-обробник у _resizeHandler щоб уникнути дублювання при повторній ініціалізації */
-        if (initReviewsSlider._resizeHandler) {
-            window.removeEventListener('resize', initReviewsSlider._resizeHandler);
-        }
-        initReviewsSlider._resizeHandler = function() { goTo(reviewsCurrent); };
-        window.addEventListener('resize', initReviewsSlider._resizeHandler);
+    if (initReviewsSlider._resizeHandler) {
+        window.removeEventListener('resize', initReviewsSlider._resizeHandler);
+    }
 
-        /* ПРАВКА 3: Використовуємо requestAnimationFrame щоб дати браузеру час порахувати DOM і порахувати реальні ширини карток перед translateX —
-           інакше offsetWidth=0 і трек залишається зсунутим */
-                        setTimeout(function() { goTo(0); }, 0); /* макротаск — виконається після рендеру DOM, офсетти карток вже реальні */
+    initReviewsSlider._resizeHandler = function() {
+        var nextMax = maxPage();
+        if (reviewsCurrent > nextMax) reviewsCurrent = nextMax;
+        buildDots();
+        goTo(reviewsCurrent);
+    };
+
+    window.addEventListener('resize', initReviewsSlider._resizeHandler);
+
+    buildDots();
+    setTimeout(function() { goTo(0); }, 0);
 }
 
 function loadInstagramEmbed() {
