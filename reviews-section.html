@@ -521,7 +521,7 @@ function initReviewsSlider() {
 
     function goTo(idx) {
         reviewsCurrent = Math.max(0, Math.min(idx, maxPage()));
-        var cardW = cards[0].offsetWidth + 20;
+                var cardW = (cards[0].getBoundingClientRect().width || cards[0].offsetWidth) + 20;
         track.style.transform = 'translateX(-' + (reviewsCurrent * cardW) + 'px)';
         updateDots();
     }
@@ -549,7 +549,7 @@ function initReviewsSlider() {
     window.addEventListener('resize', initReviewsSlider._resizeHandler);
 
     buildDots();
-    setTimeout(function() { goTo(0); }, 0);
+            requestAnimationFrame(function() { requestAnimationFrame(function() { goTo(0); }); });
 }
 
 function loadInstagramEmbed() {
