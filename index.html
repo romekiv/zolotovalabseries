@@ -1624,7 +1624,6 @@ function sendToKeepinCRM(d){
                                                                    total:    total,
                                            items: cart.map(function(i){ return {name:i.name,price:i.price,quantity:i.qty,sku:i.sku}; })
                                                            })
-                       ])
         .then(function() {
             // Спрацює ТІЛЬКИ якщо запит пройшов успішно
             alert('Дякуємо! Замовлення прийнято.\nМи зв\'яжемося з вами найближчим часом. \uD83D\uDE4F');
