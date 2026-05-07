@@ -1486,8 +1486,6 @@ document.addEventListener('DOMContentLoaded', function() {
     var cart = [];
     try { cart = JSON.parse(localStorage.getItem('cz_cart')) || []; } catch(e) { cart = []; }
 
-    var BOT_TOKEN = '8539395724:AAHmhK1tqwr7W61q7wwGyqA8iH-Bd4Q_d2M';
-    var CHAT_ID   = '-1003554081452';
 
     // ─── FALLBACK ДЛЯ ЗОБРАЖЕНЬ ЛОГОТИПУ ──────────────────
     document.querySelectorAll('.js-img-fallback').forEach(function(img) {
@@ -1597,29 +1595,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 1400);
     }
 
-    // ─── TELEGRAM ─────────────────────────────────────────
-    function sendTelegramNotification(orderData) {
-        var text = [
-            '\uD83D\uDECD *Нове замовлення!*', '',
-            '\uD83D\uDC64 Ім\'я: '    + orderData.name,
-            '\uD83D\uDCDE Телефон: '  + orderData.phone,
-            '\uD83D\uDCE6 Адреса: '   + orderData.address,
-            '', '\uD83D\uDED2 Товари:', orderData.items,
-            '', '\uD83D\uDCB0 Сума: ' + orderData.total + ' грн'
-        ].join('\n');
-
-        return fetch('https://api.telegram.org/bot' + BOT_TOKEN + '/sendMessage', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ chat_id: CHAT_ID, text: text, parse_mode: 'Markdown' })
-        }).then(function(response) {
-            if (!response.ok) {
-                throw new Error('Telegram API error: ' + response.status + ' ' + response.statusText);
-            }
-            return response;
-        });
-    }
-
 function sendToKeepinCRM(d){
             return fetch('https://site-order-api.romek-ivanchenko.workers.dev/order',{
                           method:'POST',
@@ -1640,18 +1615,13 @@ function sendToKeepinCRM(d){
         // var btn = form.querySelector('button[type="submit"]');
         // btn.disabled = true;
 
-Promise.all([        sendTelegramNotification({
-            name:    document.getElementById('name').value,
-            phone:   document.getElementById('phone').value,
-            address: document.getElementById('address').value,
-            items:   items,
-            total:   total
-        }),
                          sendToKeepinCRM({
                                            fullName: document.getElementById('name').value,
                                            phone: document.getElementById('phone').value,
                                            email: '',
                                            comment: document.getElementById('address').value,
+                                                       address:  document.getElementById('address').value,
+                                                                   total:    total,
                                            items: cart.map(function(i){ return {name:i.name,price:i.price,quantity:i.qty,sku:i.sku}; })
                                                            })
                        ])
