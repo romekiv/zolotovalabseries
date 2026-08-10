@@ -1,0 +1,55 @@
+<div id="payment-page" class="payment-card">
+  <h2>Замовлення №<span id="order-id"></span> успішно створено!</h2>
+  <p class="amount-tag">До сплати: <strong id="order-amount"></strong> грн</p>
+
+  <div class="bank-buttons">
+    <a id="btn-privat24" href="#" target="_blank" class="btn btn-privat">
+      🟢 Оплатити через Privat24
+    </a>
+    <a id="btn-monobank" href="#" target="_blank" class="btn btn-mono">
+      ⚫️ Оплатити через Monobank
+    </a>
+  </div>
+
+  <hr>
+
+  <div class="manual-details">
+    <h3>Реквізити для оплати вручну (IBAN):</h3>
+    <p><strong>Отримувач:</strong> <span id="fop-name"></span></p>
+    <p><strong>ЄДРПОУ/ІПН:</strong> <span id="fop-tax"></span></p>
+    
+    <div class="copy-field">
+      <span>IBAN: <strong id="fop-iban"></strong></span>
+      <button onclick="copyToClipboard('fop-iban')">📋 Скопіювати</button>
+    </div>
+
+    <div class="copy-field">
+      <span>Призначення: <strong id="fop-purpose"></strong></span>
+      <button onclick="copyToClipboard('fop-purpose')">📋 Скопіювати</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Приклад обробки відповіді від Worker у Вашому JS скрипті:
+function handleOrderSuccess(responseData) {
+  const { order_id, payment_details, deep_links } = responseData;
+
+  document.getElementById('order-id').innerText = order_id;
+  document.getElementById('order-amount').innerText = payment_details.amount;
+  document.getElementById('fop-name').innerText = payment_details.fop_name;
+  document.getElementById('fop-tax').innerText = payment_details.tax_id;
+  document.getElementById('fop-iban').innerText = payment_details.iban;
+  document.getElementById('fop-purpose').innerText = payment_details.purpose;
+
+  // Встановлюємо deep links у кнопки
+  document.getElementById('btn-privat24').href = deep_links.privat24;
+  document.getElementById('btn-monobank').href = deep_links.monobank;
+}
+
+function copyToClipboard(elementId) {
+  const text = document.getElementById(elementId).innerText;
+  navigator.clipboard.writeText(text);
+  alert('Скопійовано: ' + text);
+}
+</script>
