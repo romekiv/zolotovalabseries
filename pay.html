@@ -5,26 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Оплата замовлення | ZolotovA Lab Series</title>
     
-    <!-- Подключение шрифтов (Cormorant Garamond для заголовков, Montserrat для текста) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
     
-    <!-- Библиотека для генерации QR-кода -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
     <style>
-        /* === БЛОК 1: Стилизация под бренд ZolotovA Lab Series === */
         :root {
-            --bg-color: #FAF8F5;          /* Теплый кремовый фон */
-            --card-bg: #FFFFFF;          /* Белые карточки */
-            --text-main: #2A2A2A;        /* Глубокий темный для текста */
-            --text-muted: #7A7A7A;       /* Серый для подзаголовков */
-            --accent-gold: #C5A880;      /* Премиальный золотисто-нюдовый акцент */
+            --bg-color: #FAF8F5;
+            --card-bg: #FFFFFF;
+            --text-main: #2A2A2A;
+            --text-muted: #7A7A7A;
+            --accent-gold: #C5A880;
             --accent-gold-hover: #b3956d;
-            --border-color: #EFECE6;     /* Мягкие границы */
-            --mono-color: #111111;       /* Цвет кнопки Monobank */
-            --privat-color: #41A252;     /* Цвет кнопки Приват24 */
+            --border-color: #EFECE6;
+            --btn-color: #111111;
         }
 
         * {
@@ -89,7 +85,6 @@
             margin-top: 4px;
         }
 
-        /* === БЛОК 2: Кнопки Deep Links для мобильных устройств === */
         .deeplink-group {
             display: flex;
             flex-direction: column;
@@ -103,24 +98,15 @@
             justify-content: center;
             gap: 10px;
             width: 100%;
-            padding: 14px;
+            padding: 16px;
             border-radius: 10px;
             border: none;
-            font-weight: 500;
-            font-size: 14px;
+            font-weight: 600;
+            font-size: 15px;
             cursor: pointer;
-            text-decoration: none;
+            background-color: var(--btn-color);
+            color: #FFFFFF;
             transition: all 0.2s ease;
-        }
-
-        .btn-mono {
-            background-color: var(--mono-color);
-            color: #FFFFFF;
-        }
-
-        .btn-privat {
-            background-color: var(--privat-color);
-            color: #FFFFFF;
         }
 
         .btn-deeplink:hover {
@@ -128,7 +114,12 @@
             transform: translateY(-1px);
         }
 
-        /* === БЛОК 3: Отображение QR-кода НБУ (для ПК) === */
+        .btn-deeplink:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         .qr-wrapper {
             display: flex;
             flex-direction: column;
@@ -149,7 +140,6 @@
             margin-top: 8px;
         }
 
-        /* === БЛОК 4: Поля с текстовыми реквизитами IBAN === */
         .iban-details {
             border-top: 1px dashed var(--border-color);
             padding-top: 20px;
@@ -196,7 +186,6 @@
             color: var(--accent-gold-hover);
         }
 
-        /* === БЛОК 5: Статус оплаты и авто-опрос === */
         .status-box {
             margin-top: 24px;
             display: flex;
@@ -220,7 +209,6 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Плашка успеха при получении денег */
         .success-overlay {
             display: none;
             text-align: center;
@@ -232,47 +220,38 @@
             margin-bottom: 12px;
         }
 
-        /* Адаптивность под типы устройств */
         @media (min-width: 600px) {
-            .deeplink-group { display: none; } /* Скрываем кнопки диплинков на ПК */
+            .deeplink-group { display: none; }
         }
         @media (max-width: 599px) {
-            .qr-wrapper { display: none; } /* Скрываем QR-код на смартфонах */
+            .qr-wrapper { display: none; }
         }
     </style>
 </head>
 <body>
 
     <div class="payment-card" id="mainCard">
-        <!-- Шапка бренда -->
         <div class="brand-header">
             <div class="brand-title">ZOLOTOVA</div>
             <div style="font-size: 10px; letter-spacing: 3px; color: var(--accent-gold);">LAB SERIES</div>
         </div>
 
-        <!-- Информация о замовленні -->
         <div class="order-info">
             <div class="order-num" id="orderTitle">Завантаження...</div>
             <div class="amount" id="orderAmount">0.00 грн</div>
         </div>
 
-        <!-- Мобильный UX: Кнопки Deep Links -->
         <div class="deeplink-group">
-            <button class="btn-deeplink btn-mono" onclick="payViaMono()">
-                Оплатити через Monobank
-            </button>
-            <button class="btn-deeplink btn-privat" onclick="payViaPrivat()">
-                Оплатити через Приват24
+            <button class="btn-deeplink" id="payBtn" onclick="payViaBank()" disabled>
+                Оплатити у додатку банку
             </button>
         </div>
 
-        <!-- Десктопный UX: QR-код НБУ -->
         <div class="qr-wrapper">
             <div id="qrcode"></div>
             <div class="qr-hint">Відскануйте камерою смартфона або додатком банку</div>
         </div>
 
-        <!-- Текстовые реквизиты IBAN -->
         <div class="iban-details">
             <div class="field-group">
                 <div class="field-label">Отримувач (ФОП)</div>
@@ -299,14 +278,12 @@
             </div>
         </div>
 
-        <!-- Индикатор ожидания оплаты -->
         <div class="status-box" id="statusBox">
-            <div class="spinner"></div>
-            <span>Очікуємо підтвердження платежу...</span>
+            <div class="spinner" id="statusSpinner"></div>
+            <span id="statusText">Очікуємо підтвердження платежу...</span>
         </div>
     </div>
 
-    <!-- Экраны подтверждения успешной оплаты -->
     <div class="payment-card success-overlay" id="successCard">
         <div class="success-icon">✓</div>
         <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 28px; margin-bottom: 8px;">Дякуємо за оплату!</h2>
@@ -315,35 +292,35 @@
         </p>
     </div>
 
-    <!-- === БЛОК 6: Скрипты взаимодействия и динамической загрузки === -->
     <script>
-        const WORKER_API_URL = "https://site-order-api.romek-ivanchenko.workers.dev/payment-info";
+        const WORKER_BASE_URL = "https://site-order-api.romek-ivanchenko.workers.dev";
 
-        // 1. Считываем параметры из URL (pay.html?deal_id=10482&amount=1250)
         const urlParams = new URLSearchParams(window.location.search);
         const dealId = urlParams.get('deal_id') || '0000';
         const amount = urlParams.get('amount') || '0';
 
         let universalDeepLink = "";
-
-        // 2. Элемент под QR-код
         const qrContainer = document.getElementById("qrcode");
+        const payBtn = document.getElementById("payBtn");
 
-        // 3. Динамически получаем реквизиты и универсальный диплинк из Cloudflare Worker
-        fetch(`${WORKER_API_URL}?deal_id=${encodeURIComponent(dealId)}&amount=${encodeURIComponent(amount)}`)
-            .then(response => response.json())
+        // 1. Динамическое получение данных оплаты из Worker
+        fetch(`${WORKER_BASE_URL}/payment-info?deal_id=${encodeURIComponent(dealId)}&amount=${encodeURIComponent(amount)}`)
+            .then(res => {
+                if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+                return res.json();
+            })
             .then(data => {
                 if (data && data.success) {
                     universalDeepLink = data.deep_link;
 
-                    // Заполняем интерфейс данными из Secrets воркера
                     document.getElementById('orderTitle').innerText = `Оплата замовлення №${dealId}`;
                     document.getElementById('orderAmount').innerText = `${data.amount} грн`;
                     document.getElementById('fopName').innerText = data.fop_name;
                     document.getElementById('ibanVal').innerText = data.iban;
                     document.getElementById('purposeVal').innerText = data.purpose;
 
-                    // Отрисовываем QR-код НБУ
+                    payBtn.disabled = false;
+
                     qrContainer.innerHTML = "";
                     new QRCode(qrContainer, {
                         text: universalDeepLink,
@@ -353,50 +330,53 @@
                         colorLight: "#FFFFFF",
                         correctLevel: QRCode.CorrectLevel.M
                     });
+                } else {
+                    throw new Error("Invalid response format");
                 }
             })
             .catch(err => {
                 console.error("Помилка завантаження реквізитів:", err);
                 document.getElementById('orderTitle').innerText = "Помилка завантаження";
+                document.getElementById('statusSpinner').style.display = 'none';
+                document.getElementById('statusText').innerText = "Не вдалося завантажити реквізити. Оновіть сторінку.";
             });
 
-        // 4. Переход по универсальному диплинку
-        function payViaMono() {
+        // 2. Переход по универсальному диплинку
+        function payViaBank() {
             if (universalDeepLink) {
                 window.location.href = universalDeepLink;
             }
         }
 
-        function payViaPrivat() {
-            if (universalDeepLink) {
-                window.location.href = universalDeepLink;
-            }
-        }
-
-        // 5. Функция быстрого копирования текста
+        // 3. Копирование
         function copyText(elementId) {
             const text = document.getElementById(elementId).innerText;
+            if (!text || text.includes("Завантаження")) return;
+            
             navigator.clipboard.writeText(text).then(() => {
                 alert("Скопійовано: " + text);
             });
         }
 
-        // 6. Логика авто-опроса (Polling) статуса сделки в KeepinCRM
+        // 4. Polling статуса оплаты из Worker
         let checkInterval = setInterval(checkPaymentStatus, 4000);
 
         function checkPaymentStatus() {
             if (!dealId || dealId === '0000') return;
 
-            fetch(`/api/check-status.php?deal_id=${dealId}`)
-                .then(response => response.json())
+            fetch(`${WORKER_BASE_URL}/payment-status?deal_id=${encodeURIComponent(dealId)}`)
+                .then(res => {
+                    if (!res.ok) return null;
+                    return res.json();
+                })
                 .then(data => {
-                    if (data.status === 'paid' || data.status === 'success') {
+                    if (data && data.status === 'paid') {
                         clearInterval(checkInterval);
                         document.getElementById('mainCard').style.display = 'none';
                         document.getElementById('successCard').style.display = 'block';
                     }
                 })
-                .catch(err => console.log('Очікування підтвердження оплати...'));
+                .catch(err => console.log('Очікування підтвердження...'));
         }
     </script>
 </body>
