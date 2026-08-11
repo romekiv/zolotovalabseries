@@ -1,584 +1,403 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Оплата замовлення — Zolotova Lab Series</title>
-  <meta name="robots" content="noindex, nofollow" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-  <style>
-    /* ── Design Tokens ── */
-    :root {
-      --color-bg:           #faf9f6;
-      --color-surface:      #f5f3ef;
-      --color-border:       rgba(60,50,30,0.12);
-      --color-text:         #2a2318;
-      --color-text-muted:   #7a7060;
-      --color-text-faint:   #b5ad9d;
-      --color-gold:         #b8922a;
-      --color-gold-hover:   #9a7a22;
-      --color-privat:       #00a650;
-      --color-privat-hover: #007a3d;
-      --color-mono:         #1a1a1a;
-      --color-mono-hover:   #000;
-      --color-success:      #3a7a1e;
-      --color-success-bg:   #eef6e8;
-      --radius-sm: 0.375rem;
-      --radius-md: 0.625rem;
-      --radius-lg: 1rem;
-      --space-1: 0.25rem;
-      --space-2: 0.5rem;
-      --space-3: 0.75rem;
-      --space-4: 1rem;
-      --space-6: 1.5rem;
-      --space-8: 2rem;
-      --space-12: 3rem;
-      --font-display: 'Cormorant Garamond', Georgia, serif;
-      --font-body: 'DM Sans', system-ui, sans-serif;
-      --transition: 160ms cubic-bezier(0.16, 1, 0.3, 1);
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Оплата замовлення | ZolotovA Lab Series</title>
+    
+    <!-- Подключение шрифтов (Cormorant Garamond для заголовков, Montserrat для текста) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Библиотека для генерации QR-кода -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
-    /* ── Reset & Base ── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
-    body {
-      min-height: 100dvh;
-      font-family: var(--font-body);
-      font-size: clamp(0.9375rem, 0.9rem + 0.2vw, 1rem);
-      color: var(--color-text);
-      background: var(--color-bg);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      padding: var(--space-8) var(--space-4) var(--space-12);
-    }
-    img { display: block; max-width: 100%; }
-    button { cursor: pointer; border: none; background: none; font: inherit; }
-    a { color: inherit; text-decoration: none; }
+    <style>
+        /* === БЛОК 1: Стилизация под бренд ZolotovA Lab Series === */
+        :root {
+            --bg-color: #FAF8F5;          /* Теплый кремовый фон */
+            --card-bg: #FFFFFF;          /* Белые карточки */
+            --text-main: #2A2A2A;        /* Глубокий темный для текста */
+            --text-muted: #7A7A7A;       /* Серый для подзаголовков */
+            --accent-gold: #C5A880;      /* Премиальный золотисто-нюдовый акцент */
+            --accent-gold-hover: #b3956d;
+            --border-color: #EFECE6;     /* Мягкие границы */
+            --mono-color: #111111;       /* Цвет кнопки Monobank */
+            --privat-color: #41A252;     /* Цвет кнопки Приват24 */
+        }
 
-    /* ── Header ── */
-    .site-header {
-      width: 100%;
-      max-width: 520px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: var(--space-8);
-    }
-    .site-logo {
-      display: flex;
-      align-items: center;
-      gap: var(--space-3);
-      text-decoration: none;
-      color: var(--color-text);
-    }
-    .site-logo img {
-      height: 36px;
-      width: auto;
-      border-radius: var(--radius-sm);
-    }
-    .site-logo-name {
-      font-family: var(--font-display);
-      font-size: clamp(1.1rem, 1rem + 0.5vw, 1.35rem);
-      font-weight: 500;
-      letter-spacing: 0.02em;
-      color: var(--color-text);
-    }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+        }
 
-    /* ── Card ── */
-    .payment-card {
-      width: 100%;
-      max-width: 520px;
-      background: #fff;
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-lg);
-      box-shadow: 0 2px 8px rgba(40,30,10,0.06), 0 12px 32px rgba(40,30,10,0.05);
-      overflow: hidden;
-    }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
 
-    /* ── Card Header Band ── */
-    .card-header {
-      background: var(--color-surface);
-      border-bottom: 1px solid var(--color-border);
-      padding: var(--space-6) var(--space-8);
-      text-align: center;
-    }
-    .status-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--space-2);
-      font-size: 0.75rem;
-      font-weight: 500;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--color-text-muted);
-      margin-bottom: var(--space-3);
-    }
-    .status-dot {
-      width: 8px; height: 8px;
-      background: var(--color-gold);
-      border-radius: 50%;
-      animation: pulse 2s ease-in-out infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.6; transform: scale(0.85); }
-    }
-    .card-title {
-      font-family: var(--font-display);
-      font-size: clamp(1.35rem, 1.1rem + 1vw, 1.75rem);
-      font-weight: 500;
-      color: var(--color-text);
-      line-height: 1.2;
-    }
-    .card-title span { color: var(--color-gold); }
-    .amount-tag {
-      margin-top: var(--space-3);
-      font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
-      font-family: var(--font-display);
-      font-weight: 600;
-      color: var(--color-text);
-      letter-spacing: -0.01em;
-    }
-    .amount-tag .currency {
-      font-size: 0.55em;
-      font-weight: 400;
-      color: var(--color-text-muted);
-      vertical-align: super;
-      margin-left: 2px;
-    }
+        .payment-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            max-width: 480px;
+            width: 100%;
+            padding: 36px 28px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+            text-align: center;
+        }
 
-    /* ── Card Body ── */
-    .card-body {
-      padding: var(--space-6) var(--space-8);
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-6);
-    }
+        .brand-header {
+            margin-bottom: 24px;
+        }
 
-    /* ── Bank Buttons ── */
-    .section-label {
-      font-size: 0.72rem;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--color-text-faint);
-      margin-bottom: var(--space-3);
-    }
-    .bank-buttons {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-3);
-    }
-    .btn-bank {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: var(--space-3);
-      width: 100%;
-      padding: var(--space-4) var(--space-6);
-      border-radius: var(--radius-md);
-      font-size: 0.9375rem;
-      font-weight: 500;
-      transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
-      text-decoration: none;
-      border: 1px solid transparent;
-    }
-    .btn-bank:active { transform: scale(0.98); }
-    .btn-bank svg { flex-shrink: 0; }
+        .brand-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 26px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text-main);
+        }
 
-    .btn-privat {
-      background: var(--color-privat);
-      color: #fff;
-    }
-    .btn-privat:hover {
-      background: var(--color-privat-hover);
-      box-shadow: 0 4px 16px rgba(0,166,80,0.25);
-    }
-    .btn-mono {
-      background: var(--color-mono);
-      color: #fff;
-    }
-    .btn-mono:hover {
-      background: var(--color-mono-hover);
-      box-shadow: 0 4px 16px rgba(0,0,0,0.22);
-    }
+        .order-info {
+            background-color: var(--bg-color);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 28px;
+        }
 
-    /* ── Divider ── */
-    .divider {
-      display: flex;
-      align-items: center;
-      gap: var(--space-3);
-      color: var(--color-text-faint);
-      font-size: 0.75rem;
-    }
-    .divider::before, .divider::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--color-border);
-    }
+        .order-info .order-num {
+            font-size: 13px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
 
-    /* ── Manual Details ── */
-    .iban-details {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-3);
-    }
-    .detail-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--space-4);
-      padding: var(--space-3) var(--space-4);
-      background: var(--color-surface);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-md);
-      min-height: 52px;
-    }
-    .detail-label {
-      font-size: 0.75rem;
-      color: var(--color-text-faint);
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-    .detail-value {
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: var(--color-text);
-      text-align: right;
-      word-break: break-all;
-      flex: 1;
-    }
-    .detail-value.mono {
-      font-size: 0.8rem;
-      letter-spacing: 0.04em;
-    }
-    .copy-btn {
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 32px; height: 32px;
-      border-radius: var(--radius-sm);
-      color: var(--color-text-muted);
-      transition: background var(--transition), color var(--transition);
-    }
-    .copy-btn:hover { background: var(--color-border); color: var(--color-text); }
-    .copy-btn.copied { color: var(--color-success); }
+        .order-info .amount {
+            font-size: 32px;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-top: 4px;
+        }
 
-    /* ── Purpose highlight ── */
-    .purpose-row .detail-value {
-      color: var(--color-gold);
-      font-weight: 600;
-    }
+        /* === БЛОК 2: Кнопки Deep Links для мобильных устройств === */
+        .deeplink-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
 
-    /* ── Notice ── */
-    .notice {
-      display: flex;
-      gap: var(--space-3);
-      padding: var(--space-3) var(--space-4);
-      background: var(--color-success-bg);
-      border: 1px solid rgba(58,122,30,0.18);
-      border-radius: var(--radius-md);
-      font-size: 0.8125rem;
-      color: var(--color-success);
-      line-height: 1.5;
-    }
-    .notice svg { flex-shrink: 0; margin-top: 2px; }
+        .btn-deeplink {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 14px;
+            border-radius: 10px;
+            border: none;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
 
-    /* ── Error State ── */
-    .error-state {
-      text-align: center;
-      padding: var(--space-12) var(--space-8);
-    }
-    .error-state h2 {
-      font-family: var(--font-display);
-      font-size: 1.5rem;
-      margin-bottom: var(--space-3);
-      color: var(--color-text);
-    }
-    .error-state p {
-      color: var(--color-text-muted);
-      font-size: 0.875rem;
-    }
+        .btn-mono {
+            background-color: var(--mono-color);
+            color: #FFFFFF;
+        }
 
-    /* ── Footer ── */
-    .page-footer {
-      margin-top: var(--space-8);
-      text-align: center;
-      font-size: 0.75rem;
-      color: var(--color-text-faint);
-      line-height: 1.6;
-    }
-    .page-footer a {
-      color: var(--color-text-muted);
-      text-decoration: underline;
-      text-underline-offset: 2px;
-    }
+        .btn-privat {
+            background-color: var(--privat-color);
+            color: #FFFFFF;
+        }
 
-    /* ── Toast ── */
-    .toast {
-      position: fixed;
-      bottom: var(--space-6);
-      left: 50%;
-      transform: translateX(-50%) translateY(20px);
-      background: var(--color-text);
-      color: #fff;
-      padding: var(--space-2) var(--space-6);
-      border-radius: var(--radius-lg);
-      font-size: 0.8125rem;
-      font-weight: 500;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity var(--transition), transform var(--transition);
-      z-index: 100;
-      white-space: nowrap;
-    }
-    .toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
+        .btn-deeplink:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
 
-    /* ── Responsive ── */
-    @media (max-width: 560px) {
-      body { padding: var(--space-6) var(--space-3) var(--space-12); }
-      .card-header, .card-body { padding-inline: var(--space-6); }
-      .detail-value.mono { font-size: 0.72rem; }
-    }
-  </style>
+        /* === БЛОК 3: Отображение QR-кода НБУ (для ПК) === */
+        .qr-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        #qrcode {
+            padding: 12px;
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+        }
+
+        .qr-hint {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+
+        /* === БЛОК 4: Поля с текстовыми реквизитами IBAN === */
+        .iban-details {
+            border-top: 1px dashed var(--border-color);
+            padding-top: 20px;
+            text-align: left;
+        }
+
+        .field-group {
+            margin-bottom: 14px;
+        }
+
+        .field-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .field-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 13px;
+            font-weight: 500;
+            word-break: break-all;
+        }
+
+        .btn-copy {
+            background: none;
+            border: none;
+            color: var(--accent-gold);
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            padding-left: 8px;
+            white-space: nowrap;
+        }
+
+        .btn-copy:hover {
+            color: var(--accent-gold-hover);
+        }
+
+        /* === БЛОК 5: Статус оплаты и авто-опрос === */
+        .status-box {
+            margin-top: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .spinner {
+            width: 14px;
+            height: 14px;
+            border: 2px solid var(--border-color);
+            border-top-color: var(--accent-gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Плашка успеха при получении денег */
+        .success-overlay {
+            display: none;
+            text-align: center;
+        }
+
+        .success-icon {
+            font-size: 48px;
+            color: #4CAF50;
+            margin-bottom: 12px;
+        }
+
+        /* Адаптивность под типы устройств */
+        @media (min-width: 600px) {
+            .deeplink-group { display: none; } /* Скрываем кнопки диплинков на ПК */
+        }
+        @media (max-width: 599px) {
+            .qr-wrapper { display: none; } /* Скрываем QR-код на смартфонах */
+        }
+    </style>
 </head>
 <body>
 
-  <!-- Header / Logo -->
-  <header class="site-header">
-    <a href="/" class="site-logo">
-      <img src="/monogram.jpg" alt="Zolotova Lab Series" width="36" height="36" />
-      <span class="site-logo-name">Zolotova Lab Series</span>
-    </a>
-  </header>
+    <div class="payment-card" id="mainCard">
+        <!-- Шапка бренда -->
+        <div class="brand-header">
+            <div class="brand-title">ZOLOTOVA</div>
+            <div style="font-size: 10px; letter-spacing: 3px; color: var(--accent-gold);">LAB SERIES</div>
+        </div>
 
-  <!-- Payment Card (populated by JS) -->
-  <main id="payment-root" class="payment-card" role="main" aria-label="Сторінка оплати">
-    <!-- JS renders content here -->
-    <div class="card-body">
-      <div class="status-badge" style="justify-content:center;margin-top:var(--space-8)">
-        <div class="status-dot"></div>
-        Завантаження…
-      </div>
+        <!-- Информация о замовленні -->
+        <div class="order-info">
+            <div class="order-num" id="orderTitle">Завантаження...</div>
+            <div class="amount" id="orderAmount">0.00 грн</div>
+        </div>
+
+        <!-- Мобильный UX: Кнопки Deep Links -->
+        <div class="deeplink-group">
+            <button class="btn-deeplink btn-mono" onclick="payViaMono()">
+                Оплатити через Monobank
+            </button>
+            <button class="btn-deeplink btn-privat" onclick="payViaPrivat()">
+                Оплатити через Приват24
+            </button>
+        </div>
+
+        <!-- Десктопный UX: QR-код НБУ -->
+        <div class="qr-wrapper">
+            <div id="qrcode"></div>
+            <div class="qr-hint">Відскануйте камерою смартфона або додатком банку</div>
+        </div>
+
+        <!-- Текстовые реквизиты IBAN -->
+        <div class="iban-details">
+            <div class="field-group">
+                <div class="field-label">Отримувач (ФОП)</div>
+                <div class="field-box">
+                    <span id="fopName">Завантаження...</span>
+                    <button class="btn-copy" onclick="copyText('fopName')">Копіювати</button>
+                </div>
+            </div>
+
+            <div class="field-group">
+                <div class="field-label">Розрахунковий рахунок (IBAN)</div>
+                <div class="field-box">
+                    <span id="ibanVal">Завантаження...</span>
+                    <button class="btn-copy" onclick="copyText('ibanVal')">Копіювати</button>
+                </div>
+            </div>
+
+            <div class="field-group">
+                <div class="field-label">Призначення платежу</div>
+                <div class="field-box">
+                    <span id="purposeVal">Завантаження...</span>
+                    <button class="btn-copy" onclick="copyText('purposeVal')">Копіювати</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Индикатор ожидания оплаты -->
+        <div class="status-box" id="statusBox">
+            <div class="spinner"></div>
+            <span>Очікуємо підтвердження платежу...</span>
+        </div>
     </div>
-  </main>
 
-  <!-- Toast notification -->
-  <div class="toast" id="toast" aria-live="polite" aria-atomic="true"></div>
+    <!-- Экраны подтверждения успешной оплаты -->
+    <div class="payment-card success-overlay" id="successCard">
+        <div class="success-icon">✓</div>
+        <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 28px; margin-bottom: 8px;">Дякуємо за оплату!</h2>
+        <p style="font-size: 14px; color: var(--text-muted); line-height: 1.5;">
+            Ваше замовлення успішно підтверджено.<br>Ми вже готуємо його до відправки.
+        </p>
+    </div>
 
-  <!-- Footer -->
-  <footer class="page-footer">
-    <p>Маєте питання? <a href="tel:+38636999624" id="footer-phone">Зателефонуйте нам</a></p>
-    <p style="margin-top:var(--space-1)">© 2026 Zolotova Lab Series</p>
-  </footer>
+    <!-- === БЛОК 6: Скрипты взаимодействия и динамической загрузки === -->
+    <script>
+        const WORKER_API_URL = "https://site-order-api.romek-ivanchenko.workers.dev/payment-info";
 
-<script>
-(function () {
-  'use strict';
+        // 1. Считываем параметры из URL (pay.html?deal_id=10482&amount=1250)
+        const urlParams = new URLSearchParams(window.location.search);
+        const dealId = urlParams.get('deal_id') || '0000';
+        const amount = urlParams.get('amount') || '0';
 
-  /* ── 1. Читаємо дані з URL-параметрів ── */
-  function getParams() {
-    const p = new URLSearchParams(window.location.search);
-    return {
-      order_id:        p.get('order_id')  || p.get('id') || null,
-      amount:          p.get('amount')    || p.get('total') || null,
-      iban:            p.get('iban')      || null,
-      fop_name:        p.get('fop_name')  || null,
-      tax_id:          p.get('tax_id')    || null,
-      purpose:         p.get('purpose')   || null,
-      privat24:        p.get('privat24')  || null,
-      monobank:        p.get('monobank')  || null,
-    };
-  }
+        let universalDeepLink = "";
 
-  /* ── 2. Якщо параметри є — рендеримо; інакше показуємо помилку ── */
-  function init() {
-    // Спочатку пробуємо sessionStorage (якщо сайт передав дані через нього)
-    let data = null;
-    try {
-      const raw = sessionStorage.getItem('paymentData');
-      if (raw) { data = JSON.parse(raw); sessionStorage.removeItem('paymentData'); }
-    } catch (_) {}
+        // 2. Элемент под QR-код
+        const qrContainer = document.getElementById("qrcode");
 
-    // Потім URL-параметри як фолбек
-    if (!data) {
-      const p = getParams();
-      if (p.order_id) {
-        data = {
-          order_id: p.order_id,
-          payment_details: {
-            amount:   p.amount,
-            iban:     p.iban,
-            fop_name: p.fop_name,
-            tax_id:   p.tax_id,
-            purpose:  p.purpose || ('Оплата замовлення №' + p.order_id),
-          },
-          deep_links: {
-            privat24: p.privat24,
-            monobank: p.monobank,
-          }
-        };
-      }
-    }
+        // 3. Динамически получаем реквизиты и универсальный диплинк из Cloudflare Worker
+        fetch(`${WORKER_API_URL}?deal_id=${encodeURIComponent(dealId)}&amount=${encodeURIComponent(amount)}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.success) {
+                    universalDeepLink = data.deep_link;
 
-    if (data && data.order_id) {
-      renderPayment(data);
-    } else {
-      renderError();
-    }
-  }
+                    // Заполняем интерфейс данными из Secrets воркера
+                    document.getElementById('orderTitle').innerText = `Оплата замовлення №${dealId}`;
+                    document.getElementById('orderAmount').innerText = `${data.amount} грн`;
+                    document.getElementById('fopName').innerText = data.fop_name;
+                    document.getElementById('ibanVal').innerText = data.iban;
+                    document.getElementById('purposeVal').innerText = data.purpose;
 
-  /* ── 3. Основний рендер ── */
-  function renderPayment(d) {
-    const pd = d.payment_details || {};
-    const dl = d.deep_links || {};
+                    // Отрисовываем QR-код НБУ
+                    qrContainer.innerHTML = "";
+                    new QRCode(qrContainer, {
+                        text: universalDeepLink,
+                        width: 160,
+                        height: 160,
+                        colorDark: "#2A2A2A",
+                        colorLight: "#FFFFFF",
+                        correctLevel: QRCode.CorrectLevel.M
+                    });
+                }
+            })
+            .catch(err => {
+                console.error("Помилка завантаження реквізитів:", err);
+                document.getElementById('orderTitle').innerText = "Помилка завантаження";
+            });
 
-    const amount = pd.amount ? parseFloat(pd.amount).toLocaleString('uk-UA', { minimumFractionDigits: 0, maximumFractionDigits: 2 }) : '—';
+        // 4. Переход по универсальному диплинку
+        function payViaMono() {
+            if (universalDeepLink) {
+                window.location.href = universalDeepLink;
+            }
+        }
 
-    document.getElementById('payment-root').innerHTML = `
-      <div class="card-header">
-        <div class="status-badge">
-          <div class="status-dot"></div>
-          Очікує оплати
-        </div>
-        <h1 class="card-title">Замовлення <span>#${escHtml(String(d.order_id))}</span> створено</h1>
-        <div class="amount-tag">${escHtml(amount)}<span class="currency">грн</span></div>
-      </div>
+        function payViaPrivat() {
+            if (universalDeepLink) {
+                window.location.href = universalDeepLink;
+            }
+        }
 
-      <div class="card-body">
+        // 5. Функция быстрого копирования текста
+        function copyText(elementId) {
+            const text = document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                alert("Скопійовано: " + text);
+            });
+        }
 
-        <!-- Bank buttons -->
-        <div>
-          <p class="section-label">Швидка оплата</p>
-          <div class="bank-buttons">
-            ${dl.privat24 ? `
-            <a id="btn-privat24" href="${escHtml(dl.privat24)}" target="_blank" rel="noopener noreferrer" class="btn-bank btn-privat">
-              <svg width="20" height="20" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-                <rect width="48" height="48" rx="10" fill="#fff" opacity=".15"/>
-                <text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" font-size="22" font-family="sans-serif" fill="#fff">🟢</text>
-              </svg>
-              Оплатити через Privat24
-            </a>` : ''}
-            ${dl.monobank ? `
-            <a id="btn-monobank" href="${escHtml(dl.monobank)}" target="_blank" rel="noopener noreferrer" class="btn-bank btn-mono">
-              <svg width="20" height="20" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-                <rect width="48" height="48" rx="10" fill="#fff" opacity=".1"/>
-                <text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" font-size="22" font-family="sans-serif" fill="#fff">⚫</text>
-              </svg>
-              Оплатити через Monobank
-            </a>` : ''}
-            ${!dl.privat24 && !dl.monobank ? `<p style="color:var(--color-text-muted);font-size:.875rem">Кнопки швидкої оплати недоступні — скористайтесь реквізитами нижче.</p>` : ''}
-          </div>
-        </div>
+        // 6. Логика авто-опроса (Polling) статуса сделки в KeepinCRM
+        let checkInterval = setInterval(checkPaymentStatus, 4000);
 
-        <!-- Divider -->
-        <div class="divider">або вручну</div>
+        function checkPaymentStatus() {
+            if (!dealId || dealId === '0000') return;
 
-        <!-- IBAN Details -->
-        <div>
-          <p class="section-label">Реквізити для ручного переказу</p>
-          <div class="iban-details">
-            ${pd.fop_name ? detailRow('Отримувач', pd.fop_name, false, false) : ''}
-            ${pd.tax_id   ? detailRow('ЄДРПОУ / ІПН', pd.tax_id, false, false) : ''}
-            ${pd.iban     ? detailRow('IBAN', pd.iban, true, true) : ''}
-            ${pd.purpose  ? detailRow('Призначення платежу', pd.purpose, true, false, true) : ''}
-          </div>
-        </div>
-
-        <!-- Notice -->
-        <div class="notice" role="note">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-          </svg>
-          <span>Вкажіть точне призначення платежу — це дозволить автоматично зарахувати оплату до вашого замовлення.</span>
-        </div>
-
-      </div>
-    `;
-  }
-
-  function detailRow(label, value, copyable, isMono, isPurpose) {
-    const safeId = 'field-' + label.replace(/\s+/g, '-').toLowerCase().replace(/[^a-z0-9-]/g, '');
-    const monoClass = isMono ? ' mono' : '';
-    const purposeClass = isPurpose ? ' purpose-row' : '';
-    return `
-      <div class="detail-row${purposeClass}">
-        <span class="detail-label">${escHtml(label)}</span>
-        <span class="detail-value${monoClass}" id="${safeId}">${escHtml(value)}</span>
-        ${copyable ? `
-        <button class="copy-btn" onclick="copyField('${safeId}', this)" aria-label="Скопіювати ${escHtml(label)}">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-          </svg>
-        </button>` : ''}
-      </div>
-    `;
-  }
-
-  function renderError() {
-    document.getElementById('payment-root').innerHTML = `
-      <div class="error-state">
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-faint)" stroke-width="1.5" style="margin:0 auto var(--space-4)" aria-hidden="true">
-          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-        </svg>
-        <h2>Дані замовлення не знайдено</h2>
-        <p>Схоже, ви потрапили на цю сторінку напряму.<br>Поверніться до магазину та оформіть замовлення.</p>
-        <a href="/" style="display:inline-block;margin-top:var(--space-6);padding:var(--space-3) var(--space-6);background:var(--color-text);color:#fff;border-radius:var(--radius-md);font-size:.875rem;font-weight:500">← На головну</a>
-      </div>
-    `;
-  }
-
-  /* ── 4. Утиліти ── */
-  window.copyField = function (elementId, btn) {
-    const text = document.getElementById(elementId).innerText.trim();
-    navigator.clipboard.writeText(text).then(function () {
-      if (btn) {
-        btn.classList.add('copied');
-        btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>`;
-        setTimeout(function () {
-          btn.classList.remove('copied');
-          btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
-        }, 2000);
-      }
-      showToast('Скопійовано!');
-    }).catch(function () {
-      showToast('Не вдалося скопіювати');
-    });
-  };
-
-  function showToast(msg) {
-    var t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    clearTimeout(t._timer);
-    t._timer = setTimeout(function () { t.classList.remove('show'); }, 2200);
-  }
-
-  function escHtml(str) {
-    return String(str || '').replace(/[&<>"']/g, function (c) {
-      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
-    });
-  }
-
-  /* ── 5. Публічний API для сайту ── */
-  window.handleOrderSuccess = function (responseData) {
-    try { sessionStorage.setItem('paymentData', JSON.stringify(responseData)); } catch (_) {}
-    renderPayment(responseData);
-    window.history.replaceState({}, '', '/pay.html?order_id=' + encodeURIComponent(responseData.order_id));
-  };
-
-  init();
-})();
-</script>
+            fetch(`/api/check-status.php?deal_id=${dealId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'paid' || data.status === 'success') {
+                        clearInterval(checkInterval);
+                        document.getElementById('mainCard').style.display = 'none';
+                        document.getElementById('successCard').style.display = 'block';
+                    }
+                })
+                .catch(err => console.log('Очікування підтвердження оплати...'));
+        }
+    </script>
 </body>
 </html>
