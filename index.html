@@ -1607,42 +1607,44 @@ function sendToKeepinCRM(d){
         e.preventDefault();
         if (cart.length === 0) { alert('Додайте щось у кошик!'); return; }
 
-        var form    = this;
-        var total   = cart.reduce(function(sum, i){ return sum + i.price * i.qty; }, 0);
-        var items   = cart.map(function(i){ return '• ' + i.name + ' × ' + i.qty + ' = ' + (i.price * i.qty) + ' грн'; }).join('\n');
+        var form = this;
+        var btn = form.querySelector('button[type="submit"]');
+        if (btn) btn.disabled = true;
 
-        // Опціонально: заблокувати кнопку під час відправки
-        // var btn = form.querySelector('button[type="submit"]');
-        // btn.disabled = true;
+        var total = cart.reduce(function(sum, i){ return sum + i.price * i.qty; }, 0);
 
-                         sendToKeepinCRM({
-                                           fullName: document.getElementById('name').value,
-                                           phone: document.getElementById('phone').value,
-                                           email: '',
-                                           comment: document.getElementById('address').value,
-                                                       address:  document.getElementById('address').value,
-                                                                   total:    total,
-                                           items: cart.map(function(i){ return {name:i.name,price:i.price,quantity:i.qty,sku:i.sku}; })
-                                                           })
-        .then(function() {
-            // Спрацює ТІЛЬКИ якщо запит пройшов успішно
-            alert('Дякуємо! Замовлення прийнято.\nМи зв\'яжемося з вами найближчим часом. \uD83D\uDE4F');
-            cart = [];
-            updateUI();
-            form.reset();
+        sendToKeepinCRM({
+            fullName: document.getElementById('name').value,
+            phone: document.getElementById('phone').value,
+            email: '',
+            comment: document.getElementById('address').value,
+            address: document.getElementById('address').value,
+            total: total,
+            items: cart.map(function(i){ return { name: i.name, price: i.price, quantity: i.qty, sku: i.sku }; })
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+            if (data && data.success) {
+                var orderId = data.order_id;
+                // Очищаем корзину перед редиректом
+                cart = [];
+                updateUI();
+                form.reset();
+                // Редирект на страницу оплаты с актуальными параметрами
+                window.location.href = 'pay.html?deal_id=' + encodeURIComponent(orderId) + '&amount=' + encodeURIComponent(total);
+            } else {
+                alert('Виникла помилка при оформленні замовлення. Спробуйте ще раз.');
+            }
         })
         .catch(function(error) {
-            // Спрацює при помилці (немає мережі, збій API тощо)
             console.error('Помилка відправки:', error);
-            alert('Вибачте, сталася помилка при відправці замовлення. Будь ласка, спробуйте ще раз або зв\'яжіться з нами в Instagram.');
+            alert('Вибачте, сталася помилка при відправці замовлення. Будь ласка, спробуйте ще раз або зв\'яжіться з нами.');
         })
         .finally(function() {
-            // Спрацює в будь-якому випадку в самому кінці
-            // Тут зручно повертати кнопку в активний стан
-            // btn.disabled = false;
+            if (btn) btn.disabled = false;
         });
     });
-
+    
     // ─── АНІМАЦІЯ ПОЯВИ СЕКЦІЙ ────────────────────────────
     if ('IntersectionObserver' in window) {
         var observer = new IntersectionObserver(function(entries) {
