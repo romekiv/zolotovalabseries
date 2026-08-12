@@ -8,6 +8,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Легкая сборка qrcode без eval -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
 
     <style>
         :root {
@@ -137,6 +140,12 @@
             justify-content: center;
         }
 
+        #qrcode img, #qrcode svg {
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+
         .qr-hint {
             font-size: 12px;
             color: var(--text-muted);
@@ -252,7 +261,7 @@
 
         <div class="qr-wrapper">
             <div id="qrcode"></div>
-            <div class="qr-hint">Відскануйте камерою смартфона або додатком банку</div>
+            <div class="qr-hint">Відскануйте сканером у додатку банку (Приват24, Monobank, ПУМБ)</div>
         </div>
 
         <div class="iban-details">
@@ -306,17 +315,16 @@
         const qrContainer = document.getElementById("qrcode");
         const payBtn = document.getElementById("payBtn");
 
-        // 1. Загрузка реквизитов и SVG QR-кода из Worker
+        // 1. Получаем реквизиты и raw_bcd из Worker
         fetch(`${WORKER_BASE_URL}/payment-info?deal_id=${encodeURIComponent(dealId)}&amount=${encodeURIComponent(amount)}`)
             .then(res => {
                 if (!res.ok) throw new Error(`HTTP error ${res.status}`);
                 return res.json();
             })
             .then(data => {
-                if (data && data.success) {
+                if (data && data.success && data.raw_bcd) {
                     universalDeepLink = data.deep_link || "";
 
-                    // Заполняем интерфейс
                     document.getElementById('orderTitle').innerText = `Оплата замовлення №${dealId}`;
                     document.getElementById('orderAmount').innerText = `${data.amount} грн`;
                     document.getElementById('fopName').innerText = data.fop_name;
@@ -325,9 +333,17 @@
 
                     if (payBtn) payBtn.disabled = false;
 
-                    // Вставляем готовый векторный SVG QR-код из воркера
-                    if (data.qr_svg) {
-                        qrContainer.innerHTML = data.qr_svg;
+                    // Генерация SVG QR без вызова eval()
+                    try {
+                        qrContainer.innerHTML = "";
+                        const typeNumber = 0; // Авто-размер
+                        const errorCorrectionLevel = 'L';
+                        const qr = qrcode(typeNumber, errorCorrectionLevel);
+                        qr.addData(data.raw_bcd);
+                        qr.make();
+                        qrContainer.innerHTML = qr.createSvgTag(4, 0);
+                    } catch (qrErr) {
+                        console.error("Помилка генерації QR-коду:", qrErr);
                     }
                 } else {
                     throw new Error("Invalid response format");
