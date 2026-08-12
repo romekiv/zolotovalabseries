@@ -323,7 +323,7 @@
 
                     qrContainer.innerHTML = "";
                     new QRCode(qrContainer, {
-                        text: universalDeepLink,
+                                                    text: unescape(encodeURIComponent(data.raw_bcd)),
                         width: 160,
                         height: 160,
                         colorDark: "#2A2A2A",
