@@ -132,6 +132,11 @@
             background: #fff;
             border: 1px solid var(--border-color);
             border-radius: 12px;
+            min-width: 160px;
+            min-height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .qr-hint {
@@ -303,34 +308,41 @@
         const qrContainer = document.getElementById("qrcode");
         const payBtn = document.getElementById("payBtn");
 
-        // 1. Получаем реквизиты, raw_bcd и deep_link из воркера
+        // 1. Получаем реквизиты из Worker
         fetch(`${WORKER_BASE_URL}/payment-info?deal_id=${encodeURIComponent(dealId)}&amount=${encodeURIComponent(amount)}`)
             .then(res => {
                 if (!res.ok) throw new Error(`HTTP error ${res.status}`);
                 return res.json();
             })
             .then(data => {
-                if (data && data.success && data.raw_bcd) {
-                    universalDeepLink = data.deep_link;
+                if (data && data.success) {
+                    universalDeepLink = data.deep_link || "";
 
+                    // Заполняем текстовые реквизиты
                     document.getElementById('orderTitle').innerText = `Оплата замовлення №${dealId}`;
                     document.getElementById('orderAmount').innerText = `${data.amount} грн`;
                     document.getElementById('fopName').innerText = data.fop_name;
                     document.getElementById('ibanVal').innerText = data.iban;
                     document.getElementById('purposeVal').innerText = data.purpose;
 
-                    payBtn.disabled = false;
+                    if (payBtn) payBtn.disabled = false;
 
-                    // Отрисовываем QR-код с кодированием UTF-8 байт для qrcodejs
-                    qrContainer.innerHTML = "";
-                    new QRCode(qrContainer, {
-                        text: unescape(encodeURIComponent(data.raw_bcd)),
-                        width: 160,
-                        height: 160,
-                        colorDark: "#2A2A2A",
-                        colorLight: "#FFFFFF",
-                        correctLevel: QRCode.CorrectLevel.M
-                    });
+                    // Безопасный рендеринг QR-кода
+                    if (data.raw_bcd) {
+                        try {
+                            qrContainer.innerHTML = "";
+                            new QRCode(qrContainer, {
+                                text: unescape(encodeURIComponent(data.raw_bcd)),
+                                width: 160,
+                                height: 160,
+                                colorDark: "#2A2A2A",
+                                colorLight: "#FFFFFF",
+                                correctLevel: QRCode.CorrectLevel.L
+                            });
+                        } catch (qrErr) {
+                            console.error("Помилка генерації QR-коду:", qrErr);
+                        }
+                    }
                 } else {
                     throw new Error("Invalid response format");
                 }
@@ -349,7 +361,7 @@
             }
         }
 
-        // 3. Быстрое копирование
+        // 3. Копирование
         function copyText(elementId) {
             const text = document.getElementById(elementId).innerText;
             if (!text || text.includes("Завантаження")) return;
