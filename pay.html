@@ -1,394 +1,397 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Оплата замовлення | ZolotovA Lab Series</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Оплата замовлення | ZOLOTOVA LAB SERIES</title>
+  
+  <!-- Подключение шрифтов (замени на свои, если используешь другие) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Библиотека генерации QR-кода -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+
+  <style>
+    :root {
+      --primary-color: #333333;
+      --accent-color: #d4b58e; /* Золотистый оттенок */
+      --bg-color: #f9f9f9;
+      --card-bg: #ffffff;
+      --input-bg: #faf9f7;
+      --border-color: #e5e5e5;
+      --text-main: #2a2a2a;
+      --text-muted: #888888;
+      --success-color: #4caf50;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .payment-card {
+      background-color: var(--card-bg);
+      width: 100%;
+      max-width: 480px;
+      border-radius: 12px;
+      padding: 40px 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      text-align: center;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      color: var(--primary-color);
+      margin-bottom: 5px;
+    }
+
+    .logo span {
+      display: block;
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 4px;
+      color: var(--accent-color);
+    }
+
+    .header-info {
+      background-color: var(--input-bg);
+      border-radius: 8px;
+      padding: 20px;
+      margin: 25px 0;
+    }
+
+    .order-title {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 5px;
+    }
+
+    .order-amount {
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .qr-wrapper {
+      margin: 20px auto;
+      width: 180px;
+      height: 180px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #fff;
+      border-radius: 8px;
+    }
+
+    .qr-wrapper svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .scan-instruction {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 25px;
+      line-height: 1.5;
+    }
+
+    /* Мобильная кнопка оплаты */
+    .mobile-pay-btn {
+      display: none;
+      background-color: var(--text-main);
+      color: #fff;
+      text-decoration: none;
+      padding: 15px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 25px;
+      transition: background-color 0.3s;
+    }
+
+    .mobile-pay-btn:hover {
+      background-color: #000;
+    }
+
+    .divider {
+      height: 1px;
+      background-color: var(--border-color);
+      border-style: dashed;
+      border-width: 1px 0 0 0;
+      margin: 0 0 25px 0;
+    }
+
+    .details-group {
+      text-align: left;
+      margin-bottom: 15px;
+    }
+
+    .details-group label {
+      display: block;
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 5px;
+      text-transform: uppercase;
+    }
+
+    .input-wrapper {
+      display: flex;
+      background-color: var(--input-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .input-wrapper input {
+      flex-grow: 1;
+      border: none;
+      background: transparent;
+      padding: 12px 15px;
+      font-size: 13px;
+      color: var(--text-main);
+      outline: none;
+      font-family: monospace;
+    }
+
+    .copy-btn {
+      background: transparent;
+      border: none;
+      border-left: 1px solid var(--border-color);
+      padding: 0 15px;
+      color: var(--accent-color);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+
+    .copy-btn:hover {
+      color: #b59267;
+    }
+
+    .status-text {
+      margin-top: 25px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
     
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
-    
-    <!-- Легкая сборка qrcode без eval -->
-    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+    .status-text.success {
+      color: var(--success-color);
+      font-weight: 600;
+    }
 
-    <style>
-        :root {
-            --bg-color: #FAF8F5;
-            --card-bg: #FFFFFF;
-            --text-main: #2A2A2A;
-            --text-muted: #7A7A7A;
-            --accent-gold: #C5A880;
-            --accent-gold-hover: #b3956d;
-            --border-color: #EFECE6;
-            --btn-color: #111111;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Montserrat', sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .payment-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            max-width: 480px;
-            width: 100%;
-            padding: 36px 28px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
-            text-align: center;
-        }
-
-        .brand-header {
-            margin-bottom: 24px;
-        }
-
-        .brand-title {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 26px;
-            font-weight: 600;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: var(--text-main);
-        }
-
-        .order-info {
-            background-color: var(--bg-color);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 28px;
-        }
-
-        .order-info .order-num {
-            font-size: 13px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .order-info .amount {
-            font-size: 32px;
-            font-weight: 600;
-            color: var(--text-main);
-            margin-top: 4px;
-        }
-
-        .deeplink-group {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-
-        .btn-deeplink {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            width: 100%;
-            padding: 16px;
-            border-radius: 10px;
-            border: none;
-            font-weight: 600;
-            font-size: 15px;
-            cursor: pointer;
-            background-color: var(--btn-color);
-            color: #FFFFFF;
-            transition: all 0.2s ease;
-        }
-
-        .btn-deeplink:hover {
-            opacity: 0.9;
-            transform: translateY(-1px);
-        }
-
-        .btn-deeplink:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .qr-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 24px;
-        }
-
-        #qrcode {
-            padding: 12px;
-            background: #fff;
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            min-width: 160px;
-            min-height: 160px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        #qrcode img, #qrcode svg {
-            display: block;
-            max-width: 100%;
-            height: auto;
-        }
-
-        .qr-hint {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-top: 8px;
-        }
-
-        .iban-details {
-            border-top: 1px dashed var(--border-color);
-            padding-top: 20px;
-            text-align: left;
-        }
-
-        .field-group {
-            margin-bottom: 14px;
-        }
-
-        .field-label {
-            font-size: 11px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 4px;
-        }
-
-        .field-box {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--bg-color);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 10px 12px;
-            font-size: 13px;
-            font-weight: 500;
-            word-break: break-all;
-        }
-
-        .btn-copy {
-            background: none;
-            border: none;
-            color: var(--accent-gold);
-            font-weight: 600;
-            font-size: 12px;
-            cursor: pointer;
-            padding-left: 8px;
-            white-space: nowrap;
-        }
-
-        .btn-copy:hover {
-            color: var(--accent-gold-hover);
-        }
-
-        .status-box {
-            margin-top: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            font-size: 13px;
-            color: var(--text-muted);
-        }
-
-        .spinner {
-            width: 14px;
-            height: 14px;
-            border: 2px solid var(--border-color);
-            border-top-color: var(--accent-gold);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .success-overlay {
-            display: none;
-            text-align: center;
-        }
-
-        .success-icon {
-            font-size: 48px;
-            color: #4CAF50;
-            margin-bottom: 12px;
-        }
-
-        @media (min-width: 600px) {
-            .deeplink-group { display: none; }
-        }
-        @media (max-width: 599px) {
-            .qr-wrapper { display: none; }
-        }
-    </style>
+    /* Медиа-запрос для мобильных устройств */
+    @media (max-width: 600px) {
+      .qr-wrapper {
+        display: none; /* Скрываем QR на мобильных */
+      }
+      .scan-instruction {
+        display: none;
+      }
+      .mobile-pay-btn {
+        display: block; /* Показываем кнопку диплинка */
+      }
+    }
+  </style>
 </head>
 <body>
 
-    <div class="payment-card" id="mainCard">
-        <div class="brand-header">
-            <div class="brand-title">ZOLOTOVA</div>
-            <div style="font-size: 10px; letter-spacing: 3px; color: var(--accent-gold);">LAB SERIES</div>
-        </div>
-
-        <div class="order-info">
-            <div class="order-num" id="orderTitle">Завантаження...</div>
-            <div class="amount" id="orderAmount">0.00 грн</div>
-        </div>
-
-        <div class="deeplink-group">
-            <button class="btn-deeplink" id="payBtn" onclick="payViaBank()" disabled>
-                Оплатити у додатку банку
-            </button>
-        </div>
-
-        <div class="qr-wrapper">
-            <div id="qrcode"></div>
-            <div class="qr-hint">Відскануйте сканером у додатку банку (Приват24, Monobank, ПУМБ)</div>
-        </div>
-
-        <div class="iban-details">
-            <div class="field-group">
-                <div class="field-label">Отримувач (ФОП)</div>
-                <div class="field-box">
-                    <span id="fopName">Завантаження...</span>
-                    <button class="btn-copy" onclick="copyText('fopName')">Копіювати</button>
-                </div>
-            </div>
-
-            <div class="field-group">
-                <div class="field-label">Розрахунковий рахунок (IBAN)</div>
-                <div class="field-box">
-                    <span id="ibanVal">Завантаження...</span>
-                    <button class="btn-copy" onclick="copyText('ibanVal')">Копіювати</button>
-                </div>
-            </div>
-
-            <div class="field-group">
-                <div class="field-label">Призначення платежу</div>
-                <div class="field-box">
-                    <span id="purposeVal">Завантаження...</span>
-                    <button class="btn-copy" onclick="copyText('purposeVal')">Копіювати</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="status-box" id="statusBox">
-            <div class="spinner" id="statusSpinner"></div>
-            <span id="statusText">Очікуємо підтвердження платежу...</span>
-        </div>
+  <div class="payment-card">
+    <div class="logo">
+      ZOLOTOVA
+      <span>LAB SERIES</span>
     </div>
 
-    <div class="payment-card success-overlay" id="successCard">
-        <div class="success-icon">✓</div>
-        <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 28px; margin-bottom: 8px;">Дякуємо за оплату!</h2>
-        <p style="font-size: 14px; color: var(--text-muted); line-height: 1.5;">
-            Ваше замовлення успішно підтверджено.<br>Ми вже готуємо його до відправки.
-        </p>
+    <div class="header-info">
+      <div class="order-title" id="order-title">ЗАВАНТАЖЕННЯ...</div>
+      <div class="order-amount" id="order-amount">0.00 грн</div>
     </div>
 
-    <script>
-        const WORKER_BASE_URL = "https://site-order-api.romek-ivanchenko.workers.dev";
+    <div class="qr-wrapper" id="qrcode-container">
+      <!-- QR-код сгенерируется здесь -->
+    </div>
+    
+    <div class="scan-instruction">
+      Відскануйте сканером у додатку банку<br>(Приват24, Monobank, ПУМБ)
+    </div>
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const dealId = urlParams.get('deal_id') || '0000';
-        const amount = urlParams.get('amount') || '0';
+    <a href="#" class="mobile-pay-btn" id="mobile-pay-btn">Оплатити в додатку банку</a>
 
-        let universalDeepLink = "";
-        const qrContainer = document.getElementById("qrcode");
-        const payBtn = document.getElementById("payBtn");
+    <div class="divider"></div>
 
-        // 1. Получаем реквизиты и raw_bcd из Worker
-        fetch(`${WORKER_BASE_URL}/payment-info?deal_id=${encodeURIComponent(dealId)}&amount=${encodeURIComponent(amount)}`)
-            .then(res => {
-                if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-                return res.json();
-            })
-            .then(data => {
-                if (data && data.success && data.raw_bcd) {
-                    universalDeepLink = data.deep_link || "";
+    <div class="details-group">
+      <label>ОТРИМУВАЧ (ФОП)</label>
+      <div class="input-wrapper">
+        <input type="text" id="fop-name" value="Завантаження..." readonly>
+        <button class="copy-btn" onclick="copyToClipboard('fop-name', this)">Копіювати</button>
+      </div>
+    </div>
 
-                    document.getElementById('orderTitle').innerText = `Оплата замовлення №${dealId}`;
-                    document.getElementById('orderAmount').innerText = `${data.amount} грн`;
-                    document.getElementById('fopName').innerText = data.fop_name;
-                    document.getElementById('ibanVal').innerText = data.iban;
-                    document.getElementById('purposeVal').innerText = data.purpose;
+    <div class="details-group">
+      <label>ЄДРПОУ/ІПН</label>
+      <div class="input-wrapper">
+        <input type="text" id="tax-id" value="Завантаження..." readonly>
+        <button class="copy-btn" onclick="copyToClipboard('tax-id', this)">Копіювати</button>
+      </div>
+    </div>
 
-                    if (payBtn) payBtn.disabled = false;
+    <div class="details-group">
+      <label>РОЗРАХУНКОВИЙ РАХУНОК (IBAN)</label>
+      <div class="input-wrapper">
+        <input type="text" id="iban" value="Завантаження..." readonly>
+        <button class="copy-btn" onclick="copyToClipboard('iban', this)">Копіювати</button>
+      </div>
+    </div>
 
-                    // Генерация SVG QR без вызова eval()
-                    try {
-                        qrContainer.innerHTML = "";
-                        const typeNumber = 0; // Авто-размер
-                        const errorCorrectionLevel = 'L';
-                        const qr = qrcode(typeNumber, errorCorrectionLevel);
-                        qr.addData(data.raw_bcd);
-                        qr.make();
-                        qrContainer.innerHTML = qr.createSvgTag(4, 0);
-                    } catch (qrErr) {
-                        console.error("Помилка генерації QR-коду:", qrErr);
-                    }
-                } else {
-                    throw new Error("Invalid response format");
-                }
-            })
-            .catch(err => {
-                console.error("Помилка завантаження реквізитів:", err);
-                document.getElementById('orderTitle').innerText = "Помилка завантаження";
-                document.getElementById('statusSpinner').style.display = 'none';
-                document.getElementById('statusText').innerText = "Не вдалося завантажити реквізити. Оновіть сторінку.";
-            });
+    <div class="details-group">
+      <label>ПРИЗНАЧЕННЯ ПЛАТЕЖУ</label>
+      <div class="input-wrapper">
+        <input type="text" id="purpose" value="Завантаження..." readonly>
+        <button class="copy-btn" onclick="copyToClipboard('purpose', this)">Копіювати</button>
+      </div>
+    </div>
 
-        // 2. Переход по мобильному диплинку
-        function payViaBank() {
-            if (universalDeepLink) {
-                window.location.href = universalDeepLink;
+    <div class="status-text" id="payment-status">
+      Очікуємо підтвердження платежу...
+    </div>
+  </div>
+
+  <script>
+    // URL твоего Cloudflare Worker
+    const API_BASE = "https://site-order-api.romek-ivanchenko.workers.dev";
+    
+    // Получение параметров из URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const dealId = urlParams.get('deal_id');
+    const amount = urlParams.get('amount');
+
+    // Функция копирования в буфер
+    function copyToClipboard(inputId, btnElement) {
+      const input = document.getElementById(inputId);
+      input.select();
+      input.setSelectionRange(0, 99999); // Для мобильных
+      navigator.clipboard.writeText(input.value).then(() => {
+        const originalText = btnElement.innerText;
+        btnElement.innerText = "Скопійовано!";
+        setTimeout(() => {
+          btnElement.innerText = originalText;
+        }, 2000);
+      }).catch(err => {
+        console.error('Не вдалося скопіювати текст: ', err);
+      });
+    }
+
+    // Загрузка реквизитов и генерация QR
+    async function loadPaymentInfo() {
+      if (!dealId || !amount) {
+        document.getElementById('order-title').innerText = "ПОМИЛКА";
+        document.getElementById('order-amount').innerText = "Недійсне посилання";
+        return;
+      }
+
+      document.getElementById('order-title').innerText = `ОПЛАТА ЗАМОВЛЕННЯ №${dealId}`;
+
+      try {
+        const response = await fetch(`${API_BASE}/payment-info?deal_id=${dealId}&amount=${amount}`);
+        const data = await response.json();
+
+        if (data.success) {
+          // Заполнение текстовых полей
+          document.getElementById('order-amount').innerText = `${data.amount} грн`;
+          document.getElementById('fop-name').value = data.fop_name;
+          document.getElementById('tax-id').value = data.tax_id;
+          document.getElementById('iban').value = data.iban;
+          document.getElementById('purpose').value = data.purpose;
+
+          // Установка ссылки для мобильной кнопки (Версия 002 Deeplink)
+          if (data.deep_link) {
+            document.getElementById('mobile-pay-btn').href = data.deep_link;
+          }
+
+          // Генерация QR-кода на фронтенде (Версия 001)
+          if (data.raw_bcd) {
+            try {
+              // Настройка qrcode-generator на работу с UTF-8
+              qrcode.stringToBytes = qrcode.stringToBytesFuncs['UTF-8'];
+              const qr = qrcode(0, 'M'); // Уровень коррекции M
+              qr.addData(data.raw_bcd, 'Byte'); // Режим Byte для кириллицы
+              qr.make();
+              
+              document.getElementById('qrcode-container').innerHTML = qr.createSvgTag({
+                cellSize: 5,
+                margin: 0,
+                scalable: true
+              });
+            } catch (qrErr) {
+              console.error("Помилка генерації QR на клієнті:", qrErr);
+              // Если фронт упал (очень редко), пытаемся достать SVG от бекенда
+              if (data.qr_available) {
+                document.getElementById('qrcode-container').innerHTML = data.qr_svg;
+              } else {
+                document.getElementById('qrcode-container').innerHTML = '<span style="font-size: 12px; color: red;">Помилка QR</span>';
+              }
             }
+          }
+
+          // Запуск проверки статуса платежа
+          startStatusPolling();
+          
+        } else {
+          throw new Error(data.error || "Помилка завантаження реквізитів");
         }
+      } catch (error) {
+        console.error(error);
+        document.getElementById('order-title').innerText = "ПОМИЛКА ЗАВАНТАЖЕННЯ";
+        document.getElementById('payment-status').innerText = "Не вдалося завантажити реквізити. Оновіть сторінку.";
+      }
+    }
 
-        // 3. Копирование
-        function copyText(elementId) {
-            const text = document.getElementById(elementId).innerText;
-            if (!text || text.includes("Завантаження")) return;
-            navigator.clipboard.writeText(text).then(() => {
-                alert("Скопійовано: " + text);
-            });
+    // Проверка статуса оплаты в CRM каждые 7 секунд
+    let pollingInterval;
+    async function checkPaymentStatus() {
+      try {
+        const response = await fetch(`${API_BASE}/payment-status?deal_id=${dealId}`);
+        const data = await response.json();
+
+        if (data.success && data.status === "paid") {
+          const statusEl = document.getElementById('payment-status');
+          statusEl.innerText = "✓ Оплату успішно підтверджено!";
+          statusEl.className = "status-text success";
+          clearInterval(pollingInterval);
         }
+      } catch (err) {
+        console.log("Помилка перевірки статусу:", err);
+      }
+    }
 
-        // 4. Polling статуса оплаты из KeepinCRM через воркер
-        let checkInterval = setInterval(checkPaymentStatus, 4000);
+    function startStatusPolling() {
+      // Делаем первый чек через 5 секунд, затем каждые 7 секунд
+      setTimeout(() => {
+        checkPaymentStatus();
+        pollingInterval = setInterval(checkPaymentStatus, 7000);
+      }, 5000);
+    }
 
-        function checkPaymentStatus() {
-            if (!dealId || dealId === '0000') return;
-
-            fetch(`${WORKER_BASE_URL}/payment-status?deal_id=${encodeURIComponent(dealId)}`)
-                .then(res => res.ok ? res.json() : null)
-                .then(data => {
-                    if (data && data.status === 'paid') {
-                        clearInterval(checkInterval);
-                        document.getElementById('mainCard').style.display = 'none';
-                        document.getElementById('successCard').style.display = 'block';
-                    }
-                })
-                .catch(err => console.log('Очікування підтвердження...'));
-        }
-    </script>
+    // Инициализация при загрузке страницы
+    window.onload = loadPaymentInfo;
+  </script>
 </body>
 </html>
