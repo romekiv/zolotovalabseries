@@ -303,14 +303,14 @@
         const qrContainer = document.getElementById("qrcode");
         const payBtn = document.getElementById("payBtn");
 
-        // 1. Динамическое получение данных оплаты из Worker
+        // 1. Получаем реквизиты, raw_bcd и deep_link из воркера
         fetch(`${WORKER_BASE_URL}/payment-info?deal_id=${encodeURIComponent(dealId)}&amount=${encodeURIComponent(amount)}`)
             .then(res => {
-                if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+                if (!res.ok) throw new Error(`HTTP error ${res.status}`);
                 return res.json();
             })
             .then(data => {
-                if (data && data.success) {
+                if (data && data.success && data.raw_bcd) {
                     universalDeepLink = data.deep_link;
 
                     document.getElementById('orderTitle').innerText = `Оплата замовлення №${dealId}`;
@@ -321,6 +321,7 @@
 
                     payBtn.disabled = false;
 
+                    // Отрисовываем QR-код с кодированием UTF-8 байт для qrcodejs
                     qrContainer.innerHTML = "";
                     new QRCode(qrContainer, {
                         text: unescape(encodeURIComponent(data.raw_bcd)),
@@ -328,7 +329,6 @@
                         height: 160,
                         colorDark: "#2A2A2A",
                         colorLight: "#FFFFFF",
-                        typeNumber: 0,
                         correctLevel: QRCode.CorrectLevel.M
                     });
                 } else {
@@ -342,34 +342,30 @@
                 document.getElementById('statusText').innerText = "Не вдалося завантажити реквізити. Оновіть сторінку.";
             });
 
-        // 2. Переход по универсальному диплинку
+        // 2. Переход по мобильному диплинку
         function payViaBank() {
             if (universalDeepLink) {
                 window.location.href = universalDeepLink;
             }
         }
 
-        // 3. Копирование
+        // 3. Быстрое копирование
         function copyText(elementId) {
             const text = document.getElementById(elementId).innerText;
             if (!text || text.includes("Завантаження")) return;
-            
             navigator.clipboard.writeText(text).then(() => {
                 alert("Скопійовано: " + text);
             });
         }
 
-        // 4. Polling статуса оплаты из Worker
+        // 4. Polling статуса оплаты из KeepinCRM через воркер
         let checkInterval = setInterval(checkPaymentStatus, 4000);
 
         function checkPaymentStatus() {
             if (!dealId || dealId === '0000') return;
 
             fetch(`${WORKER_BASE_URL}/payment-status?deal_id=${encodeURIComponent(dealId)}`)
-                .then(res => {
-                    if (!res.ok) return null;
-                    return res.json();
-                })
+                .then(res => res.ok ? res.json() : null)
                 .then(data => {
                     if (data && data.status === 'paid') {
                         clearInterval(checkInterval);
