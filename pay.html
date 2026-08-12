@@ -8,8 +8,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
     <style>
         :root {
@@ -308,7 +306,7 @@
         const qrContainer = document.getElementById("qrcode");
         const payBtn = document.getElementById("payBtn");
 
-        // 1. Получаем реквизиты из Worker
+        // 1. Загрузка реквизитов и SVG QR-кода из Worker
         fetch(`${WORKER_BASE_URL}/payment-info?deal_id=${encodeURIComponent(dealId)}&amount=${encodeURIComponent(amount)}`)
             .then(res => {
                 if (!res.ok) throw new Error(`HTTP error ${res.status}`);
@@ -318,7 +316,7 @@
                 if (data && data.success) {
                     universalDeepLink = data.deep_link || "";
 
-                    // Заполняем текстовые реквизиты
+                    // Заполняем интерфейс
                     document.getElementById('orderTitle').innerText = `Оплата замовлення №${dealId}`;
                     document.getElementById('orderAmount').innerText = `${data.amount} грн`;
                     document.getElementById('fopName').innerText = data.fop_name;
@@ -327,21 +325,9 @@
 
                     if (payBtn) payBtn.disabled = false;
 
-                    // Безопасный рендеринг QR-кода
-                    if (data.raw_bcd) {
-                        try {
-                            qrContainer.innerHTML = "";
-                            new QRCode(qrContainer, {
-                                text: unescape(encodeURIComponent(data.raw_bcd)),
-                                width: 160,
-                                height: 160,
-                                colorDark: "#2A2A2A",
-                                colorLight: "#FFFFFF",
-                                correctLevel: QRCode.CorrectLevel.L
-                            });
-                        } catch (qrErr) {
-                            console.error("Помилка генерації QR-коду:", qrErr);
-                        }
+                    // Вставляем готовый векторный SVG QR-код из воркера
+                    if (data.qr_svg) {
+                        qrContainer.innerHTML = data.qr_svg;
                     }
                 } else {
                     throw new Error("Invalid response format");
