@@ -5,18 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Оплата замовлення | ZOLOTOVA LAB SERIES</title>
   
-  <!-- Подключение шрифтов (замени на свои, если используешь другие) -->
+  <!-- Підключення шрифтів -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
   
-  <!-- Библиотека генерации QR-кода -->
+  <!-- Бібліотека генерації QR-коду -->
   <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
 
   <style>
     :root {
       --primary-color: #333333;
-      --accent-color: #d4b58e; /* Золотистый оттенок */
+      --accent-color: #d4b58e;
       --bg-color: #f9f9f9;
       --card-bg: #ffffff;
       --input-bg: #faf9f7;
@@ -113,7 +113,7 @@
       line-height: 1.5;
     }
 
-    /* Мобильная кнопка оплаты */
+    /* Мобільна кнопка оплати */
     .mobile-pay-btn {
       display: none;
       background-color: var(--text-main);
@@ -198,16 +198,16 @@
       font-weight: 600;
     }
 
-    /* Медиа-запрос для мобильных устройств */
+    /* Медіа-запит для мобільних пристроїв */
     @media (max-width: 600px) {
       .qr-wrapper {
-        display: none; /* Скрываем QR на мобильных */
+        display: none; /* Ховаємо QR на мобільних */
       }
       .scan-instruction {
         display: none;
       }
       .mobile-pay-btn {
-        display: block; /* Показываем кнопку диплинка */
+        display: block; /* Показуємо кнопку діплінка */
       }
     }
   </style>
@@ -226,11 +226,11 @@
     </div>
 
     <div class="qr-wrapper" id="qrcode-container">
-      <!-- QR-код сгенерируется здесь -->
+      <!-- QR-код згенерується тут -->
     </div>
     
     <div class="scan-instruction">
-      Відскануйте сканером у додатку банку<br>(Приват24, Monobank, ПУМБ)
+      Відскануйте сканером смартфона<br>або у додатку банку (Приват24, Monobank, ПУМБ)
     </div>
 
     <a href="#" class="mobile-pay-btn" id="mobile-pay-btn">Оплатити в додатку банку</a>
@@ -275,19 +275,19 @@
   </div>
 
   <script>
-    // URL твоего Cloudflare Worker
+    // URL твого Cloudflare Worker
     const API_BASE = "https://site-order-api.romek-ivanchenko.workers.dev";
     
-    // Получение параметров из URL
+    // Отримання параметрів з URL
     const urlParams = new URLSearchParams(window.location.search);
     const dealId = urlParams.get('deal_id');
     const amount = urlParams.get('amount');
 
-    // Функция копирования в буфер
+    // Функція копіювання в буфер
     function copyToClipboard(inputId, btnElement) {
       const input = document.getElementById(inputId);
       input.select();
-      input.setSelectionRange(0, 99999); // Для мобильных
+      input.setSelectionRange(0, 99999); // Для мобільних
       navigator.clipboard.writeText(input.value).then(() => {
         const originalText = btnElement.innerText;
         btnElement.innerText = "Скопійовано!";
@@ -299,7 +299,7 @@
       });
     }
 
-    // Загрузка реквизитов и генерация QR
+    // Завантаження реквізитів і генерація QR
     async function loadPaymentInfo() {
       if (!dealId || !amount) {
         document.getElementById('order-title').innerText = "ПОМИЛКА";
@@ -314,25 +314,23 @@
         const data = await response.json();
 
         if (data.success) {
-          // Заполнение текстовых полей
+          // Заповнення текстових полів
           document.getElementById('order-amount').innerText = `${data.amount} грн`;
           document.getElementById('fop-name').value = data.fop_name;
           document.getElementById('tax-id').value = data.tax_id;
           document.getElementById('iban').value = data.iban;
           document.getElementById('purpose').value = data.purpose;
 
-          // Установка ссылки для мобильной кнопки (Версия 002 Deeplink)
+          // Встановлення посилання для мобільної кнопки (Версія 002 Deeplink)
           if (data.deep_link) {
             document.getElementById('mobile-pay-btn').href = data.deep_link;
           }
 
-          // Генерация QR-кода на фронтенде (Версия 001)
-          if (data.raw_bcd) {
+          // Генерація QR-коду на фронтенді (кодуємо URL НБУ для 100% сумісності банків)
+          if (data.deep_link) {
             try {
-              // Настройка qrcode-generator на работу с UTF-8
-              qrcode.stringToBytes = qrcode.stringToBytesFuncs['UTF-8'];
-              const qr = qrcode(0, 'M'); // Уровень коррекции M
-              qr.addData(data.raw_bcd, 'Byte'); // Режим Byte для кириллицы
+              const qr = qrcode(0, 'M'); // Рівень корекції M
+              qr.addData(data.deep_link); 
               qr.make();
               
               document.getElementById('qrcode-container').innerHTML = qr.createSvgTag({
@@ -342,16 +340,11 @@
               });
             } catch (qrErr) {
               console.error("Помилка генерації QR на клієнті:", qrErr);
-              // Если фронт упал (очень редко), пытаемся достать SVG от бекенда
-              if (data.qr_available) {
-                document.getElementById('qrcode-container').innerHTML = data.qr_svg;
-              } else {
-                document.getElementById('qrcode-container').innerHTML = '<span style="font-size: 12px; color: red;">Помилка QR</span>';
-              }
+              document.getElementById('qrcode-container').innerHTML = '<span style="font-size: 12px; color: red;">Помилка QR</span>';
             }
           }
 
-          // Запуск проверки статуса платежа
+          // Запуск перевірки статусу платежу
           startStatusPolling();
           
         } else {
@@ -364,7 +357,7 @@
       }
     }
 
-    // Проверка статуса оплаты в CRM каждые 7 секунд
+    // Перевірка статусу оплати в CRM кожні 7 секунд
     let pollingInterval;
     async function checkPaymentStatus() {
       try {
@@ -383,14 +376,14 @@
     }
 
     function startStatusPolling() {
-      // Делаем первый чек через 5 секунд, затем каждые 7 секунд
+      // Робимо перший чек через 5 секунд, потім кожні 7 секунд
       setTimeout(() => {
         checkPaymentStatus();
         pollingInterval = setInterval(checkPaymentStatus, 7000);
       }, 5000);
     }
 
-    // Инициализация при загрузке страницы
+    // Ініціалізація при завантаженні сторінки
     window.onload = loadPaymentInfo;
   </script>
 </body>
