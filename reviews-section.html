@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="uk">
 <head>
@@ -54,17 +53,18 @@
 
 /* ─── Слайдер ──────────────────────────────────────────── */
 
-/* Обрізаємо те, що виходить за межі */
-/* ПРАВКА 6: overflow:hidden перенесено на .reviews-track — тепер .reviews-overflow відкритий і навігація не обрізається */
-.reviews-overflow { overflow: visible; }
+/* Обрізаємо те, що виходить за межі (ефект "вікна" каруселі) */
+.reviews-overflow { 
+    overflow: hidden; 
+    width: 100%;
+}
 
-/* Горизонтальна стрічка карток */
+/* Горизонтальна стрічка карток. Вона має бути ширшою за екран, щоб вміщати всі відгуки */
 .reviews-track {
     display: flex;
     gap: 20px;
     transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
     align-items: stretch; /* всі картки однакової висоти в ряду */
-    overflow: hidden; /* ПРАВКА 6: overflow:hidden тепер тут — обрізає тільки стрічку карток, не навігацію */
 }
     
 /* ─── Картка відгуку ───────────────────────────────────── */
@@ -521,7 +521,7 @@ function initReviewsSlider() {
 
     function goTo(idx) {
         reviewsCurrent = Math.max(0, Math.min(idx, maxPage()));
-                var cardW = (cards[0].getBoundingClientRect().width || cards[0].offsetWidth) + 20;
+        var cardW = (cards[0].getBoundingClientRect().width || cards[0].offsetWidth) + 20;
         track.style.transform = 'translateX(-' + (reviewsCurrent * cardW) + 'px)';
         updateDots();
     }
@@ -549,7 +549,7 @@ function initReviewsSlider() {
     window.addEventListener('resize', initReviewsSlider._resizeHandler);
 
     buildDots();
-            requestAnimationFrame(function() { requestAnimationFrame(function() { goTo(0); }); });
+    requestAnimationFrame(function() { requestAnimationFrame(function() { goTo(0); }); });
 }
 
 function loadInstagramEmbed() {
@@ -582,18 +582,17 @@ function loadTikTokEmbed() {
     document.body.appendChild(script);
 }
 
-/* ПРАВКА 4: НE викликаємо initReviewsSlider() одразу — чекаємо Google Reviews.
-   Fallback: якщо Google не відповів за 3с — ініціалізуємо зі статичними картками */
+/* Fallback: якщо Google не відповів за 3с — ініціалізуємо зі статичними картками */
 var _sliderFallbackTimer = setTimeout(function() {
     var track = document.getElementById('reviews-track');
-      /* ПРАВКА: запускаємо слайдер завжди (Google не відповів за 3с) — прибрано неправильну умову */
-      if (track) {
-        initReviewsSlider(); /* Google не відповів — ініціалізуємо зі статичними */
+    if (track) {
+        initReviewsSlider(); 
     }
 }, 3000);
-loadGoogleReviews();    /* Google Reviews (якщо ключ заповнений) */
-loadInstagramEmbed();   /* Instagram embeds (якщо є blockquote) */
-loadTikTokEmbed();      /* TikTok embeds (якщо є blockquote) */
+
+loadGoogleReviews();    /* Google Reviews */
+loadInstagramEmbed();   /* Instagram embeds */
+loadTikTokEmbed();      /* TikTok embeds */
 </script>
 
 </body>
