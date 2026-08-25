@@ -195,12 +195,6 @@
             -webkit-transition: padding 0.3s; transition: padding 0.3s;
         }
 
-        /* ═══════════════════════════════════════════
-           ЛОГОТИП — ЗАМІНИТИ ФАЙЛИ:
-           Помістіть у ту саму папку що й index.html:
-           • logo_full.png   — логотип з текстом (Image 1)
-           • monogram.png    — тільки монограма CZ (Image 2)
-           ═══════════════════════════════════════════ */
         .nav-logo img {
             height: 44px;
             object-fit: contain;
@@ -243,10 +237,6 @@
         }
 
         .hero-logo {
-            /* ═══════════════════════════════════════
-               ЛОГОТИП HERO — тут використовується
-               logo_full.png (великий, з підписом)
-               ═══════════════════════════════════════ */
             width: min(900px, 105vw);
             margin: 0 auto 100px;
             animation: fadeInDown 1.6s cubic-bezier(0.16, 1, 0.3, 1) both;
@@ -340,7 +330,6 @@
             .products-grid { grid-template-columns: 1fr; }
         }
 
-        /* [AI PATCH] На десктопі — фіксована висота 480px; на мобільному — auto з min-height (see @media нижче) */
         .card { height: 480px; perspective: 1400px; cursor: pointer; }
         .card-inner {
             position: relative; width: 100%; height: 100%;
@@ -360,16 +349,11 @@
             border: 1px solid var(--card-border);
         }
 
-        /* ── ПЕРЕДНЯ СТОРОНА КАРТКИ ── */
         .card-front {
             background: var(--card-bg);
             display: flex; flex-direction: column;
         }
 
-        /* ═══════════════════════════════════════════
-           ЗОБРАЖЕННЯ ТОВАРУ — замінити src у кожній картці.
-           Рекомендований розмір: 600×400px або пропорційний.
-           ═══════════════════════════════════════════ */
         .card-img {
             width: 100%; height: 55%;
             object-fit: cover;
@@ -377,7 +361,6 @@
             display: block;
         }
 
-        /* Якщо картинки ще немає — показуємо заглушку */
         .card-img-placeholder {
             width: 100%; height: 55%;
             background: linear-gradient(135deg, #1a1508 0%, #0e0c07 100%);
@@ -418,7 +401,6 @@
             text-transform: uppercase;
         }
 
-        /* ── ЗАДНЯ СТОРОНА КАРТКИ ── */
         .card-back {
             -webkit-transform: rotateY(180deg); transform: rotateY(180deg);
             background: #0d0b06;
@@ -443,10 +425,6 @@
             letter-spacing: 1px;
         }
 
-        /* ═══════════════════════════════════════════
-           ОПИС ТОВАРУ — відредагуйте <p class="card-desc">
-           в кожній картці нижче в HTML.
-           ═══════════════════════════════════════════ */
         .card-desc { font-size: 0.85rem; line-height: 1.8; color: var(--text-muted); flex: 1; }
 
         .card-mood {
@@ -485,7 +463,6 @@
             color: var(--dark);
         }
 
-        /* ─── БЕЙДЖ НА КАРТЦІ ─────────────────────── */
         .card-front { position: relative; }
         .card-badge {
             position: absolute;
@@ -526,7 +503,6 @@
             margin-bottom: 3px;
         }
 
-        /* ─── ДО/ПІСЛЯ ───────────────────────────── */
         .ba-grid {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -605,6 +581,7 @@
         }
         input:focus, textarea:focus { border-color: var(--gold); }
         textarea { resize: vertical; min-height: 80px; }
+        input:disabled { opacity: 0.5; cursor: not-allowed; }
 
         .cart-summary {
             padding: 20px;
@@ -616,6 +593,102 @@
             color: var(--text-muted);
         }
         .cart-summary strong { color: var(--gold); }
+
+        /* ─── ОФОРМЛЕННЯ ЗАМОВЛЕННЯ (НОВІ ЕЛЕМЕНТИ) ─── */
+        .checkout-info {
+            background: rgba(201,168,76,0.04);
+            border-left: 3px solid var(--gold-dim);
+            padding: 18px 20px;
+            border-radius: 0 var(--radius) var(--radius) 0;
+            margin-bottom: 10px;
+        }
+        .checkout-info p {
+            font-size: 0.8rem;
+            line-height: 1.6;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+        .checkout-info p:last-child { margin-bottom: 0; }
+        .checkout-info strong { color: var(--gold-light); font-weight: 600; }
+        .checkout-info .warn-text {
+            font-size: 0.75rem;
+            color: #bfa068;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(201,168,76,0.1);
+        }
+
+        .form-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-top: 10px;
+        }
+        .form-checkbox input[type="checkbox"] {
+            appearance: none;
+            background: #0d0d0a;
+            border: 1px solid rgba(201,168,76,0.4);
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .form-checkbox input[type="checkbox"]:checked {
+            background: var(--gold);
+            border-color: var(--gold);
+        }
+        .form-checkbox input[type="checkbox"]:checked::after {
+            content: '✓';
+            position: absolute;
+            color: var(--dark);
+            font-size: 14px;
+            font-weight: bold;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .form-checkbox label {
+            font-size: 0.75rem;
+            line-height: 1.6;
+            color: var(--text-muted);
+            cursor: pointer;
+            text-transform: none;
+            letter-spacing: normal;
+        }
+        .form-checkbox a {
+            color: var(--gold-dim);
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            transition: 0.3s;
+        }
+        .form-checkbox a:hover { color: var(--gold); }
+
+        .relative { position: relative; }
+        .autocomplete-dropdown {
+            position: absolute;
+            top: 100%; left: 0; right: 0;
+            background: #111008;
+            border: 1px solid var(--card-border);
+            border-top: none;
+            border-radius: 0 0 var(--radius) var(--radius);
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 10;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .autocomplete-dropdown.hidden { display: none; }
+        .autocomplete-item {
+            padding: 12px 16px;
+            font-size: 0.8rem;
+            color: var(--text);
+            cursor: pointer;
+            transition: background 0.2s;
+            border-bottom: 1px solid rgba(201,168,76,0.05);
+        }
+        .autocomplete-item:last-child { border-bottom: none; }
+        .autocomplete-item:hover { background: rgba(201,168,76,0.1); color: var(--gold); }
 
         /* ─── КОШИК OVERLAY ──────────────────────── */
         .cart-overlay {
@@ -739,88 +812,58 @@
                 right: 12px;
             }
 
-        /* ═══════════════════════════════════════════════════════
-           [AI PATCH] МОБІЛЬНА ВЕРСІЯ КАРТОЧОК
-           Проблема: .card мала фіксовану height: 480px,
-           через що лицева сторона з різним обсягом тексту
-           «налазила» на сусідні картки.
-           Рішення:
-           1. На мобільному height:auto + min-height замість px
-           2. .card-inner — relative + padding-bottom для висоти
-           3. .card-front і .card-back — position:absolute, inset:0
-              щоб обидві сторони займали однаковий простір
-           4. gap між картками через .products-grid
-           ПК (>620px) — НЕ змінюється (height:480px залишається)
-        ═══════════════════════════════════════════════════════ */
+            .products-grid {
+                gap: 20px;
+            }
 
-        /* [AI PATCH] Gap між картками на мобільному */
-        .products-grid {
-            gap: 20px;
-        }
+            .card {
+                height: auto;
+                height: 640px; 
+            }
 
-        /* [AI PATCH] Картка: висота — по контенту, не фіксована */
-        .card {
-            height: auto;
-            height: 640px; /* [AI PATCH] перекриває desktop height:480px; 640px — вистачає для найбільшої картки */
-        }
+            .card-inner {
+                position: relative;
+                width: 100%;
+                height: 80%; 
+                min-height: 520px; 
+            }
 
-        /* [AI PATCH] Внутрішній контейнер картки:
-           position:relative дозволяє абсолютно
-           позиціонувати front/back всередині */
-        .card-inner {
-            position: relative;
-            width: 100%;
-            height: 80%; /* [AI PATCH] mob: inner росте від min-height батька */
-            min-height: 520px; /* [AI PATCH] */
-        }
+            .card-front,
+            .card-back {
+                position: absolute;
+                inset: 0;
+            }
 
-        /* [AI PATCH] Обидві сторони займають 100% висоти
-           батьківського контейнера — виключає різницю розмірів */
-        .card-front,
-        .card-back {
-            position: absolute;
-            inset: 0;
-        }
+            .card-front {
+                display: flex;
+                flex-direction: column;
+            }
 
-        /* [AI PATCH] Лицева сторона: flex-колонка,
-           кнопка "В кошик" завжди знизу */
-        .card-front {
-            display: flex;
-            flex-direction: column;
-        }
+            .card-img,
+            .card-img-placeholder {
+                height: 65%;
+                flex-shrink: 0;
+            }
 
-        /* [AI PATCH] Зображення займає фіксовану частину висоти */
-        .card-img,
-        .card-img-placeholder {
-            height: 65%;
-            flex-shrink: 0;
-        }
+            .card-front-body {
+                flex: 1;
+        
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                padding: 16px 20px;
+            }
 
-        /* [AI PATCH] Тіло лицевої картки займає залишок */
-        .card-front-body {
-            flex: 1;
-    
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 16px 20px;
-        }
+            .card-back {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                padding: 28px 24px;
+            }
 
-        /* [AI PATCH] Задня сторона: flex-колонка,
-           кнопка "В кошик" завжди внизу */
-        .card-back {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 28px 24px;
-        }
-
-        /* [AI PATCH] Опис на задній стороні — обрізаємо
-           якщо дуже довгий, щоб не розтягувати картку */
-        .card-desc {
-            flex: 1;
-
-        }
+            .card-desc {
+                flex: 1;
+            }
         }
     </style>
 </head>
@@ -829,11 +872,6 @@
 <!-- ─── НАВІГАЦІЯ ────────────────────────────────────── -->
 <nav class="nav">
     <div class="nav-logo">
-        <!--
-            ЛОГОТИП у навігації:
-            Файл: monogram.jpg (тільки CZ монограма — Image 2)
-            Помістіть поруч з index.html або вкажіть правильний шлях.
-        -->
         <img src="monogram.jpg" alt="Olena Zolotova" class="js-img-fallback" data-fallback-text="CZ">
         <span class="js-img-fallback-text" style="display:none;font-family:'Cinzel',serif;color:var(--gold);font-size:1.4rem;letter-spacing:3px;">CZ</span>
     </div>
@@ -851,10 +889,6 @@
 <!-- ─── HERO ─────────────────────────────────────────── -->
 <section class="hero">
     <div>
-        <!--
-            ЛОГОТИП HERO:
-            Файл: logo_full.jpg (логотип з написом OLENA ZOLOTOVA — Image 1)
-        -->
         <div class="hero-logo">
             <img src="logo_full.jpg" alt="Olena Zolotova Lab Series" class="js-img-fallback" data-fallback-text="CZ">
             <div class="js-img-fallback-text" style="display:none;font-family:'Cinzel',serif;color:var(--gold);font-size:4rem;text-shadow:0 0 30px rgba(201,168,76,0.4);">CZ</div>
@@ -895,8 +929,8 @@
 
         <!-- ══════════════════════════════════════════════
              ТОВАР 1 — CLEANSING OIL
-             Фото: images/cleansing_oil.jpg
-             ══════════════════════════════════════════════ --
+             ══════════════════════════════════════════════ -->
+        <!-- 
         <div class="card">
             <div class="card-inner">
                 <div class="card-front">
@@ -926,11 +960,12 @@
                 </div>
             </div>
         </div>
+        -->
 
         <!-- ══════════════════════════════════════════════
              ТОВАР 2 — SILK FINISH CREAM
-             Фото: images/silk_cream.jpg
-             ══════════════════════════════════════════════ --
+             ══════════════════════════════════════════════ -->
+        <!-- 
         <div class="card">
             <div class="card-inner">
                 <div class="card-front">
@@ -961,11 +996,12 @@
                 </div>
             </div>
         </div>
+        -->
 
         <!-- ══════════════════════════════════════════════
              ТОВАР 3 — GLASS SKIN PEPTIDE SERUM
-             Фото: images/glass_skin.jpg
-             ══════════════════════════════════════════════ --
+             ══════════════════════════════════════════════ -->
+        <!-- 
         <div class="card">
             <div class="card-inner">
                 <div class="card-front">
@@ -996,11 +1032,12 @@
                 </div>
             </div>
         </div>
+        -->
 
         <!-- ══════════════════════════════════════════════
              ТОВАР 4 — PHA SKIN REFINING LOTION
-             Фото: images/pha_lotion.jpg
-             ══════════════════════════════════════════════ --
+             ══════════════════════════════════════════════ -->
+        <!-- 
         <div class="card">
             <div class="card-inner">
                 <div class="card-front">
@@ -1030,11 +1067,12 @@
                 </div>
             </div>
         </div>
+        -->
 
         <!-- ══════════════════════════════════════════════
              ТОВАР 5 — EYE DRAINAGE & LIFT SERUM
-             Фото: images/eye_serum.jpg
-             ══════════════════════════════════════════════ --
+             ══════════════════════════════════════════════ -->
+        <!-- 
         <div class="card">
             <div class="card-inner">
                 <div class="card-front">
@@ -1064,11 +1102,12 @@
                 </div>
             </div>
         </div>
+        -->
 
         <!-- ══════════════════════════════════════════════
              ТОВАР 6 — SPICULE RENEWAL GEL
-             Фото: images/spicule_gel.jpg
-             ══════════════════════════════════════════════ --
+             ══════════════════════════════════════════════ -->
+        <!-- 
         <div class="card">
             <div class="card-inner">
                 <div class="card-front">
@@ -1102,10 +1141,10 @@
                 </div>
             </div>
         </div>
+        -->
 
         <!-- ══════════════════════════════════════════════
              ТОВАР 7 — ПАРФУМ 10 МЛ
-             Фото: images/perfume10.jpg
              ══════════════════════════════════════════════ -->
         <div class="card">
             <div class="card-inner">
@@ -1139,7 +1178,6 @@
 
         <!-- ══════════════════════════════════════════════
              ТОВАР 8 — ПАРФУМ 20 МЛ
-             Фото: images/perfume20.jpg
              ══════════════════════════════════════════════ -->
         <div class="card">
             <div class="card-inner">
@@ -1173,8 +1211,8 @@
 
         <!-- ══════════════════════════════════════════════
              НАБІР 9 — ANTI-AGE CORE SYSTEM (ХІТ ПРОДАЖІВ)
-             Фото: images/kit_antiage.jpg
-             ══════════════════════════════════════════════ --
+             ══════════════════════════════════════════════ -->
+        <!-- 
         <div class="card">
             <div class="card-inner">
                 <div class="card-front">
@@ -1212,11 +1250,12 @@
                 </div>
             </div>
         </div>
+        -->
 
         <!-- ══════════════════════════════════════════════
              НАБІР 10 — HYDRATION SYSTEM
-             Фото: images/kit_hydration.jpg
-             ══════════════════════════════════════════════ --
+             ══════════════════════════════════════════════ -->
+        <!-- 
         <div class="card">
             <div class="card-inner">
                 <div class="card-front">
@@ -1253,11 +1292,12 @@
                 </div>
             </div>
         </div>
+        -->
 
         <!-- ══════════════════════════════════════════════
              НАБІР 11 — CLEAN & GLOW SYSTEM
-             Фото: images/kit_cleanglow.jpg
-             ══════════════════════════════════════════════ --
+             ══════════════════════════════════════════════ -->
+        <!-- 
         <div class="card">
             <div class="card-inner">
                 <div class="card-front">
@@ -1293,11 +1333,12 @@
                 </div>
             </div>
         </div>
+        -->
 
         <!-- ══════════════════════════════════════════════
              НАБІР 12 — FULL SYSTEM (ВСІ ПРОДУКТИ)
-             Фото: images/kit_full.jpg
-             ══════════════════════════════════════════════ --
+             ══════════════════════════════════════════════ -->
+        <!-- 
         <div class="card">
             <div class="card-inner">
                 <div class="card-front">
@@ -1337,7 +1378,8 @@
                 </div>
             </div>
         </div>
-   -->
+        -->
+
     </div>
 </section>
 
@@ -1348,10 +1390,6 @@
 
         <div class="ba-item ba-item--first">
             <div class="ba-collage">
-                <!-- КАРТОЧКА 1 -->
-                <!-- Покласти файл у папку: images/results/ -->
-                <!-- Назва файлу: ba-1.jpg -->
-                <!-- Відповідає поточному вкладенню: 1.jpg -->
                 <img src="images/results/ba-1.jpg" alt="Колаж результату догляду 1" class="js-img-fallback" data-fallback-text="До / Після">
                 <div class="ba-label ba-label--bottom-left">До</div>
                 <div class="ba-label ba-label--bottom-right">За 5 днів</div>
@@ -1360,10 +1398,6 @@
 
         <div class="ba-item">
             <div class="ba-collage">
-                <!-- КАРТОЧКА 2 -->
-                <!-- Покласти файл у папку: images/results/ -->
-                <!-- Назва файлу: ba-2.jpg -->
-                <!-- Відповідає поточному вкладенню: 2.jpg -->
                 <img src="images/results/ba-2.jpg" alt="Колаж результату догляду 2" class="js-img-fallback" data-fallback-text="До / Після">
                 <div class="ba-label ba-label--top-left">До</div>
                 <div class="ba-label ba-label--bottom-left">За 5 днів</div>
@@ -1372,10 +1406,6 @@
 
         <div class="ba-item">
             <div class="ba-collage">
-                <!-- КАРТОЧКА 3 -->
-                <!-- Покласти файл у папку: images/results/ -->
-                <!-- Назва файлу: ba-3.jpg -->
-                <!-- Відповідає поточному вкладенню: 3.jpg -->
                 <img src="images/results/ba-3.jpg" alt="Колаж результату догляду 3" class="js-img-fallback" data-fallback-text="До / Після">
                 <div class="ba-label ba-label--top-left">До</div>
                 <div class="ba-label ba-label--bottom-left">За 5 днів</div>
@@ -1384,10 +1414,6 @@
 
         <div class="ba-item">
             <div class="ba-collage">
-                <!-- КАРТОЧКА 4 -->
-                <!-- Покласти файл у папку: images/results/ -->
-                <!-- Назва файлу: ba-4.jpg -->
-                <!-- Відповідає поточному вкладенню: 4.jpg -->
                 <img src="images/results/ba-4.jpg" alt="Колаж результату догляду 4" class="js-img-fallback" data-fallback-text="До / Після">
                 <div class="ba-label ba-label--top-left">До</div>
                 <div class="ba-label ba-label--bottom-left">За 5 днів</div>
@@ -1407,41 +1433,46 @@
     <form class="order-form" id="main-form">
         <div class="cart-summary" id="order-summary">Кошик порожній — додайте товари вище</div>
 
-        <div class="form-field">
-            <label>Ваше ім'я</label>
-            <input type="text" id="name" placeholder="Олена Золотова" required>
-        </div>
-        <div class="form-field">
-            <label>Номер телефону</label>
-            <input type="tel" id="phone" placeholder="+380 __ ___ __ __" required>
-        </div>
-        <div class="form-field">
-            <label>Адреса доставки</label>
-            <textarea id="address" placeholder="Нова Пошта, місто, відділення або адресна доставка" required></textarea>
+        <!-- Инфоблок -->
+        <div class="checkout-info">
+            <p><strong>🚚 Доставка:</strong> Новою Поштою по Україні (за тарифами перевізника).</p>
+            <p><strong>💳 Оплата:</strong> Тільки за реквізитами IBAN.</p>
+            <p class="warn-text">⚠️ <em>Зверніть увагу:</em> згідно з Постановою КМУ №172, парфюмерно-косметичні вироби належної якості не підлягають поверненню та обміну.</p>
         </div>
 
-        <!-- ════════════════════════════════════════════
-             ОПЛАТА — підключення платіжної системи:
+        <div class="form-field">
+            <label>Ваше ім'я та прізвище *</label>
+            <input type="text" id="name" placeholder="Наприклад, Олена Коваленко" required>
+        </div>
+        
+        <div class="form-field">
+            <label>Номер телефону *</label>
+            <input type="tel" id="phone" placeholder="+38 (000) 000-00-00" required>
+        </div>
+        
+        <!-- Поля Новой Пошты -->
+        <div class="form-field relative">
+            <label>Місто доставки (Нова Пошта) *</label>
+            <input type="text" id="np-city" placeholder="Місто" autocomplete="off" required>
+            <div id="np-city-dropdown" class="autocomplete-dropdown hidden"></div>
+        </div>
+        
+        <div class="form-field relative">
+            <label>Відділення або поштомат Нової Пошти *</label>
+            <input type="text" id="np-branch" placeholder="№ відділення" autocomplete="off" disabled required>
+            <div id="np-branch-dropdown" class="autocomplete-dropdown hidden"></div>
+        </div>
 
-             Варіант 1 — LiqPay (найпростіший для України):
-             1. Зареєструйтесь на liqpay.ua
-             2. Отримайте public_key і private_key
-             3. Замість кнопки "Підтвердити замовлення" вставте
-                форму LiqPay або викличте їхній JS API.
-             Документація: https://www.liqpay.ua/documentation/api/aquiring/checkout/
+        <!-- Чекбокс согласия -->
+        <div class="form-checkbox">
+            <input type="checkbox" id="agreement" required>
+            <label for="agreement">
+                Я підтверджую замовлення та погоджуюсь з <a href="/offer.html" target="_blank">Публічною офертою</a>, <a href="/privacy.html" target="_blank">Політикою конфіденційності</a>, а також даю згоду на обробку моїх персональних даних. Я ознайомлений(а) з умовами повернення товару.
+            </label>
+        </div>
 
-             Варіант 2 — WayForPay:
-             Аналогічно: wayforpay.com/uk/api-merchants
-             Після заповнення форми передайте суму і товари у
-             запит до WayForPay API.
-
-             Варіант 3 — Посилання на оплату Monobank:
-             Створюйте invoice через Monobank Acquiring API
-             і відкривайте посилання в новій вкладці.
-        ════════════════════════════════════════════ -->
-
-        <button type="submit" class="btn-gold" style="font-size:0.8rem;">
-            Підтвердити замовлення
+        <button type="submit" class="btn-gold" style="font-size:0.8rem; margin-top: 10px;">
+            ПІДТВЕРДИТИ ЗАМОВЛЕННЯ
         </button>
     </form>
 </section>
@@ -1486,7 +1517,6 @@ document.addEventListener('DOMContentLoaded', function() {
     var cart = [];
     try { cart = JSON.parse(localStorage.getItem('cz_cart')) || []; } catch(e) { cart = []; }
 
-
     // ─── FALLBACK ДЛЯ ЗОБРАЖЕНЬ ЛОГОТИПУ ──────────────────
     document.querySelectorAll('.js-img-fallback').forEach(function(img) {
         img.addEventListener('error', function() {
@@ -1511,7 +1541,7 @@ document.addEventListener('DOMContentLoaded', function() {
             e.stopPropagation();
             var name  = btn.getAttribute('data-name');
             var price = parseInt(btn.getAttribute('data-price'), 10);
-            var sku   = btn.getAttribute('data-sku') || ''; // ← читаем SKU из кнопки
+            var sku   = btn.getAttribute('data-sku') || '';
             addToCart(btn, name, price, sku);
         });
     });
@@ -1595,13 +1625,112 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 1400);
     }
 
-function sendToKeepinCRM(d){
-            return fetch('https://site-order-api.romek-ivanchenko.workers.dev/order',{
-                          method:'POST',
-                          headers:{'Content-Type':'application/json'},
-                          body:JSON.stringify(d)
-                                      });
-          }
+    // ─── ЛОГІКА НОВОЇ ПОШТИ ───
+    const WORKER_URL = 'https://site-order-api.romek-ivanchenko.workers.dev';
+    let debounceTimer;
+    let currentCityRef = '';
+
+    const cityInput = document.getElementById('np-city');
+    const branchInput = document.getElementById('np-branch');
+    const cityDropdown = document.getElementById('np-city-dropdown');
+    const branchDropdown = document.getElementById('np-branch-dropdown');
+
+    async function fetchNP(model, method, props) {
+        try {
+            const res = await fetch(`${WORKER_URL}/np`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    modelName: model,
+                    calledMethod: method,
+                    methodProperties: props
+                })
+            });
+            return await res.json();
+        } catch (e) {
+            console.error('NP Error:', e);
+            return { success: false, data: [] };
+        }
+    }
+
+    cityInput.addEventListener('input', function() {
+        clearTimeout(debounceTimer);
+        const query = this.value.trim();
+        branchInput.value = '';
+        branchInput.disabled = true;
+        currentCityRef = '';
+        
+        if (query.length < 2) {
+            cityDropdown.classList.add('hidden');
+            return;
+        }
+
+        debounceTimer = setTimeout(async () => {
+            const res = await fetchNP('Address', 'getCities', { FindByString: query });
+            if (res.success && res.data.length > 0) {
+                cityDropdown.innerHTML = res.data.map(city => 
+                    `<div class="autocomplete-item" data-ref="${city.Ref}">${city.Description}</div>`
+                ).join('');
+                cityDropdown.classList.remove('hidden');
+            } else {
+                cityDropdown.classList.add('hidden');
+            }
+        }, 300);
+    });
+
+    cityDropdown.addEventListener('click', function(e) {
+        if (e.target.classList.contains('autocomplete-item')) {
+            cityInput.value = e.target.textContent;
+            currentCityRef = e.target.getAttribute('data-ref');
+            cityDropdown.classList.add('hidden');
+            branchInput.disabled = false;
+            branchInput.focus();
+            loadWarehouses('');
+        }
+    });
+
+    branchInput.addEventListener('input', function() {
+        clearTimeout(debounceTimer);
+        const query = this.value.trim();
+        if (!currentCityRef) return;
+        debounceTimer = setTimeout(() => { loadWarehouses(query); }, 300);
+    });
+
+    async function loadWarehouses(query) {
+        const res = await fetchNP('Address', 'getWarehouses', { CityRef: currentCityRef, FindByString: query });
+        if (res.success && res.data.length > 0) {
+            branchDropdown.innerHTML = res.data.map(w => 
+                `<div class="autocomplete-item">${w.Description}</div>`
+            ).join('');
+            branchDropdown.classList.remove('hidden');
+        } else {
+            branchDropdown.classList.add('hidden');
+        }
+    }
+
+    branchDropdown.addEventListener('click', function(e) {
+        if (e.target.classList.contains('autocomplete-item')) {
+            branchInput.value = e.target.textContent;
+            branchDropdown.classList.add('hidden');
+        }
+    });
+
+    // Закрываем дропдауны при клике вне их зоны
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.relative')) {
+            cityDropdown.classList.add('hidden');
+            branchDropdown.classList.add('hidden');
+        }
+    });
+
+    function sendToKeepinCRM(d){
+        return fetch(`${WORKER_URL}/order`,{
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify(d)
+        });
+    }
+
     // ─── ФОРМА ЗАМОВЛЕННЯ ──────────────────────────────────
     document.getElementById('main-form').addEventListener('submit', function(e) {
         e.preventDefault();
@@ -1613,12 +1742,15 @@ function sendToKeepinCRM(d){
 
         var total = cart.reduce(function(sum, i){ return sum + i.price * i.qty; }, 0);
 
+        // Збираємо адресу з полів НП
+        var fullAddress = "НП: " + document.getElementById('np-city').value + ", " + document.getElementById('np-branch').value;
+
         sendToKeepinCRM({
             fullName: document.getElementById('name').value,
             phone: document.getElementById('phone').value,
             email: '',
-            comment: document.getElementById('address').value,
-            address: document.getElementById('address').value,
+            comment: fullAddress,
+            address: fullAddress,
             total: total,
             items: cart.map(function(i){ return { name: i.name, price: i.price, quantity: i.qty, sku: i.sku }; })
         })
@@ -1626,11 +1758,9 @@ function sendToKeepinCRM(d){
         .then(function(data) {
             if (data && data.success) {
                 var orderId = data.order_id;
-                // Очищаем корзину перед редиректом
                 cart = [];
                 updateUI();
                 form.reset();
-                // Редирект на страницу оплаты с актуальными параметрами
                 window.location.href = 'pay.html?deal_id=' + encodeURIComponent(orderId) + '&amount=' + encodeURIComponent(total);
             } else {
                 alert('Виникла помилка при оформленні замовлення. Спробуйте ще раз.');
