@@ -223,21 +223,23 @@
     align-items: center;
     justify-content: center;
     font-family: 'Montserrat', sans-serif;
-    font-size: 0.75rem;
-    letter-spacing: 2.5px;
-    color: var(--gold);
+    font-size: 0.8rem;
+    font-weight: 600; /* Робимо шрифт трохи жирнішим */
+    letter-spacing: 2px;
+    color: #0a0803; /* Темний колір тексту для максимального контрасту */
     text-transform: uppercase;
     text-decoration: none;
-    border: 1px solid rgba(201,168,76,0.35);
-    padding: 14px 36px;
+    border: none;
+    padding: 16px 40px; /* Робимо кнопку трохи масивнішою */
     border-radius: 2px;
-    transition: 0.3s;
-    background: transparent;
+    transition: all 0.3s ease;
+    background: var(--gold);
     cursor: pointer;
 }
 .reviews-leave-btn:hover {
-    background: rgba(201,168,76,0.1);
-    border-color: var(--gold);
+    background: #d4b456; /* Трохи світліший золотий при наведенні */
+    box-shadow: 0 0 15px rgba(201,168,76,0.4); /* Легке світіння */
+    transform: translateY(-2px); /* Мінімальний ефект натискання/підняття */
 }
 
 /* ─── Адаптив ───────────────────────────────────────────── */
