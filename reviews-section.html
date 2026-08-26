@@ -212,6 +212,34 @@
 }
 .reviews-dot.active { background: var(--gold); }
 
+/* ─── Кнопка "Залишити відгук" ─────────────────────────── */
+.reviews-action {
+    display: flex;
+    justify-content: center;
+    margin-top: 36px;
+}
+.reviews-leave-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 2.5px;
+    color: var(--gold);
+    text-transform: uppercase;
+    text-decoration: none;
+    border: 1px solid rgba(201,168,76,0.35);
+    padding: 14px 36px;
+    border-radius: 2px;
+    transition: 0.3s;
+    background: transparent;
+    cursor: pointer;
+}
+.reviews-leave-btn:hover {
+    background: rgba(201,168,76,0.1);
+    border-color: var(--gold);
+}
+
 /* ─── Адаптив ───────────────────────────────────────────── */
 @media (max-width: 900px) {
     /* На планшеті показуємо 2 картки */
@@ -233,10 +261,7 @@
          (gold-лінія під ним додається через ::after в основному CSS) -->
     <h2 class="section-title">Відгуки</h2>
 
-    <!-- ─── Агрегований рейтинг ──────────────────────────────
-         Значення 4.9 і 47 відгуків беремо з JSON-LD (уже є в коді).
-         При підключенні Google API — ці цифри замінюємо динамічно
-         через JS (функція renderGoogleAggregate нижче)           -->
+    <!-- ─── Агрегований рейтинг ────────────────────────────── -->
     <div class="reviews-aggregate">
       <span class="reviews-score" id="reviews-score">5</span>
       <div class="reviews-stars-wrap">
@@ -252,160 +277,26 @@
       </div>
     </div>
 
-    <!-- ─── Слайдер ──────────────────────────────────────────
-         overflow: hidden приховує картки, що вийшли за межу.
-         Рух здійснюється через transform: translateX() в JS    -->
+    <!-- ─── Слайдер ────────────────────────────────────────── -->
     <div class="reviews-overflow">
       <div class="reviews-track" id="reviews-track">
 
-        
-
-        <!-- Статичний відгук #1 --
-        <div class="review-card">
-          <span class="review-quote-mark">"</span>
-          <div class="review-card-stars">
-            <div class="review-card-star"></div>
-            <div class="review-card-star"></div>
-            <div class="review-card-star"></div>
-            <div class="review-card-star"></div>
-            <div class="review-card-star"></div>
-          </div>
-          
-          <p class="review-text">Після курсу RF-ліфтингу шкіра стала значно пружнішою. Олена — справжній профі. Результат видно вже після другого сеансу!</p>
-          <div class="review-footer">
-            <div>
-              
-              <p class="review-author-name">Марина К.</p>
-              <p class="review-author-meta">RF-ліфтинг · 4 процедури</p>
-            </div>
-            
-            <div class="review-source">
-              <div class="review-source-dot"></div>Facebook
-            </div>
-          </div>
-        </div>
-
-        <!-- Статичний відгук #2 --
-        <div class="review-card">
-          <span class="review-quote-mark">"</span>
-          <div class="review-card-stars">
-            <div class="review-card-star"></div>
-            <div class="review-card-star"></div>
-            <div class="review-card-star"></div>
-            <div class="review-card-star"></div>
-            <div class="review-card-star"></div>
-          </div>
-          <p class="review-text">Замовила сироватку Lab Series — доставили швидко. Вже тиждень використовую і вже бачу різницю. Шкіра зволожена й сяє зсередини.</p>
-          <div class="review-footer">
-            <div>
-              <p class="review-author-name">Анна С.</p>
-              <p class="review-author-meta">Сироватка · доставка</p>
-            </div>
-            <div class="review-source">
-              <div class="review-source-dot"></div>Instagram
-            </div>
-          </div>
-        </div>
-
-        <!-- Статичний відгук #3 --
-        <div class="review-card">
-          <span class="review-quote-mark">"</span>
-          <div class="review-card-stars">
-            <div class="review-card-star"></div>
-            <div class="review-card-star"></div>
-            <div class="review-card-star"></div>
-            <div class="review-card-star"></div>
-            <div class="review-card-star"></div>
-          </div>
-          <p class="review-text">Дуже задоволена кавітацією! Підхід індивідуальний, все пояснює. Відчуваю себе на руках у фахівця. Рекомендую всім у Вінниці.</p>
-          <div class="review-footer">
-            <div>
-              <p class="review-author-name">Катерина В.</p>
-              <p class="review-author-meta">Кавітація · 4 процедури</p>
-            </div>
-            <div class="review-source">
-              <div class="review-source-dot"></div>TikTok
-            </div>
-          </div>
-        </div>
-
-        <!-- Статичний відгук #4 --
-        <div class="review-card">
-          <span class="review-quote-mark">"</span>
-          <div class="review-card-stars">
-            <div class="review-card-star"></div>
-            <div class="review-card-star"></div>
-            <div class="review-card-star"></div>
-            <div class="review-card-star"></div>
-            <div class="review-card-star"></div>
-          </div>
-          <p class="review-text">Олена — косметолог від Бога. Після пілінгу шкіра просто сяє. Їду до неї вже третій рік поспіль і не збираюся змінювати.</p>
-          <div class="review-footer">
-            <div>
-              <p class="review-author-name">Вікторія Л.</p>
-              <p class="review-author-meta">Пілінг · постійна клієнтка</p>
-            </div>
-            <div class="review-source">
-              <div class="review-source-dot"></div>TikTok
-            </div>
-          </div>
-        </div> -->
-
-        
-
-        
-
-        <!-- Instagram пост #1 (ПРИКЛАД — замініть на реальний embed) 
-        <div class="review-card review-card--embed">                  
-            <blockquote 
-				class="instagram-media" 
-				data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/stories/highlights/18025059401797041/" 
-				data-instgrm-version="14"				
-			</blockquote>			
-        </div>
-
-         Instagram пост #2 (за потреби — додайте ще один такий блок) 
-		<div class="review-card review-card--embed">                  
-            <blockquote 
-				class="instagram-media" 
-				data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/p/DS0JwRMDeDk/" 
-				data-instgrm-version="14"				
-			</blockquote>			
-        </div>
-        
-
-         TikTok відео #1 (ПРИКЛАД — замініть) 
-        <div class="review-card review-card--embed">
-          <!--
-            ПРИКЛАД КОДУ TIKTOK EMBED (замініть cite та дані):
-
-            <blockquote 
-              class="tiktok-embed" 
-              cite="https://www.tiktok.com/@kosmetologzolotova/video/ЗАМІНІТЬ_НА_РЕАЛЬНИЙ_ID"
-              data-video-id="ЗАМІНІТЬ_НА_РЕАЛЬНИЙ_ID"
-              style="max-width:100%; min-width:100%;">
-              <section></section>
-            </blockquote>
-
-            ВАЖЛИВО: скрипт TikTok вже підключений нижче в JS-блоці.
-            Додавати окремо НЕ ТРЕБА.
-         
-          <p style="color:var(--text-muted);font-size:0.75rem;text-align:center;padding:20px;letter-spacing:2px;">
-            EMBED З TIKTOK
-          </p>
-        </div>
+        <!-- Статичні відгуки залишаємо закоментованими або видаляємо, 
+             якщо вони більше не потрібні -->
 
       </div>
-    </div><!-- /.reviews-track -->
     </div><!-- /.reviews-overflow -->
 
-    <!-- ─── Навігація слайдера ───────────────────────────────
-         Точки і кнопки генеруються автоматично в JS.
-         Кількість точок = кількість "сторінок" слайдера.      -->
+    <!-- ─── Навігація слайдера ─────────────────────────────── -->
     <div class="reviews-controls">
       <button class="reviews-nav-btn" id="reviews-prev">&#8592;</button>
       <div class="reviews-dots" id="reviews-dots"></div>
       <button class="reviews-nav-btn" id="reviews-next">&#8594;</button>
+    </div>
+
+    <!-- ─── Кнопка "Залишити відгук" ───────────────────────── -->
+    <div class="reviews-action">
+      <a href="https://g.page/r/CQdhnGmDHzbgEAE/review" target="_blank" rel="noopener noreferrer" class="reviews-leave-btn">Залишити свій відгук</a>
     </div>
 
   </div><!-- /.section -->
