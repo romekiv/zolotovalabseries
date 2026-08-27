@@ -1755,8 +1755,8 @@ document.addEventListener('DOMContentLoaded', function() {
             email: '',
             comment: fullAddress,
             address: fullAddress,
-            np_city_ref: currentCityRef,           // Передаємо Ref міста
-            np_warehouse_ref: currentWarehouseRef, // Передаємо Ref відділення
+            np_city_name: document.getElementById('np-city').value,
+            np_warehouse_name: document.getElementById('np-branch').value,
             total: total,
             items: cart.map(function(i){ return { name: i.name, price: i.price, quantity: i.qty, sku: i.sku }; })
         })
