@@ -1629,6 +1629,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const WORKER_URL = 'https://site-order-api.romek-ivanchenko.workers.dev';
     let debounceTimer;
     let currentCityRef = '';
+    let currentWarehouseRef = ''; // Додаємо змінну для зберігання Ref відділення
 
     const cityInput = document.getElementById('np-city');
     const branchInput = document.getElementById('np-branch');
@@ -1659,6 +1660,7 @@ document.addEventListener('DOMContentLoaded', function() {
         branchInput.value = '';
         branchInput.disabled = true;
         currentCityRef = '';
+        currentWarehouseRef = ''; // Скидаємо відділення при зміні міста
         
         if (query.length < 2) {
             cityDropdown.classList.add('hidden');
@@ -1699,8 +1701,9 @@ document.addEventListener('DOMContentLoaded', function() {
     async function loadWarehouses(query) {
         const res = await fetchNP('Address', 'getWarehouses', { CityRef: currentCityRef, FindByString: query });
         if (res.success && res.data.length > 0) {
+            // Зберігаємо Ref відділення в атрибут data-ref
             branchDropdown.innerHTML = res.data.map(w => 
-                `<div class="autocomplete-item">${w.Description}</div>`
+                `<div class="autocomplete-item" data-ref="${w.Ref}">${w.Description}</div>`
             ).join('');
             branchDropdown.classList.remove('hidden');
         } else {
@@ -1711,6 +1714,7 @@ document.addEventListener('DOMContentLoaded', function() {
     branchDropdown.addEventListener('click', function(e) {
         if (e.target.classList.contains('autocomplete-item')) {
             branchInput.value = e.target.textContent;
+            currentWarehouseRef = e.target.getAttribute('data-ref'); // Захоплюємо Ref при кліку
             branchDropdown.classList.add('hidden');
         }
     });
@@ -1751,6 +1755,8 @@ document.addEventListener('DOMContentLoaded', function() {
             email: '',
             comment: fullAddress,
             address: fullAddress,
+            np_city_ref: currentCityRef,           // Передаємо Ref міста
+            np_warehouse_ref: currentWarehouseRef, // Передаємо Ref відділення
             total: total,
             items: cart.map(function(i){ return { name: i.name, price: i.price, quantity: i.qty, sku: i.sku }; })
         })
