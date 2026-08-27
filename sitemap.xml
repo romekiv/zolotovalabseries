@@ -6,4 +6,22 @@
       <changefreq>weekly</changefreq>
       <priority>1.0</priority>
    </url>
+   <url>
+        <loc>https://www.zolotovalabseries.pp.ua/pay</loc>
+        <lastmod>2026-08-27</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.5</priority>
+    </url>
+    <url>
+        <loc>https://www.zolotovalabseries.pp.ua/offer</loc>
+        <lastmod>2026-08-27</lastmod>
+        <changefreq>yearly</changefreq>
+        <priority>0.3</priority>
+    </url>
+    <url>
+        <loc>https://www.zolotovalabseries.pp.ua/privacy</loc>
+        <lastmod>2026-08-27</lastmod>
+        <changefreq>yearly</changefreq>
+        <priority>0.3</priority>
+    </url>
 </urlset>
